@@ -9,18 +9,23 @@ https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926
 
 - 🛢️ **Indexes**: create indexes, browse and edit every setting (searchable / filterable / sortable
   attributes, ranking rules, typo tolerance, synonyms, stop words, dictionary, separator tokens,
-  embedders, displayed fields, foreign keys...)
+  embedders, displayed fields, foreign keys...). The sidebar lists every index with its live
+  document count, so you can jump straight to one without opening the Indexes page.
 - 🔍 **Documents**: import, search, sort, filter, edit, delete documents
 - 🗝️ **Access keys**: create keys, generate tenant tokens (JWTs)
-- 📋 **Tasks**: browse and monitor the task queue
+- 📋 **Tasks**: browse and monitor the task queue in real time over Meilisearch's `/tasks/stream`
+  (SSE), with an automatic fallback to polling on older instances or when the stream is unavailable
 - 🅿️ **Backup**: one-click dumps, snapshots and index export to a remote instance
 - 🕸️ **Network**: manage multi-instance / sharded network settings
 - 🪝 **Webhooks**: manage webhooks
-- 🧭 **Search rules**: manage search rules
+- 🧭 **Search rules**: manage search rules, including editable dynamic search rule filter conditions
 - 💬 **Chat**: use Meilisearch's AI-powered chat, when enabled on the instance
+- 🧠 **Embedders**: configure embedders and preview their rendered document template against a real
+  document before saving
 - 🧪 **Experimental features**: toggle Meilisearch experimental features from the UI
 - 🎨 **Theming**: light/dark/system appearance, accent color and sidebar layout, all customizable from the UI
-- 🗺️ **Map view**: browse geo-tagged documents on an [OpenFreeMap](https://openfreemap.org) map
+- 🗺️ **Map view**: browse geo-tagged documents on an [OpenFreeMap](https://openfreemap.org) map, with
+  automatic light/dark map styling
 
 ## Demo
 
