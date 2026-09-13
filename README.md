@@ -1,6 +1,6 @@
 # Meiliweb
 
-[Meiliweb](https://meiliweb.pages.dev) is a web-based administration panel
+[Meiliweb](https://meilisearch.pages.dev) is a web-based administration panel
 that helps you store, organize and visualize data in your [Meilisearch](https://meilisearch.com) instances.
 
 https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926a3dafafe1
@@ -29,7 +29,7 @@ https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926
 
 ## Demo
 
-You can run Meilweb on your search instances, provided they expose appropriate CORS headers, on [https://meiliweb.pages.dev](https://meiliweb.pages.dev).
+You can run Meilweb on your search instances, provided they expose appropriate CORS headers, on [https://meilisearch.pages.dev](https://meilisearch.pages.dev).
 
 ## Local usage
 
@@ -43,18 +43,18 @@ and [Nuxt UI](https://ui.nuxt.com/), you will easily figure out how this applica
 
 Feel free to contribute!
 
-- [Discussions](https://github.com/bpolaszek/meiliweb/discussions): Ask questions, share ideas, suggest features
-- [Issues](https://github.com/bpolaszek/meiliweb/issues): Report bugs
-- [Pull requests](https://github.com/bpolaszek/meiliweb/pulls): Request changes
+- [Discussions](https://github.com/deepflowteam/meiliweb/discussions): Ask questions, share ideas, suggest features
+- [Issues](https://github.com/deepflowteam/meiliweb/issues): Report bugs
+- [Pull requests](https://github.com/deepflowteam/meiliweb/pulls): Request changes
 
 ### Installation
 
-You mostly don't need to install it on your computer. Just head up to [https://meiliweb.pages.dev](https://meiliweb.pages.dev) and fill your instance credentials.
+You mostly don't need to install it on your computer. Just head up to [https://meilisearch.pages.dev](https://meilisearch.pages.dev) and fill your instance credentials.
 
 If for some reason you want to run it locally, you can clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/bpolaszek/meiliweb.git
+git clone https://github.com/deepflowteam/meiliweb.git
 cd meiliweb
 bun install
 ```
