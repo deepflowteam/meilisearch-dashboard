@@ -118,6 +118,7 @@ import Button from '~/components/layout/forms/Button.vue'
 import DocumentationLink from '~/components/layout/DocumentationLink.vue'
 import { createReusableTemplate, watchImmediate } from '@vueuse/core'
 import InfiniteLoading from 'v3-infinite-loading'
+import { useTaskStream } from '~/stores'
 
 const { t } = useI18n()
 useHead({
@@ -180,6 +181,21 @@ const cancelTask = async (task: Task) => {
   task.status = 'canceled'
 }
 
+/**
+ * Task updates come from the shared `useTaskStream` store (SSE `/tasks/stream`) when the
+ * instance supports it, falling back to per-task polling below otherwise.
+ */
+const taskStream = useTaskStream()
+const unsubscribeTaskStream = taskStream.onTask((streamedTask) => {
+  const existing = self.tasks.results.find(
+    (task: Task) => task.uid === streamedTask.uid,
+  )
+  if (existing) {
+    Object.assign(existing, streamedTask)
+  }
+})
+onBeforeUnmount(unsubscribeTaskStream)
+
 const watchers = new WeakMap()
 watch(
   pendingTasks,
@@ -189,6 +205,9 @@ watch(
         return
       }
       watchers.set(task, this)
+      if (taskStream.active) {
+        return
+      }
       if (task.status === 'enqueued') {
         const interval = setInterval(async () => {
           let updatedTask = await meili.tasks.getTask(task.uid)

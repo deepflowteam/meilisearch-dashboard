@@ -13,7 +13,10 @@
     </h3>
 
     <template v-for="embedder of embedders">
-      <EmbedderEntry :embedder="embedder as [string, Embedder]" />
+      <EmbedderEntry
+        :embedder="embedder as [string, Embedder]"
+        :index-uid="props.indexUid"
+      />
     </template>
 
     <div

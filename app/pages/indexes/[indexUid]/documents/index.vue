@@ -164,7 +164,7 @@
     />
 
     <DocumentsEmptyState
-      v-if="0 === resultset.estimatedTotalHits"
+      v-if="0 === resultset.estimatedTotalHits && 'map' !== viewMode"
       :index-uid="index.uid"
       :request-has-filters="!!(searchParams.filter || searchParams.q)"
     ></DocumentsEmptyState>

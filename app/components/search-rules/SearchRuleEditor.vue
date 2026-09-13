@@ -108,12 +108,61 @@
             {{ t('hints.timeWindow') }}
           </p>
 
-          <p
-            v-if="hasFilterConditions"
-            class="text-xs font-light text-gray-500 italic dark:text-gray-400"
-          >
-            {{ t('hints.filterConditions') }}
-          </p>
+          <div class="space-y-2">
+            <p class="text-sm font-light text-gray-600 dark:text-gray-400">
+              {{ t('hints.filterConditions') }}
+            </p>
+
+            <div
+              v-for="(condition, i) of form.filterConditions"
+              :key="condition.id"
+              class="flex items-center gap-2"
+            >
+              <UInput
+                v-model="condition.facet"
+                size="sm"
+                :placeholder="t('placeholders.facetName')"
+                autocapitalize="off"
+                autocomplete="off"
+                spellcheck="false"
+                class="w-1/3"
+              />
+              <UInput
+                v-model="condition.value"
+                size="sm"
+                :placeholder="t('placeholders.facetValue')"
+                autocapitalize="off"
+                autocomplete="off"
+                spellcheck="false"
+                class="flex-1"
+              />
+              <UButton
+                type="button"
+                variant="ghost"
+                color="neutral"
+                icon="heroicons:trash"
+                v-tippy="t('actions.removeFilterCondition')"
+                class="shrink-0 hover:text-red-600"
+                @click="form.filterConditions.splice(i, 1)"
+              />
+            </div>
+
+            <p
+              v-if="!form.filterConditions.length"
+              class="text-sm font-light text-gray-400 italic dark:text-gray-500"
+            >
+              {{ t('emptyFilterConditions') }}
+            </p>
+
+            <Button
+              type="button"
+              size="small"
+              icon="heroicons:plus"
+              @click="addFilterCondition()"
+            >
+              {{ t('actions.addFilterCondition') }}
+            </Button>
+          </div>
         </section>
 
         <section
@@ -242,6 +291,14 @@ type PinRow = {
   position: number
 }
 
+/** Each row keeps a stable `id` for the `v-for` key; `facet`/`value` map to one entry of
+ * `conditions.filter.values`. */
+type FilterConditionRow = {
+  id: string
+  facet: string
+  value: string
+}
+
 const queryKindItems = computed(() => [
   { label: t('queryKinds.any'), value: 'any' },
   { label: t('queryKinds.empty'), value: 'empty' },
@@ -304,6 +361,13 @@ const factory = () => {
       documentId: selector.id,
       position: action.position,
     })) as PinRow[],
+    filterConditions: Object.entries(conditions?.filter?.values ?? {}).map(
+      ([facet, value]) => ({
+        id: ulid(),
+        facet,
+        value: String(value),
+      }),
+    ) as FilterConditionRow[],
   }
 }
 
@@ -312,8 +376,8 @@ const reset = () => Object.assign(form, factory())
 // Re-seed the form whenever the editor is (re)opened for a different rule.
 watch(open, (isOpen) => isOpen && reset())
 
-/** Filter conditions are not editable here; we only warn that they exist and are preserved. */
-const hasFilterConditions = computed(() => !!props.rule?.conditions?.filter)
+const addFilterCondition = () =>
+  form.filterConditions.push({ id: ulid(), facet: '', value: '' })
 
 const addPin = () =>
   form.pins.push({
@@ -323,10 +387,7 @@ const addPin = () =>
     position: form.pins.length,
   })
 
-/**
- * Unlike top-level keys, `conditions` is replaced wholesale by the API, so we rebuild it
- * in full — including the `filter` part the form doesn't expose.
- */
+/** Unlike top-level keys, `conditions` is replaced wholesale by the API, so we rebuild it in full. */
 const buildConditions = (): SearchRuleConditions => {
   const conditions: SearchRuleConditions = {}
 
@@ -353,8 +414,13 @@ const buildConditions = (): SearchRuleConditions => {
     conditions.time = time
   }
 
-  if (props.rule?.conditions?.filter) {
-    conditions.filter = props.rule.conditions.filter
+  const filterValues = Object.fromEntries(
+    form.filterConditions
+      .filter(({ facet, value }) => facet.trim() && value.trim())
+      .map(({ facet, value }) => [facet.trim(), value.trim()]),
+  )
+  if (Object.keys(filterValues).length) {
+    conditions.filter = { values: filterValues }
   }
 
   return conditions
@@ -430,18 +496,23 @@ en:
     words: running shoes
     documentId: Document ID
     anyIndex: Any index
+    facetName: 'Facet, e.g. color'
+    facetValue: 'Value, e.g. red'
   hints:
     uid: Letters, digits, hyphens and underscores. It cannot be changed later.
     precedence: Lower values win when several rules match. Leave empty for none.
     conditions: All conditions below must match for the rule to apply. Leave them all empty to always apply it.
     words: The rule applies when the search query contains these words.
     timeWindow: Both bounds are optional, and must be in the future.
-    filterConditions: This rule also carries filter conditions, which are not editable here. They will be preserved.
+    filterConditions: The rule applies when the search's own filter resolves to all of these facet values. Leave empty to ignore the filter.
     pins: Each document is pinned at the given position (0 is the first result) when the rule applies.
   emptyPins: No pinned document yet.
+  emptyFilterConditions: No filter condition yet.
   actions:
     addPin: Add a pinned document
     removePin: Remove
+    addFilterCondition: Add a filter condition
+    removeFilterCondition: Remove
   toasts:
     saving: Saving search rule...
     failed: Meilisearch could not apply this rule.
