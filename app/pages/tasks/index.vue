@@ -24,13 +24,18 @@
         t('columns.date'),
         t('columns.duration'),
         '',
-      ]">
+      ]"
+    >
       <template #default="{ index }">
         <td class="whitespace-nowrap">
           {{ stringifyTaskType(tasks.results[index].type) }}
         </td>
         <td>
-          <Badge :theme="'succeeded' === tasks.results[index].status ? 'success' : 'danger'">
+          <Badge
+            :theme="
+              'succeeded' === tasks.results[index].status ? 'success' : 'danger'
+            "
+          >
             {{ tasks.results[index].status }}
           </Badge>
         </td>
@@ -38,17 +43,25 @@
           <NuxtLink
             v-if="tasks.results[index].indexUid"
             :to="`/indexes/${tasks.results[index].indexUid}/documents`"
-            class="font-semibold text-primary-800 hover:text-primary-700 hover:underline">
+            class="font-semibold text-primary-800 hover:text-primary-700 hover:underline"
+          >
             {{ tasks.results[index].indexUid }}
           </NuxtLink>
         </td>
         <td>
-          <UseTreeRendering v-if="'failed' === tasks.results[index].status" :value="tasks.results[index].error" />
-          <span v-else-if="'documentAdditionOrUpdate' === tasks.results[index].type">
+          <UseTreeRendering
+            v-if="'failed' === tasks.results[index].status"
+            :value="tasks.results[index].error"
+          />
+          <span
+            v-else-if="'documentAdditionOrUpdate' === tasks.results[index].type"
+          >
             {{
               t('labels.documentIndexRatio', {
-                indexedDocuments: tasks.results[index].details.indexedDocuments ?? 0,
-                receivedDocuments: tasks.results[index].details.receivedDocuments,
+                indexedDocuments:
+                  tasks.results[index].details.indexedDocuments ?? 0,
+                receivedDocuments:
+                  tasks.results[index].details.receivedDocuments,
               })
             }}
           </span>
@@ -71,13 +84,18 @@
           </template>
         </td>
         <td class="text-right">
-          <template v-if="['enqueued', 'processing'].includes(tasks.results[index].status)">
+          <template
+            v-if="
+              ['enqueued', 'processing'].includes(tasks.results[index].status)
+            "
+          >
             <Button
               theme="primary"
               size="small"
               icon="mdi:close"
               @click="cancelTask(tasks.results[index])"
-              class="w-full flex-row-reverse">
+              class="w-full flex-row-reverse"
+            >
               {{ t('buttons.cancel') }}
             </Button>
           </template>
@@ -114,7 +132,9 @@ const self = reactive({
   tasks: await tryOrThrow(() => meili.tasks.getTasks()),
   lastTaskUid: null! as number,
   pendingTasks: computed((): Task[] =>
-    self.tasks.results.filter((task: Task) => ['enqueued', 'processing'].includes(task.status)),
+    self.tasks.results.filter((task: Task) =>
+      ['enqueued', 'processing'].includes(task.status),
+    ),
   ),
 })
 const { formatDate, formatDuration } = useDateFormatter()
@@ -135,9 +155,15 @@ const stringifyTaskType = (type: string) =>
   ])
 
 const { tasks, pendingTasks } = toRefs(self)
-watchImmediate(tasks, (tasks) => (self.lastTaskUid = tasks.results[tasks.results.length - 1]!.uid), { deep: true })
+watchImmediate(
+  tasks,
+  (tasks) => (self.lastTaskUid = tasks.results[tasks.results.length - 1]!.uid),
+  { deep: true },
+)
 const handleInfiniteLoading = async () => {
-  const nextTasks = await tryOrThrow(() => meili.tasks.getTasks({ from: self.lastTaskUid }))
+  const nextTasks = await tryOrThrow(() =>
+    meili.tasks.getTasks({ from: self.lastTaskUid }),
+  )
   self.tasks.results.push(...nextTasks.results)
 }
 const cancelTask = async (task: Task) => {

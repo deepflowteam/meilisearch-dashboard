@@ -5,7 +5,7 @@
         {{ size }}
       </option>
     </select>
-    <label :for="id" class="text-sm text-gray-600">
+    <label :for="id" class="text-sm text-gray-600 dark:text-gray-400">
       {{ t('labels.itemsPerPage') }}
     </label>
   </UniqueId>

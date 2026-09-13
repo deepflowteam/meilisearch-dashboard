@@ -21,7 +21,9 @@ export const useVersion = defineStore('version', {
      * without guarding. Features simply read as unavailable for one tick.
      */
     satisfiesVersion(version: string) {
-      return semver.satisfies(unref(this.version)?.pkgVersion, version, { includePrerelease: true })
+      return semver.satisfies(unref(this.version)?.pkgVersion, version, {
+        includePrerelease: true,
+      })
     },
   },
 })

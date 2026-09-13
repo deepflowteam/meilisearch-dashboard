@@ -1,10 +1,17 @@
 <template>
   <Layout :title="t('title')" :subtitle="t('subtitle')">
     <template #title-actions>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/chats" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/chats"
+      />
     </template>
     <template #actions>
-      <Button v-if="available" theme="primary" icon="pajamas:doc-new" @click="createWorkspace()">
+      <Button
+        v-if="available"
+        theme="primary"
+        icon="pajamas:doc-new"
+        @click="createWorkspace()"
+      >
         {{ t('actions.create') }}
       </Button>
     </template>
@@ -15,7 +22,11 @@
       {{ t('empty.text') }}
     </Alert>
 
-    <Table v-else :items="workspaces" :columns="[t('columns.uid'), t('columns.actions')]">
+    <Table
+      v-else
+      :items="workspaces"
+      :columns="[t('columns.uid'), t('columns.actions')]"
+    >
       <template #default="{ item }">
         <td class="font-medium">{{ item.uid }}</td>
         <td>
@@ -23,20 +34,23 @@
             <NuxtLink
               v-tippy="t('actions.chat')"
               :to="`/chat/${item.uid}`"
-              class="text-gray-500 hover:text-primary-600">
+              class="text-gray-500 hover:text-primary-600 dark:text-gray-400"
+            >
               <Icon name="heroicons:chat-bubble-left-right" />
             </NuxtLink>
             <NuxtLink
               v-tippy="t('actions.settings')"
               :to="`/chat/${item.uid}/settings`"
-              class="text-gray-500 hover:text-primary-600">
+              class="text-gray-500 hover:text-primary-600 dark:text-gray-400"
+            >
               <Icon name="heroicons:cog-6-tooth" />
             </NuxtLink>
             <button
               type="button"
               v-tippy="t('actions.delete')"
-              class="text-gray-500 hover:text-red-600"
-              @click="confirmDelete(item.uid)">
+              class="text-gray-500 hover:text-red-600 dark:text-gray-400"
+              @click="confirmDelete(item.uid)"
+            >
               <Icon name="heroicons:trash" />
             </button>
           </div>
@@ -81,7 +95,9 @@ const { available, loading } = safeToRefs(useChatAvailability())
 // which would answer 404 on an instance where the feature is off.
 await until(loading).toBe(false)
 
-const workspaces = ref<Array<{ uid: string }>>(available.value ? (await tryOrThrow(() => list())).results : [])
+const workspaces = ref<Array<{ uid: string }>>(
+  available.value ? (await tryOrThrow(() => list())).results : [],
+)
 
 const refresh = async () => {
   workspaces.value = (await list()).results
@@ -102,7 +118,10 @@ const confirmDelete = async (uid: string) => {
   if (!(await confirm({ text: t('confirmations.delete', { uid }) }))) {
     return
   }
-  const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.deleting') })
+  const toast = createToast({
+    ...TOAST_PLEASEWAIT(t),
+    title: t('toasts.deleting'),
+  })
   try {
     await remove(uid)
     toast.update({ ...TOAST_SUCCESS(t) })

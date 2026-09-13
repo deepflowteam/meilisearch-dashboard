@@ -1,19 +1,34 @@
 <template>
   <Layout :title="t('title')" :subtitle="t('subtitle')">
     <template #title-actions>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/network" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/network"
+      />
     </template>
 
-    <Alert v-if="loadError" theme="danger" :title="t('errors.unavailable.title')">
+    <Alert
+      v-if="loadError"
+      theme="danger"
+      :title="t('errors.unavailable.title')"
+    >
       {{ t('errors.unavailable.text') }}
     </Alert>
 
     <div v-else class="space-y-8">
       <!-- Identity: self & leader -->
-      <section class="rounded-lg border border-gray-200 bg-white p-4 shadow-xs">
-        <h2 class="mb-1 text-lg font-semibold text-gray-900">{{ t('identity.title') }}</h2>
-        <p class="mb-4 text-sm text-gray-500">{{ t('identity.subtitle') }}</p>
-        <form class="flex flex-col gap-4 sm:flex-row sm:items-end" @submit.prevent="saveIdentity()">
+      <section
+        class="rounded-lg border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900"
+      >
+        <h2 class="mb-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
+          {{ t('identity.title') }}
+        </h2>
+        <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+          {{ t('identity.subtitle') }}
+        </p>
+        <form
+          class="flex flex-col gap-4 sm:flex-row sm:items-end"
+          @submit.prevent="saveIdentity()"
+        >
           <UniqueId as="div" v-slot="{ id }" class="flex flex-1 flex-col gap-1">
             <Label :for="id">{{ t('identity.self') }}</Label>
             <input
@@ -24,7 +39,8 @@
               autocapitalize="off"
               spellcheck="false"
               :placeholder="t('identity.selfPlaceholder')"
-              class="form-input w-full" />
+              class="form-input w-full"
+            />
           </UniqueId>
           <UniqueId as="div" v-slot="{ id }" class="flex flex-1 flex-col gap-1">
             <Label :for="id">{{ t('identity.leader') }}</Label>
@@ -36,7 +52,8 @@
               autocapitalize="off"
               spellcheck="false"
               :placeholder="t('identity.leaderPlaceholder')"
-              class="form-input w-full" />
+              class="form-input w-full"
+            />
           </UniqueId>
           <Button type="submit" theme="primary" :disabled="!identityChanged">
             {{ t('actions.save') }}
@@ -48,8 +65,12 @@
       <section class="space-y-3">
         <header class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900">{{ t('remotes.title') }}</h2>
-            <p class="text-sm text-gray-500">{{ t('remotes.subtitle') }}</p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {{ t('remotes.title') }}
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{ t('remotes.subtitle') }}
+            </p>
           </div>
           <Button theme="primary" icon="heroicons:plus" @click="addRemote()">
             {{ t('actions.addRemote') }}
@@ -65,43 +86,63 @@
             t('columns.searchApiKey'),
             t('columns.writeApiKey'),
             t('columns.actions'),
-          ]">
+          ]"
+        >
           <template #default="{ index: i }">
             <td class="font-medium">{{ remoteEntries[i].name }}</td>
             <td class="break-all">{{ remoteEntries[i].url }}</td>
             <td>
-              <span v-if="remoteEntries[i].searchApiKey" class="font-mono text-sm">
+              <span
+                v-if="remoteEntries[i].searchApiKey"
+                class="font-mono text-sm"
+              >
                 {{ remoteEntries[i].searchApiKey }}
               </span>
-              <span v-else class="text-sm font-light text-gray-500 italic">{{ t('placeholders.none') }}</span>
+              <span
+                v-else
+                class="text-sm font-light text-gray-500 italic dark:text-gray-400"
+                >{{ t('placeholders.none') }}</span
+              >
             </td>
             <td>
-              <span v-if="remoteEntries[i].writeApiKey" class="font-mono text-sm">
+              <span
+                v-if="remoteEntries[i].writeApiKey"
+                class="font-mono text-sm"
+              >
                 {{ remoteEntries[i].writeApiKey }}
               </span>
-              <span v-else class="text-sm font-light text-gray-500 italic">{{ t('placeholders.none') }}</span>
+              <span
+                v-else
+                class="text-sm font-light text-gray-500 italic dark:text-gray-400"
+                >{{ t('placeholders.none') }}</span
+              >
             </td>
             <td>
               <div class="flex items-center gap-2">
                 <button
                   type="button"
                   v-tippy="t('actions.edit')"
-                  class="text-gray-500 hover:text-primary-600"
-                  @click="editRemote(remoteEntries[i])">
+                  class="text-gray-500 hover:text-primary-600 dark:text-gray-400"
+                  @click="editRemote(remoteEntries[i])"
+                >
                   <Icon name="heroicons:pencil-square" />
                 </button>
                 <button
                   type="button"
                   v-tippy="t('actions.delete')"
-                  class="text-gray-500 hover:text-red-600"
-                  @click="removeRemote(remoteEntries[i].name)">
+                  class="text-gray-500 hover:text-red-600 dark:text-gray-400"
+                  @click="removeRemote(remoteEntries[i].name)"
+                >
                   <Icon name="heroicons:trash" />
                 </button>
               </div>
             </td>
           </template>
         </Table>
-        <p v-else class="rounded-lg border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-500">
+        <p
+          v-else
+          class="rounded-lg border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400"
+        >
           {{ t('remotes.empty') }}
         </p>
       </section>
@@ -110,10 +151,19 @@
       <section class="space-y-3">
         <header class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900">{{ t('shards.title') }}</h2>
-            <p class="text-sm text-gray-500">{{ t('shards.subtitle') }}</p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {{ t('shards.title') }}
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{ t('shards.subtitle') }}
+            </p>
           </div>
-          <Button theme="primary" icon="heroicons:plus" :disabled="!remoteNames.length" @click="addShard()">
+          <Button
+            theme="primary"
+            icon="heroicons:plus"
+            :disabled="!remoteNames.length"
+            @click="addShard()"
+          >
             {{ t('actions.addShard') }}
           </Button>
         </header>
@@ -121,36 +171,58 @@
         <Table
           v-if="shardEntries.length"
           :items="shardEntries"
-          :columns="[t('columns.name'), t('columns.remotes'), t('columns.actions')]">
+          :columns="[
+            t('columns.name'),
+            t('columns.remotes'),
+            t('columns.actions'),
+          ]"
+        >
           <template #default="{ index: i }">
             <td class="font-medium">{{ shardEntries[i].name }}</td>
             <td>
-              <div v-if="shardEntries[i].remotes.length" class="flex flex-wrap gap-1">
-                <Badge v-for="name in shardEntries[i].remotes" :key="name" theme="neutral">{{ name }}</Badge>
+              <div
+                v-if="shardEntries[i].remotes.length"
+                class="flex flex-wrap gap-1"
+              >
+                <Badge
+                  v-for="name in shardEntries[i].remotes"
+                  :key="name"
+                  theme="neutral"
+                  >{{ name }}</Badge
+                >
               </div>
-              <span v-else class="text-sm font-light text-gray-500 italic">{{ t('placeholders.none') }}</span>
+              <span
+                v-else
+                class="text-sm font-light text-gray-500 italic dark:text-gray-400"
+                >{{ t('placeholders.none') }}</span
+              >
             </td>
             <td>
               <div class="flex items-center gap-2">
                 <button
                   type="button"
                   v-tippy="t('actions.edit')"
-                  class="text-gray-500 hover:text-primary-600"
-                  @click="editShard(shardEntries[i])">
+                  class="text-gray-500 hover:text-primary-600 dark:text-gray-400"
+                  @click="editShard(shardEntries[i])"
+                >
                   <Icon name="heroicons:pencil-square" />
                 </button>
                 <button
                   type="button"
                   v-tippy="t('actions.delete')"
-                  class="text-gray-500 hover:text-red-600"
-                  @click="removeShard(shardEntries[i].name)">
+                  class="text-gray-500 hover:text-red-600 dark:text-gray-400"
+                  @click="removeShard(shardEntries[i].name)"
+                >
                   <Icon name="heroicons:trash" />
                 </button>
               </div>
             </td>
           </template>
         </Table>
-        <p v-else class="rounded-lg border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-500">
+        <p
+          v-else
+          class="rounded-lg border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400"
+        >
           {{ t('shards.empty') }}
         </p>
       </section>
@@ -168,7 +240,11 @@ import Label from '~/components/layout/forms/Label.vue'
 import Table from '~/components/layout/tables/Table.vue'
 import RemoteEditorModal from '~/components/network/RemoteEditorModal.vue'
 import ShardEditorModal from '~/components/network/ShardEditorModal.vue'
-import type { NetworkTopology, NetworkUpdate, Remote } from '~/components/network/types'
+import type {
+  NetworkTopology,
+  NetworkUpdate,
+  Remote,
+} from '~/components/network/types'
 import { useMeiliClient } from '~/composables'
 import {
   DismissedDialog,
@@ -192,7 +268,12 @@ const { openDialog } = usePromisifiedDialogs()
 // Register lifecycle-bound composables before the first `await` so they keep their component context.
 useHead({ title: t('title') })
 
-const empty = (): NetworkTopology => ({ self: null, leader: null, remotes: {}, shards: {} })
+const empty = (): NetworkTopology => ({
+  self: null,
+  leader: null,
+  remotes: {},
+  shards: {},
+})
 
 const self = reactive({
   network: empty() as NetworkTopology,
@@ -218,7 +299,10 @@ try {
 }
 
 // Editable copy of self/leader; reset whenever the network reloads.
-const identity = reactive({ self: self.network.self ?? '', leader: self.network.leader ?? '' })
+const identity = reactive({
+  self: self.network.self ?? '',
+  leader: self.network.leader ?? '',
+})
 watch(
   () => self.network,
   (network) => {
@@ -228,15 +312,23 @@ watch(
 )
 
 const identityChanged = computed(
-  () => identity.self !== (self.network.self ?? '') || identity.leader !== (self.network.leader ?? ''),
+  () =>
+    identity.self !== (self.network.self ?? '') ||
+    identity.leader !== (self.network.leader ?? ''),
 )
 
 const remoteEntries = computed<RemoteEntry[]>(() =>
-  Object.entries(self.network.remotes).map(([name, remote]) => ({ name, ...remote })),
+  Object.entries(self.network.remotes).map(([name, remote]) => ({
+    name,
+    ...remote,
+  })),
 )
 const remoteNames = computed(() => Object.keys(self.network.remotes))
 const shardEntries = computed<ShardEntry[]>(() =>
-  Object.entries(self.network.shards).map(([name, shard]) => ({ name, remotes: shard.remotes ?? [] })),
+  Object.entries(self.network.shards).map(([name, shard]) => ({
+    name,
+    remotes: shard.remotes ?? [],
+  })),
 )
 
 /**
@@ -246,7 +338,9 @@ const shardEntries = computed<ShardEntry[]>(() =>
 const patch = async (update: NetworkUpdate, toastTitle: string) => {
   const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: toastTitle })
   try {
-    const updated = (await meili.updateNetwork(update as never)) as unknown as Partial<NetworkTopology>
+    const updated = (await meili.updateNetwork(
+      update as never,
+    )) as unknown as Partial<NetworkTopology>
     self.network = {
       self: updated.self ?? null,
       leader: updated.leader ?? null,
@@ -261,11 +355,16 @@ const patch = async (update: NetworkUpdate, toastTitle: string) => {
 }
 
 const saveIdentity = () =>
-  patch({ self: identity.self || null, leader: identity.leader || null }, t('toasts.savingIdentity')).catch(() => {})
+  patch(
+    { self: identity.self || null, leader: identity.leader || null },
+    t('toasts.savingIdentity'),
+  ).catch(() => {})
 
 const addRemote = async () => {
   try {
-    const entry = (await openDialog(RemoteEditorModal, { existingNames: remoteNames.value })) as RemoteEntry
+    const entry = (await openDialog(RemoteEditorModal, {
+      existingNames: remoteNames.value,
+    })) as RemoteEntry
     await upsertRemote(entry)
   } catch (e) {
     if (!(e instanceof DismissedDialog)) throw e
@@ -274,7 +373,9 @@ const addRemote = async () => {
 
 const editRemote = async (remote: RemoteEntry) => {
   try {
-    const entry = (await openDialog(RemoteEditorModal, { remote })) as RemoteEntry
+    const entry = (await openDialog(RemoteEditorModal, {
+      remote,
+    })) as RemoteEntry
     await upsertRemote(entry)
   } catch (e) {
     if (!(e instanceof DismissedDialog)) throw e
@@ -283,18 +384,27 @@ const editRemote = async (remote: RemoteEntry) => {
 
 const upsertRemote = (entry: RemoteEntry) => {
   const { name, ...remote } = entry
-  return patch({ remotes: { [name]: remote } }, t('toasts.savingRemote', { name })).catch(() => {})
+  return patch(
+    { remotes: { [name]: remote } },
+    t('toasts.savingRemote', { name }),
+  ).catch(() => {})
 }
 
 const removeRemote = async (name: string) => {
-  if (!(await confirm({ text: t('confirmations.removeRemote', { name }) }))) return
+  if (!(await confirm({ text: t('confirmations.removeRemote', { name }) })))
+    return
   // Passing `null` removes the remote; Meilisearch auto-removes it from any shards too.
-  await patch({ remotes: { [name]: null } }, t('toasts.removingRemote', { name })).catch(() => {})
+  await patch(
+    { remotes: { [name]: null } },
+    t('toasts.removingRemote', { name }),
+  ).catch(() => {})
 }
 
 const addShard = async () => {
   try {
-    const result = (await openDialog(ShardEditorModal, { remoteNames: remoteNames.value })) as ShardEntry
+    const result = (await openDialog(ShardEditorModal, {
+      remoteNames: remoteNames.value,
+    })) as ShardEntry
     await patch(
       { shards: { [result.name]: { remotes: result.remotes } } },
       t('toasts.savingShard', { name: result.name }),
@@ -322,8 +432,12 @@ const editShard = async (shard: ShardEntry) => {
 }
 
 const removeShard = async (name: string) => {
-  if (!(await confirm({ text: t('confirmations.removeShard', { name }) }))) return
-  await patch({ shards: { [name]: null } }, t('toasts.removingShard', { name })).catch(() => {})
+  if (!(await confirm({ text: t('confirmations.removeShard', { name }) })))
+    return
+  await patch(
+    { shards: { [name]: null } },
+    t('toasts.removingShard', { name }),
+  ).catch(() => {})
 }
 
 const { loadError } = toRefs(self)

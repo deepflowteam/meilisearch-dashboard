@@ -1,91 +1,134 @@
 <template>
-  <SettingsSection :title="t('title')" href="https://www.meilisearch.com/docs/reference/api/search">
-    <div class="max-h-72 overflow-y-auto rounded-md border border-gray-200">
+  <SettingsSection
+    :title="t('title')"
+    href="https://www.meilisearch.com/docs/reference/api/search"
+  >
+    <div
+      class="max-h-72 overflow-y-auto rounded-md border border-gray-200 dark:border-gray-800"
+    >
       <div
-        class="sticky top-0 z-10 grid grid-cols-[1fr_repeat(5,minmax(0,4.5rem))] items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-500">
+        class="sticky top-0 z-10 grid grid-cols-[1fr_repeat(5,minmax(0,4.5rem))] items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400"
+      >
         <UInput
           v-model="attributeFilter"
           type="search"
           size="xs"
           icon="heroicons:magnifying-glass-20-solid"
           :placeholder="t('columns.attribute')"
-          class="w-full" />
+          class="w-full"
+        />
         <span class="text-center">{{ t('columns.distinct') }}</span>
         <div class="flex flex-col items-center gap-1">
           <span>{{ t('columns.retrieve') }}</span>
           <UCheckbox
             v-tippy="t('hints.toggleColumn')"
             :model-value="retrieveColumnState"
-            @update:model-value="setRetrieveColumn($event === true)" />
+            @update:model-value="setRetrieveColumn($event === true)"
+          />
         </div>
         <div class="flex flex-col items-center gap-1">
           <span>{{ t('columns.crop') }}</span>
           <UCheckbox
             v-tippy="t('hints.toggleColumn')"
             :model-value="cropColumnState"
-            @update:model-value="setCropColumn($event === true)" />
+            @update:model-value="setCropColumn($event === true)"
+          />
         </div>
         <div class="flex flex-col items-center gap-1">
           <span>{{ t('columns.highlight') }}</span>
           <UCheckbox
             v-tippy="t('hints.toggleColumn')"
             :model-value="highlightColumnState"
-            @update:model-value="setHighlightColumn($event === true)" />
+            @update:model-value="setHighlightColumn($event === true)"
+          />
         </div>
         <div class="flex flex-col items-center gap-1">
           <span>{{ t('columns.searchOn') }}</span>
           <UCheckbox
             v-tippy="t('hints.toggleColumn')"
             :model-value="searchOnColumnState"
-            @update:model-value="setSearchOnColumn($event === true)" />
+            @update:model-value="setSearchOnColumn($event === true)"
+          />
         </div>
       </div>
 
-      <p v-if="0 === visibleAttributes.length" class="px-3 py-4 text-center text-sm text-gray-500">
+      <p
+        v-if="0 === visibleAttributes.length"
+        class="px-3 py-4 text-center text-sm text-gray-500 dark:text-gray-400"
+      >
         {{ t('noAttributeMatch') }}
       </p>
 
       <div
         v-for="attribute in visibleAttributes"
         :key="attribute"
-        class="grid grid-cols-[1fr_repeat(5,minmax(0,4.5rem))] items-center gap-2 border-b border-gray-100 px-3 py-2 last:border-b-0">
+        class="grid grid-cols-[1fr_repeat(5,minmax(0,4.5rem))] items-center gap-2 border-b border-gray-100 px-3 py-2 last:border-b-0"
+      >
         <div class="flex min-w-0 items-center gap-2">
-          <span class="truncate text-sm text-gray-900">{{ attribute }}</span>
-          <span v-if="attribute === primaryKey" class="shrink-0 text-xs text-gray-400">{{ t('primaryKeyLabel') }}</span>
+          <span class="truncate text-sm text-gray-900 dark:text-gray-100">{{
+            attribute
+          }}</span>
+          <span
+            v-if="attribute === primaryKey"
+            class="shrink-0 text-xs text-gray-400 dark:text-gray-500"
+            >{{ t('primaryKeyLabel') }}</span
+          >
         </div>
 
         <div class="flex justify-center">
-          <span v-if="!isFilterable(attribute)" v-tippy="t('hints.notFilterable')">
+          <span
+            v-if="!isFilterable(attribute)"
+            v-tippy="t('hints.notFilterable')"
+          >
             <UCheckbox :model-value="false" disabled />
           </span>
-          <UCheckbox v-else :model-value="distinct === attribute" @update:model-value="toggleDistinct(attribute)" />
+          <UCheckbox
+            v-else
+            :model-value="distinct === attribute"
+            @update:model-value="toggleDistinct(attribute)"
+          />
         </div>
 
         <div class="flex justify-center">
-          <span v-if="attribute === primaryKey" v-tippy="t('hints.primaryKeyAlwaysRetrieved')">
+          <span
+            v-if="attribute === primaryKey"
+            v-tippy="t('hints.primaryKeyAlwaysRetrieved')"
+          >
             <UCheckbox :model-value="true" disabled />
           </span>
-          <UCheckbox v-else :model-value="isRetrieved(attribute)" @update:model-value="toggleRetrieve(attribute)" />
+          <UCheckbox
+            v-else
+            :model-value="isRetrieved(attribute)"
+            @update:model-value="toggleRetrieve(attribute)"
+          />
         </div>
 
         <div class="flex justify-center">
-          <UCheckbox :model-value="attributesToCrop.includes(attribute)" @update:model-value="toggleCrop(attribute)" />
+          <UCheckbox
+            :model-value="attributesToCrop.includes(attribute)"
+            @update:model-value="toggleCrop(attribute)"
+          />
         </div>
 
         <div class="flex justify-center">
           <UCheckbox
             :model-value="attributesToHighlight.includes(attribute)"
-            @update:model-value="toggleHighlight(attribute)" />
+            @update:model-value="toggleHighlight(attribute)"
+          />
         </div>
 
         <div class="flex justify-center">
-          <span v-if="!isSearchable(attribute)" v-tippy="t('hints.notSearchable')">
+          <span
+            v-if="!isSearchable(attribute)"
+            v-tippy="t('hints.notSearchable')"
+          >
             <UCheckbox :model-value="false" disabled />
           </span>
           <UCheckbox
             v-else
             :model-value="attributesToSearchOn.includes(attribute)"
-            @update:model-value="toggleSearchOn(attribute)" />
+            @update:model-value="toggleSearchOn(attribute)"
+          />
         </div>
       </div>
     </div>
@@ -107,10 +150,21 @@ type Props = {
 const props = defineProps<Props>()
 
 const distinct = defineModel<string | null>('distinct', { default: null })
-const attributesToRetrieve = defineModel<Array<string>>('attributesToRetrieve', { default: () => [] })
-const attributesToCrop = defineModel<Array<string>>('attributesToCrop', { default: () => [] })
-const attributesToHighlight = defineModel<Array<string>>('attributesToHighlight', { default: () => [] })
-const attributesToSearchOn = defineModel<Array<string>>('attributesToSearchOn', { default: () => [] })
+const attributesToRetrieve = defineModel<Array<string>>(
+  'attributesToRetrieve',
+  { default: () => [] },
+)
+const attributesToCrop = defineModel<Array<string>>('attributesToCrop', {
+  default: () => [],
+})
+const attributesToHighlight = defineModel<Array<string>>(
+  'attributesToHighlight',
+  { default: () => [] },
+)
+const attributesToSearchOn = defineModel<Array<string>>(
+  'attributesToSearchOn',
+  { default: () => [] },
+)
 
 const { t } = useI18n()
 
@@ -119,12 +173,16 @@ const { t } = useI18n()
 const attributeFilter = ref('')
 const visibleAttributes = computed(() => {
   const query = attributeFilter.value.trim().toLowerCase()
-  return 0 === query.length ? props.attributes : props.attributes.filter((a) => a.toLowerCase().includes(query))
+  return 0 === query.length
+    ? props.attributes
+    : props.attributes.filter((a) => a.toLowerCase().includes(query))
 })
 
-const isFilterable = (attribute: string) => props.filterableAttributes.includes(attribute)
+const isFilterable = (attribute: string) =>
+  props.filterableAttributes.includes(attribute)
 const isSearchable = (attribute: string) =>
-  props.searchableAttributes.includes('*') || props.searchableAttributes.includes(attribute)
+  props.searchableAttributes.includes('*') ||
+  props.searchableAttributes.includes(attribute)
 
 const toggleDistinct = (attribute: string) => {
   distinct.value = attribute === distinct.value ? null : attribute
@@ -151,7 +209,8 @@ const toggleSearchOn = (attribute: string) => {
 // `attributesToRetrieve` empty means "everything", so a row reads as checked either when the
 // list is empty or when it explicitly names the attribute.
 const isRetrieved = (attribute: string) =>
-  0 === attributesToRetrieve.value.length || attributesToRetrieve.value.includes(attribute)
+  0 === attributesToRetrieve.value.length ||
+  attributesToRetrieve.value.includes(attribute)
 
 const toggleRetrieve = (attribute: string) => {
   if (0 === attributesToRetrieve.value.length) {
@@ -161,18 +220,24 @@ const toggleRetrieve = (attribute: string) => {
     return
   }
   if (attributesToRetrieve.value.includes(attribute)) {
-    attributesToRetrieve.value = attributesToRetrieve.value.filter((a) => a !== attribute)
+    attributesToRetrieve.value = attributesToRetrieve.value.filter(
+      (a) => a !== attribute,
+    )
     return
   }
   const next = [...attributesToRetrieve.value, attribute]
   // Re-checking the last missing attribute brings the list back to "all" — collapse it to `[]`
   // so the parameter is dropped from the request instead of sent in full.
-  attributesToRetrieve.value = next.length === props.attributes.length ? [] : next
+  attributesToRetrieve.value =
+    next.length === props.attributes.length ? [] : next
 }
 
 // State of a column's all/none header checkbox: checked once every togglable attribute in it is
 // checked, unchecked once none are, indeterminate in between.
-const columnState = (targets: Array<string>, isChecked: (attribute: string) => boolean): boolean | 'indeterminate' => {
+const columnState = (
+  targets: Array<string>,
+  isChecked: (attribute: string) => boolean,
+): boolean | 'indeterminate' => {
   if (0 === targets.length) return false
   const checkedCount = targets.filter(isChecked).length
   if (0 === checkedCount) return false
@@ -187,43 +252,74 @@ const columnState = (targets: Array<string>, isChecked: (attribute: string) => b
 // and waits for the prop to come back on the parent's next render (see `useModel`'s `hasVModel`
 // branch in @vue/runtime-core), so every read inside a synchronous loop still sees the old array
 // and each write overwrites the previous one.
-const setColumn = (model: Ref<Array<string>>, targets: Array<string>, checked: boolean) => {
+const setColumn = (
+  model: Ref<Array<string>>,
+  targets: Array<string>,
+  checked: boolean,
+) => {
   model.value = checked
-    ? [...model.value, ...targets.filter((attribute) => !model.value.includes(attribute))]
+    ? [
+        ...model.value,
+        ...targets.filter((attribute) => !model.value.includes(attribute)),
+      ]
     : model.value.filter((attribute) => !targets.includes(attribute))
 }
 
 // Retrieve is locked on the primary key, so it never enters the bulk toggle.
-const retrieveTargets = computed(() => visibleAttributes.value.filter((a) => a !== props.primaryKey))
+const retrieveTargets = computed(() =>
+  visibleAttributes.value.filter((a) => a !== props.primaryKey),
+)
 const cropTargets = computed(() => visibleAttributes.value)
 const highlightTargets = computed(() => visibleAttributes.value)
-const searchOnTargets = computed(() => visibleAttributes.value.filter(isSearchable))
+const searchOnTargets = computed(() =>
+  visibleAttributes.value.filter(isSearchable),
+)
 
-const retrieveColumnState = computed(() => columnState(retrieveTargets.value, isRetrieved))
-const cropColumnState = computed(() => columnState(cropTargets.value, (a) => attributesToCrop.value.includes(a)))
+const retrieveColumnState = computed(() =>
+  columnState(retrieveTargets.value, isRetrieved),
+)
+const cropColumnState = computed(() =>
+  columnState(cropTargets.value, (a) => attributesToCrop.value.includes(a)),
+)
 const highlightColumnState = computed(() =>
-  columnState(highlightTargets.value, (a) => attributesToHighlight.value.includes(a)),
+  columnState(highlightTargets.value, (a) =>
+    attributesToHighlight.value.includes(a),
+  ),
 )
 const searchOnColumnState = computed(() =>
-  columnState(searchOnTargets.value, (a) => attributesToSearchOn.value.includes(a)),
+  columnState(searchOnTargets.value, (a) =>
+    attributesToSearchOn.value.includes(a),
+  ),
 )
 
 const setRetrieveColumn = (checked: boolean) => {
   const targets = retrieveTargets.value
   // Materialize the implicit "all" first — there is nothing to remove from an empty list.
-  const current = 0 === attributesToRetrieve.value.length ? props.attributes : attributesToRetrieve.value
+  const current =
+    0 === attributesToRetrieve.value.length
+      ? props.attributes
+      : attributesToRetrieve.value
   const next = checked
-    ? [...current, ...targets.filter((attribute) => !current.includes(attribute))]
+    ? [
+        ...current,
+        ...targets.filter((attribute) => !current.includes(attribute)),
+      ]
     : current.filter((attribute) => !targets.includes(attribute))
   // The primary key is always retrieved, and an empty list would read as "all" again — so
   // unchecking everything leaves it behind, while checking everything collapses back to `[]` and
   // drops the parameter from the request.
-  const withPrimaryKey = next.includes(props.primaryKey) ? next : [props.primaryKey, ...next]
-  attributesToRetrieve.value = withPrimaryKey.length === props.attributes.length ? [] : withPrimaryKey
+  const withPrimaryKey = next.includes(props.primaryKey)
+    ? next
+    : [props.primaryKey, ...next]
+  attributesToRetrieve.value =
+    withPrimaryKey.length === props.attributes.length ? [] : withPrimaryKey
 }
-const setCropColumn = (checked: boolean) => setColumn(attributesToCrop, cropTargets.value, checked)
-const setHighlightColumn = (checked: boolean) => setColumn(attributesToHighlight, highlightTargets.value, checked)
-const setSearchOnColumn = (checked: boolean) => setColumn(attributesToSearchOn, searchOnTargets.value, checked)
+const setCropColumn = (checked: boolean) =>
+  setColumn(attributesToCrop, cropTargets.value, checked)
+const setHighlightColumn = (checked: boolean) =>
+  setColumn(attributesToHighlight, highlightTargets.value, checked)
+const setSearchOnColumn = (checked: boolean) =>
+  setColumn(attributesToSearchOn, searchOnTargets.value, checked)
 </script>
 
 <i18n>

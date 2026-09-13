@@ -1,9 +1,15 @@
 <template>
   <ConfirmationDialog v-if="confirmationDialog" v-bind="confirmationDialog" />
-  <div class="mx-auto flex h-full max-w-5xl flex-col items-center justify-between pt-10 pb-32">
+  <div
+    class="mx-auto flex h-full max-w-5xl flex-col items-center justify-between pt-10 pb-32"
+  >
     <header>
       <a href="/" class="flex items-center justify-center gap-2">
-        <img class="-ml-10 size-16 shrink-0 grow-0" src="/assets/images/logo.svg" alt="Meiliweb" />
+        <img
+          class="-ml-10 size-16 shrink-0 grow-0"
+          src="/assets/images/logo.svg"
+          alt="Meiliweb"
+        />
         <span class="text-3xl font-semibold">Meiliweb</span>
       </a>
     </header>
@@ -11,14 +17,25 @@
     <main>
       <h1 class="text-center text-5xl">😵 {{ t('title') }}</h1>
       <div class="mt-6 flex max-w-xl items-center gap-4">
-        <p v-if="error.statusCode" class="text-5xl font-semibold text-primary-600">
+        <p
+          v-if="error.statusCode"
+          class="text-5xl font-semibold text-primary-600"
+        >
           {{ error.statusCode }}
         </p>
-        <p class="text-justify text-base leading-2 text-gray-600" v-html="errorMessage" />
+        <p
+          class="text-justify text-base leading-2 text-gray-600 dark:text-gray-400"
+          v-html="errorMessage"
+        />
       </div>
     </main>
 
-    <Button theme="primary" icon="akar-icons:arrow-back" @click="handleError()" class="font-semibold">
+    <Button
+      theme="primary"
+      icon="akar-icons:arrow-back"
+      @click="handleError()"
+      class="font-semibold"
+    >
       {{ t('actions.home') }}
     </Button>
 
@@ -54,7 +71,9 @@ useHead({
   },
 })
 
-const errorMessage = computed(() => props.error.message.replace(/`([^`]+)`/g, '<em>$1</em>'))
+const errorMessage = computed(() =>
+  props.error.message.replace(/`([^`]+)`/g, '<em>$1</em>'),
+)
 onMounted(() => console.error(props.error))
 </script>
 

@@ -1,7 +1,9 @@
 <template>
   <form class="max-w-2xl space-y-6" @submit.prevent="submit()">
     <p class="inline-flex w-full items-center justify-end">
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/export/export-to-a-remote-meilisearch" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/export/export-to-a-remote-meilisearch"
+      />
     </p>
 
     <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -16,19 +18,31 @@
         autofocus
         list="export-destinations"
         :placeholder="t('placeholders.url')"
-        class="w-full" />
+        class="w-full"
+      />
       <datalist id="export-destinations">
-        <option v-for="destination of destinations" :key="destination" :value="destination" />
+        <option
+          v-for="destination of destinations"
+          :key="destination"
+          :value="destination"
+        />
       </datalist>
-      <div v-if="destinations.length > 0" class="mt-2 flex flex-wrap items-center gap-2">
-        <span class="text-xs font-light text-gray-500 italic">{{ t('hints.recentDestinations') }}</span>
+      <div
+        v-if="destinations.length > 0"
+        class="mt-2 flex flex-wrap items-center gap-2"
+      >
+        <span
+          class="text-xs font-light text-gray-500 italic dark:text-gray-400"
+          >{{ t('hints.recentDestinations') }}</span
+        >
         <Button
           v-for="destination of destinations"
           :key="destination"
           type="button"
           theme="secondary"
           size="small"
-          @click="form.url = destination">
+          @click="form.url = destination"
+        >
           {{ destination }}
         </Button>
       </div>
@@ -40,14 +54,23 @@
         type="password"
         autocomplete="off"
         :placeholder="t('placeholders.apiKey')"
-        class="w-full" />
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField :label="t('labels.payloadSize')">
-      <UInput v-model="form.payloadSize" :placeholder="t('placeholders.payloadSize')" class="w-full" />
+      <UInput
+        v-model="form.payloadSize"
+        :placeholder="t('placeholders.payloadSize')"
+        class="w-full"
+      />
     </UFormField>
 
-    <UFormField v-if="!indexUid" :label="t('labels.indexes')" :help="t('hints.allIndexesByDefault')">
+    <UFormField
+      v-if="!indexUid"
+      :label="t('labels.indexes')"
+      :help="t('hints.allIndexesByDefault')"
+    >
       <UInputMenu
         v-model="form.selectedIndexes"
         multiple
@@ -55,18 +78,34 @@
         open-on-focus
         :items="availableIndexes"
         :placeholder="t('placeholders.indexes')"
-        class="w-full" />
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField v-else :label="t('labels.filter')" :help="t('hints.filter')">
-      <UInput v-model="form.filter" :placeholder="t('placeholders.filter')" class="w-full" />
+      <UInput
+        v-model="form.filter"
+        :placeholder="t('placeholders.filter')"
+        class="w-full"
+      />
     </UFormField>
 
-    <USwitch v-model="form.overrideSettings" :label="t('labels.overrideSettings')" />
-    <USwitch v-model="form.rememberDestination" :label="t('labels.rememberDestination')" />
+    <USwitch
+      v-model="form.overrideSettings"
+      :label="t('labels.overrideSettings')"
+    />
+    <USwitch
+      v-model="form.rememberDestination"
+      :label="t('labels.rememberDestination')"
+    />
 
     <footer class="flex justify-end">
-      <Button type="submit" theme="primary" icon="heroicons:arrow-up-tray" :loading>
+      <Button
+        type="submit"
+        theme="primary"
+        icon="heroicons:arrow-up-tray"
+        :loading
+      >
         {{ t('actions.export') }}
       </Button>
     </footer>
@@ -85,7 +124,13 @@ import {
   useTask,
   type ExportPayload,
 } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useConfirmationDialog, useToasts } from '~/stores'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useConfirmationDialog,
+  useToasts,
+} from '~/stores'
 
 type Props = {
   /** Scope the export to a single index. When omitted, the user picks indexes (or exports all of them). */
@@ -127,10 +172,15 @@ const buildPayload = (): ExportPayload => {
   const commonOptions = form.overrideSettings ? { overrideSettings: true } : {}
   if (props.indexUid) {
     payload.indexes = {
-      [props.indexUid]: { ...commonOptions, ...(form.filter.trim() ? { filter: form.filter.trim() } : {}) },
+      [props.indexUid]: {
+        ...commonOptions,
+        ...(form.filter.trim() ? { filter: form.filter.trim() } : {}),
+      },
     }
   } else if (form.selectedIndexes.length > 0) {
-    payload.indexes = Object.fromEntries(form.selectedIndexes.map((uid) => [uid, commonOptions]))
+    payload.indexes = Object.fromEntries(
+      form.selectedIndexes.map((uid) => [uid, commonOptions]),
+    )
   } else {
     payload.indexes = { '*': commonOptions }
   }

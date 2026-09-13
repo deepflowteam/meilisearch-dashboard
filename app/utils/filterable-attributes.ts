@@ -1,4 +1,7 @@
-import type { FilterableAttributes, GranularFilterableAttribute } from 'meilisearch'
+import type {
+  FilterableAttributes,
+  GranularFilterableAttribute,
+} from 'meilisearch'
 
 export type FilterableAttributeRow = {
   pattern: string
@@ -14,7 +17,9 @@ const ALL_FEATURES_ENABLED: FilterableAttributeRow = {
   comparisonFilter: true,
 }
 
-export function decodeFilterableAttributes(attrs: FilterableAttributes): FilterableAttributeRow[] {
+export function decodeFilterableAttributes(
+  attrs: FilterableAttributes,
+): FilterableAttributeRow[] {
   if (!attrs) return []
   return attrs.flatMap((attr) => {
     if (typeof attr === 'string') {
@@ -29,7 +34,9 @@ export function decodeFilterableAttributes(attrs: FilterableAttributes): Filtera
   })
 }
 
-export function encodeFilterableAttributes(rows: FilterableAttributeRow[]): GranularFilterableAttribute[] {
+export function encodeFilterableAttributes(
+  rows: FilterableAttributeRow[],
+): GranularFilterableAttribute[] {
   const groups = new Map<string, string[]>()
   for (const row of rows) {
     const key = `${row.facetSearch}:${row.equalityFilter}:${row.comparisonFilter}`
@@ -56,12 +63,18 @@ export function encodeFilterableAttributes(rows: FilterableAttributeRow[]): Gran
   })
 }
 
-export function getFilterableAttributePatterns(attrs: FilterableAttributes): string[] {
+export function getFilterableAttributePatterns(
+  attrs: FilterableAttributes,
+): string[] {
   if (!attrs) return []
-  return attrs.flatMap((attr) => (typeof attr === 'string' ? [attr] : attr.attributePatterns))
+  return attrs.flatMap((attr) =>
+    typeof attr === 'string' ? [attr] : attr.attributePatterns,
+  )
 }
 
-export function getFacetSearchableAttributePatterns(attrs: FilterableAttributes): string[] {
+export function getFacetSearchableAttributePatterns(
+  attrs: FilterableAttributes,
+): string[] {
   if (!attrs) return []
   return attrs.flatMap((attr) => {
     if (typeof attr === 'string') return [attr]

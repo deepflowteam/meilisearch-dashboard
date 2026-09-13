@@ -6,7 +6,8 @@
       :document
       :primary-key="primaryKey"
       :key="document[primaryKey]"
-      class="w-full" />
+      class="w-full"
+    />
   </main>
 </template>
 

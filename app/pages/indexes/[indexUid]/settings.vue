@@ -1,7 +1,10 @@
 <template>
   <Layout :title="humanizeString(index.uid)" :subtitle="t('subtitle')">
     <template #title-actions>
-      <NuxtLink :to="`/indexes/${index.uid}/documents`" v-tippy="t('actions.documents')">
+      <NuxtLink
+        :to="`/indexes/${index.uid}/documents`"
+        v-tippy="t('actions.documents')"
+      >
         <Icon name="pajamas:documents" />
       </NuxtLink>
     </template>
@@ -10,7 +13,12 @@
         <li
           v-for="{ href, text, current } of visibleNavigation"
           class="block w-full rounded-lg shadow-md"
-          :class="current ? 'bg-primary-600 text-white' : 'bg-gray-50 hover:bg-gray-100'">
+          :class="
+            current
+              ? 'bg-primary-600 text-white'
+              : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700'
+          "
+        >
           <NuxtLink :to="href" class="block size-full px-2 py-2.5 text-sm">
             {{ text }}
           </NuxtLink>
@@ -50,7 +58,9 @@ type NavigationItem = {
 const navigation: Array<NavigationItem> = reactive([
   {
     href: `/indexes/${index.uid}/settings/general-settings`,
-    current: computed(() => 'indexes-indexUid-settings-general-settings' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-general-settings' === route.name,
+    ),
     text: t('menu.generalSettings'),
   },
   {
@@ -61,67 +71,93 @@ const navigation: Array<NavigationItem> = reactive([
   },
   {
     href: `/indexes/${index.uid}/settings/import-documents`,
-    current: computed(() => 'indexes-indexUid-settings-import-documents' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-import-documents' === route.name,
+    ),
     text: t('menu.importDocuments'),
   },
   {
     href: `/indexes/${index.uid}/settings/filterable-attributes`,
-    current: computed(() => 'indexes-indexUid-settings-filterable-attributes' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-filterable-attributes' === route.name,
+    ),
     text: t('menu.filterableAttributes'),
   },
   {
     href: `/indexes/${index.uid}/settings/searchable-attributes`,
-    current: computed(() => 'indexes-indexUid-settings-searchable-attributes' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-searchable-attributes' === route.name,
+    ),
     text: t('menu.searchableAttributes'),
   },
   {
     href: `/indexes/${index.uid}/settings/sortable-attributes`,
-    current: computed(() => 'indexes-indexUid-settings-sortable-attributes' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-sortable-attributes' === route.name,
+    ),
     text: t('menu.sortableAttributes'),
   },
   {
     href: `/indexes/${index.uid}/settings/displayed-attributes`,
-    current: computed(() => 'indexes-indexUid-settings-displayed-attributes' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-displayed-attributes' === route.name,
+    ),
     text: t('menu.displayedAttributes'),
   },
   {
     href: `/indexes/${index.uid}/settings/ranking-rules`,
-    current: computed(() => 'indexes-indexUid-settings-ranking-rules' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-ranking-rules' === route.name,
+    ),
     text: t('menu.rankingRules'),
   },
   {
     href: `/indexes/${index.uid}/settings/typo-tolerance`,
-    current: computed(() => 'indexes-indexUid-settings-typo-tolerance' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-typo-tolerance' === route.name,
+    ),
     text: t('menu.typoTolerance'),
   },
   {
     href: `/indexes/${index.uid}/settings/dictionary`,
-    current: computed(() => 'indexes-indexUid-settings-dictionary' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-dictionary' === route.name,
+    ),
     text: t('menu.dictionary'),
   },
   {
     href: `/indexes/${index.uid}/settings/synonyms`,
-    current: computed(() => 'indexes-indexUid-settings-synonyms' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-synonyms' === route.name,
+    ),
     text: t('menu.synonyms'),
   },
   {
     href: `/indexes/${index.uid}/settings/stop-words`,
-    current: computed(() => 'indexes-indexUid-settings-stop-words' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-stop-words' === route.name,
+    ),
     text: t('menu.stopWords'),
   },
   {
     href: `/indexes/${index.uid}/settings/separator-tokens`,
-    current: computed(() => 'indexes-indexUid-settings-separator-tokens' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-separator-tokens' === route.name,
+    ),
     text: t('menu.separatorTokens'),
   },
   {
     href: `/indexes/${index.uid}/settings/non-separator-tokens`,
-    current: computed(() => 'indexes-indexUid-settings-non-separator-tokens' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-non-separator-tokens' === route.name,
+    ),
     text: t('menu.nonSeparatorTokens'),
   },
   {
     href: `/indexes/${index.uid}/settings/embedders`,
-    current: computed(() => 'indexes-indexUid-settings-embedders' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-embedders' === route.name,
+    ),
     text: t('menu.embedders'),
   },
   {
@@ -132,12 +168,16 @@ const navigation: Array<NavigationItem> = reactive([
   },
   {
     href: `/indexes/${index.uid}/settings/foreign-keys`,
-    current: computed(() => 'indexes-indexUid-settings-foreign-keys' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-foreign-keys' === route.name,
+    ),
     text: t('menu.foreignKeys'),
   },
   {
     href: `/indexes/${index.uid}/settings/local-settings`,
-    current: computed(() => 'indexes-indexUid-settings-local-settings' === route.name),
+    current: computed(
+      () => 'indexes-indexUid-settings-local-settings' === route.name,
+    ),
     text: t('menu.localSettings'),
   },
   {
@@ -148,7 +188,9 @@ const navigation: Array<NavigationItem> = reactive([
   },
 ])
 
-const visibleNavigation = computed(() => navigation.filter(({ visible }) => visible ?? true))
+const visibleNavigation = computed(() =>
+  navigation.filter(({ visible }) => visible ?? true),
+)
 
 onMounted(() => {
   if ('indexes-indexUid-settings' === route.name) {

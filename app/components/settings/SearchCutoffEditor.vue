@@ -1,20 +1,43 @@
 <template>
-  <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submitSearchCutoffMs()">
+  <form
+    class="space-y-4"
+    @reset.prevent="reset()"
+    @submit.prevent="submitSearchCutoffMs()"
+  >
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-2">
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.searchCutoffMs') }}</span>
-        <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#get-search-cutoff" />
+        <DocumentationLink
+          href="https://www.meilisearch.com/docs/reference/api/settings#get-search-cutoff"
+        />
       </Label>
-      <input v-model="searchCutoffMs" autofocus autocomplete="off" type="number" min="0" class="form-input" />
+      <input
+        v-model="searchCutoffMs"
+        autofocus
+        autocomplete="off"
+        type="number"
+        min="0"
+        class="form-input"
+      />
     </UniqueId>
 
     <footer class="flex flex-col items-center justify-between sm:flex-row">
-      <Button size="small" type="button" :disabled="loading" @click="clearSearchCutoffMs()">
+      <Button
+        size="small"
+        type="button"
+        :disabled="loading"
+        @click="clearSearchCutoffMs()"
+      >
         {{ t('buttons.reset') }}
       </Button>
       <Buttons>
         <Button size="small" type="reset" :disabled="!modified || loading" />
-        <Button size="small" type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          size="small"
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -42,7 +65,11 @@ const processTask = useTask()
 const { createToast } = useToasts()
 
 const initialSearchCutoffMs = await props.index.getSearchCutoffMs()
-const { value: searchCutoffMs, reset, modified } = resettableRef(initialSearchCutoffMs as number | null)
+const {
+  value: searchCutoffMs,
+  reset,
+  modified,
+} = resettableRef(initialSearchCutoffMs as number | null)
 const { loading, handle } = useFormSubmit({
   confirm: { text: t('confirmations.searchCutoffMs.text') },
 })
@@ -59,24 +86,27 @@ const submitSearchCutoffMs = async () => {
   })
   await handle(async () => {
     toast.spawn()
-    await processTask(() => props.index.updateSearchCutoffMs(self.searchCutoffMs), {
-      onSuccess: async () => {
-        toast.update({ ...TOAST_SUCCESS(t) })
-        reset(self.searchCutoffMs)
+    await processTask(
+      () => props.index.updateSearchCutoffMs(self.searchCutoffMs),
+      {
+        onSuccess: async () => {
+          toast.update({ ...TOAST_SUCCESS(t) })
+          reset(self.searchCutoffMs)
+        },
+        onCanceled: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.canceledTask'),
+          }),
+        onFailure: (task: Task) => {
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.failedTask'),
+          })
+          emit('error', task.error as TaskError)
+        },
       },
-      onCanceled: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.canceledTask'),
-        }),
-      onFailure: (task: Task) => {
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.failedTask'),
-        })
-        emit('error', task.error as TaskError)
-      },
-    })
+    )
   })
 }
 

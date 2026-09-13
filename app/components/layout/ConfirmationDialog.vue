@@ -1,22 +1,40 @@
 <template>
-  <UModal v-model:open="self.open" @update:open="(value: boolean) => !value && settle(false)">
+  <UModal
+    v-model:open="self.open"
+    @update:open="(value: boolean) => !value && settle(false)"
+  >
     <template #content>
-      <form class="p-4 sm:p-6" @submit.prevent="settle(true)" @reset.prevent="settle(false)">
+      <form
+        class="p-4 sm:p-6"
+        @submit.prevent="settle(true)"
+        @reset.prevent="settle(false)"
+      >
         <div class="sm:flex sm:items-start">
           <div
-            class="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-            <Icon name="heroicons:exclamation-triangle" class="h-6 w-6 text-red-600" aria-hidden="true" />
+            class="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+          >
+            <Icon
+              name="heroicons:exclamation-triangle"
+              class="h-6 w-6 text-red-600"
+              aria-hidden="true"
+            />
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3 class="text-base leading-6 font-semibold text-gray-900">
+            <h3
+              class="text-base leading-6 font-semibold text-gray-900 dark:text-gray-100"
+            >
               {{ title ?? t('title') }}
             </h3>
-            <p class="mt-2 block text-sm text-gray-500 empty:hidden">
+            <p
+              class="mt-2 block text-sm text-gray-500 empty:hidden dark:text-gray-400"
+            >
               {{ text }}
             </p>
           </div>
         </div>
-        <div class="mt-5 flex-row-reverse justify-end gap-2 sm:mt-4 sm:flex sm:flex-row">
+        <div
+          class="mt-5 flex-row-reverse justify-end gap-2 sm:mt-4 sm:flex sm:flex-row"
+        >
           <Button type="reset">
             {{ denyButtonText ?? t('buttons.deny') }}
           </Button>

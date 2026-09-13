@@ -1,17 +1,22 @@
 <template>
   <div class="flex flex-col items-center justify-center gap-6 py-20">
     <template v-if="requestHasFilters">
-      <p class="text-5xl font-light text-gray-700">🤷🏻</p>
-      <p class="text-2xl font-light text-gray-700">{{ t('emptyResults') }}</p>
+      <p class="text-5xl font-light text-gray-700 dark:text-gray-300">🤷🏻</p>
+      <p class="text-2xl font-light text-gray-700 dark:text-gray-300">
+        {{ t('emptyResults') }}
+      </p>
     </template>
     <template v-else>
-      <p class="text-5xl font-light text-gray-700">🧐</p>
-      <p class="text-2xl font-light text-gray-700">{{ t('emptyIndex') }}</p>
+      <p class="text-5xl font-light text-gray-700 dark:text-gray-300">🧐</p>
+      <p class="text-2xl font-light text-gray-700 dark:text-gray-300">
+        {{ t('emptyIndex') }}
+      </p>
       <Button
         :as="NuxtLink"
         :to="`/indexes/${indexUid}/settings/import-documents`"
         theme="primary"
-        icon="ph:upload-fill">
+        icon="ph:upload-fill"
+      >
         {{ t('actions.importDocuments') }}
       </Button>
     </template>

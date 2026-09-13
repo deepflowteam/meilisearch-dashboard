@@ -3,9 +3,13 @@
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">{{ t('description') }}</span>
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">{{
+          t('description')
+        }}</span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/indexes/list-index-fields" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/indexes/list-index-fields"
+      />
     </h3>
 
     <Alert v-if="!available" theme="warning" :title="t('unavailable.title')">
@@ -13,7 +17,12 @@
     </Alert>
 
     <template v-else>
-      <Alert v-if="self.error" dismissable theme="danger" @close="self.error = null">
+      <Alert
+        v-if="self.error"
+        dismissable
+        theme="danger"
+        @close="self.error = null"
+      >
         {{ self.error }}
       </Alert>
 
@@ -22,35 +31,51 @@
           v-model="self.pattern"
           icon="i-lucide-search"
           :placeholder="t('filters.patternPlaceholder')"
-          class="min-w-56 flex-1" />
+          class="min-w-56 flex-1"
+        />
 
         <UPopover>
-          <UChip v-if="activeBooleanFilterKeys.length > 0" :text="activeBooleanFilterKeys.length" size="sm">
+          <UChip
+            v-if="activeBooleanFilterKeys.length > 0"
+            :text="activeBooleanFilterKeys.length"
+            size="sm"
+          >
             <UButton
               color="neutral"
               variant="outline"
               icon="i-lucide-sliders-horizontal"
-              :label="t('filters.button')" />
+              :label="t('filters.button')"
+            />
           </UChip>
           <UButton
             v-else
             color="neutral"
             variant="outline"
             icon="i-lucide-sliders-horizontal"
-            :label="t('filters.button')" />
+            :label="t('filters.button')"
+          />
 
           <template #content>
             <div class="w-72 space-y-3 p-4">
-              <div v-for="key in booleanFilterKeys" :key="key" class="flex items-center justify-between gap-3">
+              <div
+                v-for="key in booleanFilterKeys"
+                :key="key"
+                class="flex items-center justify-between gap-3"
+              >
                 <span class="text-sm">{{ t(`filters.labels.${key}`) }}</span>
                 <UFieldGroup size="xs">
                   <UButton
                     v-for="option in triStateItems"
                     :key="option.value"
                     :label="option.label"
-                    :color="option.value === self.filters[key] ? 'primary' : 'neutral'"
-                    :variant="option.value === self.filters[key] ? 'solid' : 'outline'"
-                    @click="self.filters[key] = option.value" />
+                    :color="
+                      option.value === self.filters[key] ? 'primary' : 'neutral'
+                    "
+                    :variant="
+                      option.value === self.filters[key] ? 'solid' : 'outline'
+                    "
+                    @click="self.filters[key] = option.value"
+                  />
                 </UFieldGroup>
               </div>
 
@@ -61,21 +86,29 @@
                 size="xs"
                 :label="t('filters.reset')"
                 class="w-full justify-center"
-                @click="resetBooleanFilters" />
+                @click="resetBooleanFilters"
+              />
             </div>
           </template>
         </UPopover>
       </div>
 
-      <div v-if="activeBooleanFilterKeys.length > 0" class="flex flex-wrap items-center gap-2">
+      <div
+        v-if="activeBooleanFilterKeys.length > 0"
+        class="flex flex-wrap items-center gap-2"
+      >
         <UBadge
           v-for="key in activeBooleanFilterKeys"
           :key="key"
           color="neutral"
           variant="subtle"
           class="cursor-pointer gap-1"
-          @click="self.filters[key] = ANY">
-          {{ t(`filters.labels.${key}`) }}: {{ 'true' === self.filters[key] ? t('filters.yes') : t('filters.no') }}
+          @click="self.filters[key] = ANY"
+        >
+          {{ t(`filters.labels.${key}`) }}:
+          {{
+            'true' === self.filters[key] ? t('filters.yes') : t('filters.no')
+          }}
           <Icon name="mdi:close" class="size-3" />
         </UBadge>
       </div>
@@ -91,45 +124,83 @@
           t('columns.rankingRule'),
           t('columns.filterable'),
           t('columns.localized'),
-        ]">
+        ]"
+      >
         <template #default="{ item }">
-          <td class="align-top font-mono text-xs font-medium">{{ item.name }}</td>
+          <td class="align-top font-mono text-xs font-medium">
+            {{ item.name }}
+          </td>
           <td class="text-center align-top">
-            <Icon v-if="item.displayed?.enabled" name="mdi:check" class="text-green-600" />
+            <Icon
+              v-if="item.displayed?.enabled"
+              name="mdi:check"
+              class="text-green-600"
+            />
+            <Icon
+              v-else
+              name="mdi:minus"
+              class="text-gray-300 dark:text-gray-600"
+            />
+          </td>
+          <td class="text-center align-top">
+            <Icon
+              v-if="item.searchable?.enabled"
+              name="mdi:check"
+              class="text-green-600"
+            />
             <Icon v-else name="mdi:minus" class="text-gray-300" />
           </td>
           <td class="text-center align-top">
-            <Icon v-if="item.searchable?.enabled" name="mdi:check" class="text-green-600" />
+            <Icon
+              v-if="item.sortable?.enabled"
+              name="mdi:check"
+              class="text-green-600"
+            />
             <Icon v-else name="mdi:minus" class="text-gray-300" />
           </td>
           <td class="text-center align-top">
-            <Icon v-if="item.sortable?.enabled" name="mdi:check" class="text-green-600" />
-            <Icon v-else name="mdi:minus" class="text-gray-300" />
-          </td>
-          <td class="text-center align-top">
-            <Icon v-if="item.distinct?.enabled" name="mdi:check" class="text-green-600" />
+            <Icon
+              v-if="item.distinct?.enabled"
+              name="mdi:check"
+              class="text-green-600"
+            />
             <Icon v-else name="mdi:minus" class="text-gray-300" />
           </td>
           <td class="align-top">
-            <span v-if="item.rankingRule?.enabled" class="inline-flex items-center gap-1.5">
+            <span
+              v-if="item.rankingRule?.enabled"
+              class="inline-flex items-center gap-1.5"
+            >
               <Icon name="mdi:check" class="shrink-0 text-green-600" />
-              <span v-if="item.rankingRule.order" class="text-xs text-gray-500">{{ item.rankingRule.order }}</span>
+              <span
+                v-if="item.rankingRule.order"
+                class="text-xs text-gray-500 dark:text-gray-400"
+                >{{ item.rankingRule.order }}</span
+              >
             </span>
             <Icon v-else name="mdi:minus" class="text-gray-300" />
           </td>
           <td class="align-top">
-            <div v-if="item.filterable?.enabled" class="inline-flex items-start gap-1.5">
+            <div
+              v-if="item.filterable?.enabled"
+              class="inline-flex items-start gap-1.5"
+            >
               <Icon name="mdi:check" class="mt-0.5 shrink-0 text-green-600" />
-              <ul class="space-y-1 text-xs text-gray-500">
+              <ul class="space-y-1 text-xs text-gray-500 dark:text-gray-400">
                 <li v-for="feature of filterableDetails(item.filterable)">
-                  <UBadge color="neutral" variant="outline">{{ feature }}</UBadge>
+                  <UBadge color="neutral" variant="outline">{{
+                    feature
+                  }}</UBadge>
                 </li>
               </ul>
             </div>
             <Icon v-else name="mdi:minus" class="text-gray-300" />
           </td>
           <td class="align-top">
-            <span v-if="item.localized?.locales?.length" class="text-xs text-gray-500">
+            <span
+              v-if="item.localized?.locales?.length"
+              class="text-xs text-gray-500 dark:text-gray-400"
+            >
               {{ item.localized.locales.join(', ') }}
             </span>
             <Icon v-else name="mdi:minus" class="text-gray-300" />
@@ -137,7 +208,10 @@
         </template>
       </Table>
 
-      <div v-if="0 === self.fields.results.length" class="py-8 text-center text-sm text-gray-400 italic">
+      <div
+        v-if="0 === self.fields.results.length"
+        class="py-8 text-center text-sm text-gray-400 italic dark:text-gray-500"
+      >
         {{ t('emptyState') }}
       </div>
 
@@ -150,7 +224,8 @@
           :sibling-count="2"
           active-color="primary"
           variant="ghost"
-          @update:page="handlePageChange" />
+          @update:page="handlePageChange"
+        />
       </div>
     </template>
   </section>
@@ -180,30 +255,40 @@ const { satisfiesVersion } = useVersion()
 const FIELDS_MIN_VERSION = '>=1.33.0'
 const available = computed(() => satisfiesVersion(FIELDS_MIN_VERSION))
 
-const booleanFilterKeys = ['displayed', 'searchable', 'sortable', 'distinct', 'rankingRule', 'filterable'] as const
+const booleanFilterKeys = [
+  'displayed',
+  'searchable',
+  'sortable',
+  'distinct',
+  'rankingRule',
+  'filterable',
+] as const
 type BooleanFilterKey = (typeof booleanFilterKeys)[number]
 
 /** `USelect` reserves the empty string for "no selection", so "any" needs its own sentinel. */
 const ANY = 'any'
 type TriState = typeof ANY | 'true' | 'false'
-const toBool = (value: TriState): boolean | undefined => (ANY === value ? undefined : 'true' === value)
+const toBool = (value: TriState): boolean | undefined =>
+  ANY === value ? undefined : 'true' === value
 
-const triStateItems = computed<Array<{ label: string; value: TriState }>>(() => [
-  { label: t('filters.any'), value: ANY },
-  { label: t('filters.yes'), value: 'true' },
-  { label: t('filters.no'), value: 'false' },
-])
+const triStateItems = computed<Array<{ label: string; value: TriState }>>(
+  () => [
+    { label: t('filters.any'), value: ANY },
+    { label: t('filters.yes'), value: 'true' },
+    { label: t('filters.no'), value: 'false' },
+  ],
+)
 
 const itemsPerPage = ref(20)
-const { offset, totalItems, currentPage, lastPage } = usePagination(itemsPerPage)
+const { offset, totalItems, currentPage, lastPage } =
+  usePagination(itemsPerPage)
 
 const self = reactive({
   error: null as string | null,
   pattern: '',
-  filters: Object.fromEntries(booleanFilterKeys.map((key) => [key, ANY as TriState])) as Record<
-    BooleanFilterKey,
-    TriState
-  >,
+  filters: Object.fromEntries(
+    booleanFilterKeys.map((key) => [key, ANY as TriState]),
+  ) as Record<BooleanFilterKey, TriState>,
   fields: { results: [], offset: 0, limit: 0, total: 0 } as FieldsResults,
   totalItems,
   offset,
@@ -212,7 +297,9 @@ const self = reactive({
   lastPage,
 })
 
-const activeBooleanFilterKeys = computed(() => booleanFilterKeys.filter((key) => ANY !== self.filters[key]))
+const activeBooleanFilterKeys = computed(() =>
+  booleanFilterKeys.filter((key) => ANY !== self.filters[key]),
+)
 const resetBooleanFilters = () => {
   for (const key of booleanFilterKeys) self.filters[key] = ANY
 }
@@ -243,7 +330,11 @@ const buildFilter = (): FieldsFilter | undefined => {
 
 const fetchFields = () =>
   tryOrThrow(async () => {
-    const result = await index.getFields({ offset: self.offset, limit: self.itemsPerPage, filter: buildFilter() })
+    const result = await index.getFields({
+      offset: self.offset,
+      limit: self.itemsPerPage,
+      filter: buildFilter(),
+    })
     self.totalItems = result.total
     return result
   })
@@ -268,7 +359,8 @@ watchDebounced(
   { debounce: 300, deep: true },
 )
 
-const handlePageChange = (page: number) => (self.offset = (page - 1) * self.itemsPerPage)
+const handlePageChange = (page: number) =>
+  (self.offset = (page - 1) * self.itemsPerPage)
 
 useHead({
   title: `${t('title')} - ${index.uid}`,

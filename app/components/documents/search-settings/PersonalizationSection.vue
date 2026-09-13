@@ -1,7 +1,14 @@
 <template>
-  <SettingsSection :title="t('title')" href="https://www.meilisearch.com/docs/guides/personalization">
+  <SettingsSection
+    :title="t('title')"
+    href="https://www.meilisearch.com/docs/guides/personalization"
+  >
     <UFormField :label="t('labels.userContext')" :help="t('help.userContext')">
-      <UInput v-model="userContext" :placeholder="t('placeholders.userContext')" class="w-full" />
+      <UInput
+        v-model="userContext"
+        :placeholder="t('placeholders.userContext')"
+        class="w-full"
+      />
     </UFormField>
   </SettingsSection>
 </template>

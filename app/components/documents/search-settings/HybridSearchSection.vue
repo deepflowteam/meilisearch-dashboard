@@ -1,7 +1,17 @@
 <template>
-  <SettingsSection :title="t('title')" href="https://www.meilisearch.com/docs/reference/api/search#hybrid">
-    <span v-tippy="hasEmbedders ? undefined : t('hints.noEmbedder')" class="inline-block">
-      <USwitch v-model="enabled" :disabled="!hasEmbedders" :label="t('labels.enable')" />
+  <SettingsSection
+    :title="t('title')"
+    href="https://www.meilisearch.com/docs/reference/api/search#hybrid"
+  >
+    <span
+      v-tippy="hasEmbedders ? undefined : t('hints.noEmbedder')"
+      class="inline-block"
+    >
+      <USwitch
+        v-model="enabled"
+        :disabled="!hasEmbedders"
+        :label="t('labels.enable')"
+      />
     </span>
 
     <!-- Nothing to configure without an embedder: the switch above stays visible but inert, so the
@@ -9,13 +19,21 @@
     <div
       v-if="hasEmbedders"
       class="grid grid-cols-1 items-end gap-4 sm:grid-cols-2"
-      :class="{ 'opacity-50': !enabled }">
+      :class="{ 'opacity-50': !enabled }"
+    >
       <UFormField :label="t('labels.embedder')">
-        <USelect v-model="embedder" :items="embedders" :disabled="!enabled" class="w-full" />
+        <USelect
+          v-model="embedder"
+          :items="embedders"
+          :disabled="!enabled"
+          class="w-full"
+        />
       </UFormField>
 
       <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between text-xs text-gray-500">
+        <div
+          class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
+        >
           <span>{{ t('labels.keywordSearch') }}</span>
           <span>{{ t('labels.semanticSearch') }}</span>
         </div>
@@ -26,7 +44,8 @@
           :step="0.01"
           :disabled="!enabled"
           :format="formatRatio"
-          class="w-full" />
+          class="w-full"
+        />
       </div>
     </div>
   </SettingsSection>

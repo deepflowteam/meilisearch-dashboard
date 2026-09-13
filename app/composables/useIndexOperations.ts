@@ -40,7 +40,10 @@ export const useIndexOperations = () => {
   const { createToast } = useToasts()
   const processTask = useTask()
 
-  const duplicateIndex = async (indexUid: string, options: Partial<DuplicateIndexOptions> = {}): Promise<string> => {
+  const duplicateIndex = async (
+    indexUid: string,
+    options: Partial<DuplicateIndexOptions> = {},
+  ): Promise<string> => {
     let { onStart, newIndexUid } = {
       ...DEFAULT_DUPLICATE_INDEX_OPTIONS,
       ...options,
@@ -82,7 +85,9 @@ export const useIndexOperations = () => {
     }
 
     const newIndex = await meili.getIndex(newIndexUid)
-    task = await processTask(async () => newIndex.updateSettings(await index.getSettings()))
+    task = await processTask(async () =>
+      newIndex.updateSettings(await index.getSettings()),
+    )
     if (task.status === 'failed') {
       throw new Error('Failed to duplicate index')
     }
@@ -106,7 +111,10 @@ export const useIndexOperations = () => {
     return newIndexUid
   }
 
-  const renameIndex = async (indexUid: string, options: Partial<RenameIndexOptions> = {}): Promise<string> => {
+  const renameIndex = async (
+    indexUid: string,
+    options: Partial<RenameIndexOptions> = {},
+  ): Promise<string> => {
     let { onStart, newIndexUid } = {
       ...DEFAULT_DUPLICATE_INDEX_OPTIONS,
       ...options,
@@ -147,7 +155,10 @@ export const useIndexOperations = () => {
       throw new Error('Failed to rename index')
     }
 
-    task = await processTask(() => meili.swapIndexes([{ indexes: [indexUid, newIndexUid] }]), taskOptions)
+    task = await processTask(
+      () => meili.swapIndexes([{ indexes: [indexUid, newIndexUid] }]),
+      taskOptions,
+    )
     if (task.status === 'failed') {
       throw new Error('Failed to rename index')
     }
@@ -162,7 +173,10 @@ export const useIndexOperations = () => {
     return newIndexUid
   }
 
-  const swapIndex = async (indexUid: string, options: Partial<SwapIndexOptions> = {}): Promise<string> => {
+  const swapIndex = async (
+    indexUid: string,
+    options: Partial<SwapIndexOptions> = {},
+  ): Promise<string> => {
     let { onStart, targetIndexUid } = {
       ...DEFAULT_SWAP_INDEX_OPTIONS,
       ...options,
@@ -179,18 +193,24 @@ export const useIndexOperations = () => {
     })
 
     // `rename` is required by the client's `IndexSwap` type; Meiliweb only ever plain-swaps.
-    const task = await processTask(() => meili.swapIndexes([{ indexes: [indexUid, targetIndexUid], rename: false }]), {
-      onCanceled: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.canceledTask'),
-        }),
-      onFailure: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.failedTask'),
-        }),
-    })
+    const task = await processTask(
+      () =>
+        meili.swapIndexes([
+          { indexes: [indexUid, targetIndexUid], rename: false },
+        ]),
+      {
+        onCanceled: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.canceledTask'),
+          }),
+        onFailure: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.failedTask'),
+          }),
+      },
+    )
     if (task.status === 'failed') {
       throw new Error('Failed to swap indexes')
     }
@@ -214,7 +234,10 @@ export const useIndexOperations = () => {
     // REST API directly through the client's `httpRequest` (same approach as useWebhooks).
     // @see https://www.meilisearch.com/docs/reference/api/indexes/compact-index
     const task = await processTask(
-      () => meili.httpRequest.post({ path: `indexes/${indexUid}/compact` }) as Promise<EnqueuedTask>,
+      () =>
+        meili.httpRequest.post({
+          path: `indexes/${indexUid}/compact`,
+        }) as Promise<EnqueuedTask>,
       {
         onCanceled: () =>
           toast.update({

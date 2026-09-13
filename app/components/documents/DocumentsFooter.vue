@@ -1,6 +1,7 @@
 <template>
   <footer
-    class="flex items-center justify-between gap-6 rounded-t-xl border border-gray-100 bg-gray-50 px-8 py-2 text-xs text-gray-600 shadow-2xl">
+    class="flex items-center justify-between gap-6 rounded-t-xl border border-gray-100 bg-gray-50 px-8 py-2 text-xs text-gray-600 shadow-2xl dark:bg-gray-800 dark:text-gray-400 dark:border-gray-800"
+  >
     <dl class="flex items-center gap-1">
       <dt>{{ t('labels.nbEstimatedHits') }}:</dt>
       <dd>{{ nbTotalItems }}</dd>
@@ -11,7 +12,10 @@
     </dl>
     <UPopover v-if="performanceDetails">
       <button v-tippy="t('actions.showPerformanceDetails')" type="button">
-        <Icon name="mdi:speedometer" class="size-4 text-gray-600 hover:text-gray-800" />
+        <Icon
+          name="mdi:speedometer"
+          class="size-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+        />
       </button>
       <template #content>
         <div class="max-w-sm p-4 text-xs">
@@ -19,12 +23,13 @@
             :index-uid="indexUid"
             field="performanceDetails"
             :value="performanceDetails"
-            :level="0" />
+            :level="0"
+          />
         </div>
       </template>
     </UPopover>
     <UniqueId as="div" v-slot="{ id }" class="inline-flex items-center gap-1">
-      <select :id="id" v-model="itemsPerPage">
+      <select :id="id" v-model="itemsPerPage" class="form-select text-sm">
         <option :value="1">1</option>
         <option :value="10">10</option>
         <option :value="20">20</option>
@@ -40,7 +45,9 @@
     <nav class="flex items-center gap-2">
       <button
         v-if="showRerank"
-        v-tippy="personalizeApplied ? t('actions.undoRerank') : t('actions.rerank')"
+        v-tippy="
+          personalizeApplied ? t('actions.undoRerank') : t('actions.rerank')
+        "
         type="button"
         :disabled="(!canRerank && !personalizeApplied) || rerankLoading"
         @click="emit('rerank')"
@@ -49,15 +56,20 @@
           personalizeApplied
             ? 'enabled:text-primary-600 enabled:hover:text-primary-800'
             : 'enabled:text-gray-600 enabled:hover:text-gray-800',
-        ]">
-        <Icon name="heroicons:sparkles" :class="['size-4', { 'animate-spin': rerankLoading }]" />
+        ]"
+      >
+        <Icon
+          name="heroicons:sparkles"
+          :class="['size-4', { 'animate-spin': rerankLoading }]"
+        />
       </button>
       <span>
         <button
           type="button"
           :disabled="currentPage === 1"
           @click="offset = getPageOffset(previousPage)"
-          class="enabled:text-gray-600 enabled:hover:text-gray-800 disabled:cursor-default disabled:text-gray-300">
+          class="enabled:text-gray-600 enabled:hover:text-gray-800 disabled:cursor-default disabled:text-gray-300 dark:enabled:text-gray-400 dark:enabled:hover:text-gray-200 dark:disabled:text-gray-600"
+        >
           {{ t('labels.previous') }}
         </button>
         /
@@ -65,7 +77,8 @@
           type="button"
           :disabled="currentPage === lastPage"
           @click="offset = getPageOffset(nextPage)"
-          class="enabled:text-gray-600 enabled:hover:text-gray-800 disabled:cursor-default disabled:text-gray-300">
+          class="enabled:text-gray-600 enabled:hover:text-gray-800 disabled:cursor-default disabled:text-gray-300"
+        >
           {{ t('labels.next') }}
         </button>
       </span>

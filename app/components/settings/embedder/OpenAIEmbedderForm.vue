@@ -1,12 +1,22 @@
 <template>
   <UniqueId v-slot="{ id }" as="section" class="flex flex-col gap-1">
     <Label :for="id">{{ t('labels.url') }}</Label>
-    <input v-model="embedder!.url" autocomplete="off" type="url" class="form-input w-full text-sm" />
+    <input
+      v-model="embedder!.url"
+      autocomplete="off"
+      type="url"
+      class="form-input w-full text-sm"
+    />
   </UniqueId>
 
   <UniqueId v-slot="{ id }" as="section" class="flex flex-col gap-1">
     <Label :for="id">{{ t('labels.apiKey') }}</Label>
-    <input v-model="embedder!.apiKey" autocomplete="off" type="password" class="form-input w-full text-sm" />
+    <input
+      v-model="embedder!.apiKey"
+      autocomplete="off"
+      type="password"
+      class="form-input w-full text-sm"
+    />
   </UniqueId>
 
   <UniqueId v-slot="{ id }" as="section" class="flex flex-col gap-1">
@@ -17,7 +27,8 @@
         :list="datalist"
         autocomplete="off"
         type="text"
-        class="form-input w-full text-sm" />
+        class="form-input w-full text-sm"
+      />
       <datalist :id="datalist">
         <option value="text-embedding-3-small" />
         <option value="text-embedding-3-large" />
@@ -28,7 +39,13 @@
 
   <UniqueId v-slot="{ id }" as="section" class="flex flex-col gap-1">
     <Label :for="id">{{ t('labels.dimensions') }}</Label>
-    <input v-model="embedder!.dimensions" autocomplete="off" type="number" min="0" class="form-input w-full text-sm" />
+    <input
+      v-model="embedder!.dimensions"
+      autocomplete="off"
+      type="number"
+      min="0"
+      class="form-input w-full text-sm"
+    />
   </UniqueId>
 </template>
 

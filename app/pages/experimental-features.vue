@@ -1,24 +1,44 @@
 <template>
   <Layout :title="t('title')" :subtitle="t('subtitle')">
     <template #title-actions>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/experimental_features" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/experimental_features"
+      />
     </template>
 
-    <Alert v-if="loadError" theme="danger" :title="t('errors.unavailable.title')">
+    <Alert
+      v-if="loadError"
+      theme="danger"
+      :title="t('errors.unavailable.title')"
+    >
       {{ t('errors.unavailable.text') }}
     </Alert>
 
-    <ul v-else class="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white shadow-xs">
-      <li v-for="feature in sortedFeatures" :key="feature" class="flex items-center justify-between gap-6 px-4 py-4">
+    <ul
+      v-else
+      class="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white shadow-xs dark:divide-gray-800 dark:border-gray-800 dark:bg-gray-900"
+    >
+      <li
+        v-for="feature in sortedFeatures"
+        :key="feature"
+        class="flex items-center justify-between gap-6 px-4 py-4"
+      >
         <div class="flex flex-col gap-1">
-          <span class="font-medium text-gray-900">{{ labelFor(feature) }}</span>
-          <span v-if="descriptionFor(feature)" class="text-sm text-gray-500">{{ descriptionFor(feature) }}</span>
+          <span class="font-medium text-gray-900 dark:text-gray-100">{{
+            labelFor(feature)
+          }}</span>
+          <span
+            v-if="descriptionFor(feature)"
+            class="text-sm text-gray-500 dark:text-gray-400"
+            >{{ descriptionFor(feature) }}</span
+          >
         </div>
         <USwitch
           :model-value="!!features[feature]"
           :disabled="pending.has(feature)"
           size="lg"
-          @update:model-value="toggle(feature, $event)" />
+          @update:model-value="toggle(feature, $event)"
+        />
       </li>
     </ul>
   </Layout>
@@ -87,8 +107,10 @@ const translate = (key: string) => {
   const value = t(key)
   return value === key ? null : value
 }
-const labelFor = (key: string) => translate(`features.${key}.label`) ?? humanize(key)
-const descriptionFor = (key: string) => translate(`features.${key}.description`) ?? ''
+const labelFor = (key: string) =>
+  translate(`features.${key}.label`) ?? humanize(key)
+const descriptionFor = (key: string) =>
+  translate(`features.${key}.description`) ?? ''
 
 const pending = reactive(new Set<string>())
 
@@ -104,11 +126,19 @@ const toggle = async (key: string, value: boolean) => {
 
   try {
     // PATCH is partial: send only the toggled key. This is not an async task.
-    await meili.updateExperimentalFeatures({ [key]: value } as unknown as RuntimeTogglableFeatures)
-    toast.update({ ...TOAST_SUCCESS(t), title: t('toasts.updated', { feature: labelFor(key) }) })
+    await meili.updateExperimentalFeatures({
+      [key]: value,
+    } as unknown as RuntimeTogglableFeatures)
+    toast.update({
+      ...TOAST_SUCCESS(t),
+      title: t('toasts.updated', { feature: labelFor(key) }),
+    })
   } catch {
     self.features[key] = previous // rollback
-    toast.update({ ...TOAST_FAILURE(t), text: t('toasts.error', { feature: labelFor(key) }) })
+    toast.update({
+      ...TOAST_FAILURE(t),
+      text: t('toasts.error', { feature: labelFor(key) }),
+    })
   } finally {
     pending.delete(key)
   }

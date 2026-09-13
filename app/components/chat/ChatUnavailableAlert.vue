@@ -1,6 +1,8 @@
 <template>
   <Alert theme="warning" :title="t('title')">
-    <p v-if="!versionSupported">{{ t('reasons.version', { version: CHAT_MIN_VERSION }) }}</p>
+    <p v-if="!versionSupported">
+      {{ t('reasons.version', { version: CHAT_MIN_VERSION }) }}
+    </p>
     <p v-else>
       {{ t('reasons.experimental') }}
       <NuxtLink to="/experimental-features" class="font-medium underline">

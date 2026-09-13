@@ -4,7 +4,8 @@
     type="button"
     v-tippy="t('actions.open')"
     class="cursor-pointer underline decoration-dotted underline-offset-4 hover:text-primary-600"
-    @click="openDocument(documentId)">
+    @click="openDocument(documentId)"
+  >
     <slot />
   </button>
   <slot v-else />

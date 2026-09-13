@@ -1,6 +1,6 @@
 <template>
   <div class="pb-4">
-    <h3 class="text-md bg-gray-100 p-4 capitalize">
+    <h3 class="text-md bg-gray-100 p-4 capitalize dark:bg-gray-800">
       {{ humanizeString(facet) }}
     </h3>
     <div class="mt-14 px-12">
@@ -41,5 +41,10 @@ const self: any = reactive({
   ),
 })
 const { format } = toRefs(self)
-watch(value, ([min, max]) => props.appliedFilters.applyRangeFilter(props.facet, [min as number, max as number]))
+watch(value, ([min, max]) =>
+  props.appliedFilters.applyRangeFilter(props.facet, [
+    min as number,
+    max as number,
+  ]),
+)
 </script>

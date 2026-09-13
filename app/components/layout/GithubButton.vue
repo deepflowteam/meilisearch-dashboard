@@ -1,7 +1,13 @@
 <template>
-  <a v-tippy="t('label')" href="https://github.com/bpolaszek/meiliweb" target="github">
-    <Icon name="bi:github" class="size-6 text-gray-500 hover:text-primary-800" />
-  </a>
+  <UButton
+    v-tippy="t('label')"
+    to="https://github.com/bpolaszek/meiliweb"
+    target="github"
+    color="neutral"
+    variant="ghost"
+    icon="bi:github"
+    :aria-label="t('label')"
+  />
 </template>
 
 <script setup>

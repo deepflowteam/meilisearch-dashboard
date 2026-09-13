@@ -3,7 +3,13 @@
     <UniqueId v-slot="{ id }" as="div" class="col-span-4 space-y-2">
       <div class="flex flex-col gap-1">
         <Label required :for="id">{{ t('labels.mainWord') }}</Label>
-        <input v-model="synonym[0]" required autocomplete="off" type="text" class="form-input w-full text-sm" />
+        <input
+          v-model="synonym[0]"
+          required
+          autocomplete="off"
+          type="text"
+          class="form-input w-full text-sm"
+        />
       </div>
       <Button
         type="button"
@@ -11,7 +17,8 @@
         theme="primary"
         icon="mdi:bin"
         @click="$emit('remove', synonym[0])"
-        class="w-auto">
+        class="w-auto"
+      >
         {{ t('actions.remove') }}
       </Button>
     </UniqueId>

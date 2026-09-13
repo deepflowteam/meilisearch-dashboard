@@ -1,19 +1,35 @@
 <template>
   <form class="space-y-4" @submit.prevent>
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
-      <DocumentationLink href="https://www.meilisearch.com/docs/learn/security/tenant_tokens" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/learn/security/tenant_tokens"
+      />
     </h3>
 
     <DefineAddRuleMenu v-slot="{ big }">
-      <UDropdownMenu v-if="availableIndexes.length > 0" :items="addRuleMenuItems" :content="{ align: 'start' }">
-        <Button theme="primary" icon="zondicons:add-solid" :no-padding="!big" :class="big || 'px-2 py-1 text-xs'">
+      <UDropdownMenu
+        v-if="availableIndexes.length > 0"
+        :items="addRuleMenuItems"
+        :content="{ align: 'start' }"
+      >
+        <Button
+          theme="primary"
+          icon="zondicons:add-solid"
+          :no-padding="!big"
+          :class="big || 'px-2 py-1 text-xs'"
+        >
           {{ t('labels.addRule') }}
         </Button>
       </UDropdownMenu>
     </DefineAddRuleMenu>
 
-    <div v-if="0 === Object.entries(searchRules).length" class="flex items-center justify-center py-10">
+    <div
+      v-if="0 === Object.entries(searchRules).length"
+      class="flex items-center justify-center py-10"
+    >
       <AddRuleMenu :big="true" />
     </div>
 
@@ -30,12 +46,20 @@
         v-for="[indexUid, rules] of searchRulesMap.entries()"
         :key="indexUid"
         v-slot="{ id }"
-        class="space-y-1">
+        class="space-y-1"
+      >
         <header class="flex items-center justify-between">
-          <Label :for="id" class="text-sm font-light text-primary-800 capitalize">
+          <Label
+            :for="id"
+            class="text-sm font-light text-primary-800 capitalize"
+          >
             {{ indexUid }}
           </Label>
-          <button v-tippy="t('labels.removeRule')" type="button" @click="searchRulesMap.delete(indexUid)">
+          <button
+            v-tippy="t('labels.removeRule')"
+            type="button"
+            @click="searchRulesMap.delete(indexUid)"
+          >
             <Icon name="wpf:full-trash" />
           </button>
         </header>
@@ -50,12 +74,15 @@
               : undefined
           "
           type="text"
-          class="form-input w-full" />
+          class="form-input w-full"
+        />
         <div v-if="filterStats.has(indexUid)" class="text-xs">
           <span class="text-green-600 italic">
             {{
               t('hints.matchingDocuments', {
-                nbFilteredDocuments: (filterStats.get(indexUid) as FilterStat)[0],
+                nbFilteredDocuments: (
+                  filterStats.get(indexUid) as FilterStat
+                )[0],
                 nbTotalDocuments: (filterStats.get(indexUid) as FilterStat)[1],
               })
             }}
@@ -65,7 +92,8 @@
             v-if="jwt"
             :to="`/indexes/${indexUid}/documents?tenantToken=${jwt}`"
             class="text-primary-700 italic hover:text-primary-800"
-            target="_blank">
+            target="_blank"
+          >
             {{ t('labels.preview') }}
           </RouterLink>
         </div>
@@ -78,7 +106,8 @@
         v-if="[...searchRulesMap.entries()].length > 0"
         as="section"
         v-slot="{ id }"
-        class="space-y-1 *:block *:w-full">
+        class="space-y-1 *:block *:w-full"
+      >
         <Label required :for="id">{{ t('labels.key') }}</Label>
         <Select required v-model="keyToUse">
           <option />
@@ -93,15 +122,26 @@
           <Label :for="id">{{ t('labels.expiresAt') }}</Label>
           <div>
             <label class="inline-flex cursor-pointer items-center gap-2">
-              <span class="text-sm font-light text-gray-600 italic">
+              <span
+                class="text-sm font-light text-gray-600 italic dark:text-gray-400"
+              >
                 {{ t('labels.neverExpires') }}
               </span>
-              <input :disabled="expires" type="checkbox" v-model="expires" class="form-checkbox" />
+              <input
+                :disabled="expires"
+                type="checkbox"
+                v-model="expires"
+                class="form-checkbox"
+              />
             </label>
           </div>
         </header>
         <div>
-          <input type="datetime-local" v-model="expiresAt" class="form-input w-full" />
+          <input
+            type="datetime-local"
+            v-model="expiresAt"
+            class="form-input w-full"
+          />
         </div>
       </UniqueId>
 
@@ -154,8 +194,14 @@ const filterStats = reactive(new Map<string, FilterStat>())
 const self: Self = reactive({
   expiresAt: null as Date | null,
   keyToUse: ref(null),
-  searchRules: computed(() => Object.fromEntries([...searchRulesMap.entries()])),
-  jwt: computed(() => (self.keyToUse ? createJwt(self.searchRules, self.keyToUse, self.expiresAt ?? undefined) : null)),
+  searchRules: computed(() =>
+    Object.fromEntries([...searchRulesMap.entries()]),
+  ),
+  jwt: computed(() =>
+    self.keyToUse
+      ? createJwt(self.searchRules, self.keyToUse, self.expiresAt ?? undefined)
+      : null,
+  ),
 })
 const expires = computed({
   get: () => !self.expiresAt,
@@ -163,7 +209,9 @@ const expires = computed({
     if ('boolean' === typeof value) {
       self.expiresAt = value
         ? null
-        : (new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString() as unknown as Date)
+        : (new Date(
+            new Date().setMonth(new Date().getMonth() + 1),
+          ).toISOString() as unknown as Date)
     } else {
       self.expiresAt = value as unknown as Date
     }
@@ -171,10 +219,14 @@ const expires = computed({
 }) as ComputedRef<boolean>
 const { keyToUse, searchRules, expiresAt, jwt } = toRefs(self)
 const [indexes, keys] = await Promise.all([
-  meili.getIndexes({ limit: 1000 }).then(({ results }) => results.map(({ uid }) => uid)),
+  meili
+    .getIndexes({ limit: 1000 })
+    .then(({ results }) => results.map(({ uid }) => uid)),
   meili.getKeys(),
 ])
-const availableIndexes = computed(() => indexes.filter((indexUid) => ![...searchRulesMap.keys()].includes(indexUid)))
+const availableIndexes = computed(() =>
+  indexes.filter((indexUid) => ![...searchRulesMap.keys()].includes(indexUid)),
+)
 const addRuleMenuItems = computed<DropdownMenuItem[]>(() => [
   { type: 'label', label: t('labels.pickAnIndex') },
   ...availableIndexes.value.map((indexUid) => ({
@@ -185,16 +237,29 @@ const addRuleMenuItems = computed<DropdownMenuItem[]>(() => [
 
 const addSearchRule = async (indexUid: string) => {
   searchRulesMap.set(indexUid, { filter: '' })
-  await Promise.all([suggestPlaceholder(indexUid), updateFilterStats(indexUid, '')])
+  await Promise.all([
+    suggestPlaceholder(indexUid),
+    updateFilterStats(indexUid, ''),
+  ])
 }
 const suggestPlaceholder = async (indexUid: string) => {
   if (placeholders.has(indexUid)) {
     return
   }
-  const filterableAttributes = getFilterableAttributePatterns(await meili.index(indexUid).getFilterableAttributes())
-  const searchResults = await meili.index(indexUid).search(null, { facets: filterableAttributes, limit: 0 })
-  let stringFilterCandidate: [string | null, string | number | null, number] = [null, null, 0]
-  for (const [facetName, facetValue] of Object.entries(searchResults.facetDistribution ?? {})) {
+  const filterableAttributes = getFilterableAttributePatterns(
+    await meili.index(indexUid).getFilterableAttributes(),
+  )
+  const searchResults = await meili
+    .index(indexUid)
+    .search(null, { facets: filterableAttributes, limit: 0 })
+  let stringFilterCandidate: [string | null, string | number | null, number] = [
+    null,
+    null,
+    0,
+  ]
+  for (const [facetName, facetValue] of Object.entries(
+    searchResults.facetDistribution ?? {},
+  )) {
     for (const [value, count] of Object.entries(facetValue)) {
       if (stringFilterCandidate && count > stringFilterCandidate[2]) {
         stringFilterCandidate = [facetName, value, count]
@@ -202,25 +267,34 @@ const suggestPlaceholder = async (indexUid: string) => {
     }
   }
   if (null !== stringFilterCandidate[0]) {
-    placeholders.set(indexUid, `${field(stringFilterCandidate[0]).equals(stringFilterCandidate[1] as string | number)}`)
+    placeholders.set(
+      indexUid,
+      `${field(stringFilterCandidate[0]).equals(stringFilterCandidate[1] as string | number)}`,
+    )
     return
   }
-  for (const [facetName, stats] of Object.entries(searchResults.facetStats ?? {})) {
+  for (const [facetName, stats] of Object.entries(
+    searchResults.facetStats ?? {},
+  )) {
     const edges = [
       Math.floor(Math.random() * (stats.max - stats.min + 1) + stats.min),
       Math.floor(Math.random() * (stats.max - stats.min + 1) + stats.min),
     ]
-    placeholders.set(indexUid, `${field(facetName).isBetween(...(edges.sort() as [number, number]))}`)
+    placeholders.set(
+      indexUid,
+      `${field(facetName).isBetween(...(edges.sort() as [number, number]))}`,
+    )
     return
   }
 }
 
 const updateFilterStats = async (indexUid: string, filter: string) => {
   try {
-    const [{ total: nbTotalDocuments }, { total: nbFilteredDocuments }] = await Promise.all([
-      meili.index(indexUid).getDocuments({ limit: 0 }),
-      meili.index(indexUid).getDocuments({ filter, limit: 0 }),
-    ])
+    const [{ total: nbTotalDocuments }, { total: nbFilteredDocuments }] =
+      await Promise.all([
+        meili.index(indexUid).getDocuments({ limit: 0 }),
+        meili.index(indexUid).getDocuments({ filter, limit: 0 }),
+      ])
 
     filterStats.set(indexUid, [nbFilteredDocuments, nbTotalDocuments])
   } catch (e) {

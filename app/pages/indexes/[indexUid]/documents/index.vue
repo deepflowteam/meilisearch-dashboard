@@ -1,11 +1,20 @@
 <template>
-  <Layout no-padding-bottom :title="humanizeString(index.uid)" :subtitle="subtitle">
+  <Layout
+    no-padding-bottom
+    :title="humanizeString(index.uid)"
+    :subtitle="subtitle"
+  >
     <USlideover
       v-model:open="filterPanelOpen"
       :title="t('labels.filters')"
       side="right"
       :overlay="false"
-      :ui="{ content: 'max-w-lg', title: 'text-2xl font-semibold', body: 'p-0 sm:p-0' }">
+      :ui="{
+        content: 'max-w-lg',
+        title: 'text-2xl font-semibold',
+        body: 'p-0 sm:p-0',
+      }"
+    >
       <template #body>
         <FilterPanel
           v-model:applied-sort="appliedSort"
@@ -14,7 +23,8 @@
           :client="searchClient"
           :index-uid="index.uid"
           :sortable-attributes="sortableAttributes"
-          :filterable-attributes="facetSearchableAttributes" />
+          :filterable-attributes="facetSearchableAttributes"
+        />
       </template>
     </USlideover>
 
@@ -25,13 +35,15 @@
       :primary-key="primaryKey"
       :document-id="openedDocumentId"
       @saved="refreshDocuments()"
-      @deleted="refreshDocuments()" />
+      @deleted="refreshDocuments()"
+    />
 
     <template #actions>
       <div
         v-if="tenant.tenantToken"
-        class="inline-flex items-center gap-1 rounded-lg border-0 border-gray-200 px-4 py-2">
-        <span class="font-medium text-gray-600">
+        class="inline-flex items-center gap-1 rounded-lg border-0 border-gray-200 px-4 py-2 dark:border-gray-800"
+      >
+        <span class="font-medium text-gray-600 dark:text-gray-400">
           {{ t('labels.multitenancyEnabled') }}
         </span>
         <Button
@@ -39,8 +51,9 @@
           no-padding
           no-border
           no-rounded
-          @click="tenant.clearTenantToken()">
-          <Icon name="uil:times" class="size-6 text-primary-600" />
+          @click="tenant.clearTenantToken()"
+        >
+          <Icon name="uil:times" class="size-5 text-primary-600" />
         </Button>
       </div>
 
@@ -50,47 +63,94 @@
         icon="heroicons:magnifying-glass-20-solid"
         :placeholder="t('labels.search')"
         :ui="{ base: 'rounded-lg' }"
-        class="grow lg:w-80" />
+        class="grow lg:w-80"
+      />
 
-      <button v-tippy="t('actions.searchSettings')" type="button" @click="openSearchSettings()">
+      <button
+        v-tippy="t('actions.searchSettings')"
+        type="button"
+        @click="openSearchSettings()"
+      >
         <Icon
           name="ph:sliders-fill"
           :class="[
-            'size-6',
-            hasCustomSearchSettings ? 'text-primary-600 hover:text-primary-800' : 'text-gray-600 hover:text-gray-800',
-          ]" />
+            'size-5',
+            hasCustomSearchSettings
+              ? 'text-primary-600 hover:text-primary-800'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
+          ]"
+        />
       </button>
 
-      <button v-tippy="t('actions.documentView')" @click="viewMode = 'documents'">
+      <button
+        v-tippy="t('actions.documentView')"
+        @click="viewMode = 'documents'"
+      >
         <Icon
           name="fa-solid:id-card"
-          :class="['documents' === viewMode ? 'text-primary-700' : 'text-gray-600 hover:text-gray-800', 'size-6']" />
+          :class="[
+            'documents' === viewMode
+              ? 'text-primary-700'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
+            'size-5',
+          ]"
+        />
       </button>
 
-      <button v-tippy="t('actions.tableView')" type="button" @click="viewMode = 'table'">
+      <button
+        v-tippy="t('actions.tableView')"
+        type="button"
+        @click="viewMode = 'table'"
+      >
         <Icon
           name="nimbus:list"
-          :class="['table' === viewMode ? 'text-primary-700' : 'text-gray-600 hover:text-gray-800', 'size-6']" />
+          :class="[
+            'table' === viewMode
+              ? 'text-primary-700'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
+            'size-5',
+          ]"
+        />
       </button>
 
-      <button v-if="hasGeoDocuments" v-tippy="t('actions.mapView')" type="button" @click="viewMode = 'map'">
+      <button
+        v-if="hasGeoDocuments"
+        v-tippy="t('actions.mapView')"
+        type="button"
+        @click="viewMode = 'map'"
+      >
         <Icon
           name="gis:poi-map"
-          :class="['map' === viewMode ? 'text-primary-700' : 'text-gray-600 hover:text-gray-800', 'size-6']" />
+          :class="[
+            'map' === viewMode
+              ? 'text-primary-700'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
+            'size-5',
+          ]"
+        />
       </button>
 
-      <button v-tippy="t('actions.toggleFilters')" @click="filterPanelOpen = true">
+      <button
+        v-tippy="t('actions.toggleFilters')"
+        @click="filterPanelOpen = true"
+      >
         <Icon
           name="ph:funnel-fill"
-          class="size-6"
+          class="size-5"
           :class="
-            appliedFilters.length > 0 ? 'text-primary-600 hover:text-primary-800' : 'text-gray-600 hover:text-gray-800'
-          " />
+            appliedFilters.length > 0
+              ? 'text-primary-600 hover:text-primary-800'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+          "
+        />
       </button>
     </template>
     <template #title-actions>
-      <NuxtLink :to="`/indexes/${index.uid}/settings`" v-tippy="t('actions.goToSettings')">
-        <Icon name="heroicons-outline:cog" />
+      <NuxtLink
+        :to="`/indexes/${index.uid}/settings`"
+        v-tippy="t('actions.goToSettings')"
+      >
+        <Icon name="heroicons-outline:cog" class="size-5" />
       </NuxtLink>
     </template>
 
@@ -100,12 +160,14 @@
       :document-id="similarDocuments.documentId"
       :embedders="embedderNames"
       @close="clearSimilarDocuments()"
-      class="mb-6 w-full" />
+      class="mb-6 w-full"
+    />
 
     <DocumentsEmptyState
       v-if="0 === resultset.estimatedTotalHits"
       :index-uid="index.uid"
-      :request-has-filters="!!(searchParams.filter || searchParams.q)"></DocumentsEmptyState>
+      :request-has-filters="!!(searchParams.filter || searchParams.q)"
+    ></DocumentsEmptyState>
 
     <MainComponent
       v-else
@@ -114,7 +176,8 @@
       :primary-key="primaryKey"
       :applied-filters="appliedFilters"
       :can-filter-geo-documents="canFilterGeoDocuments"
-      :fields="displayFields" />
+      :fields="displayFields"
+    />
 
     <template #footer>
       <DocumentsFooter
@@ -132,7 +195,8 @@
         :can-rerank="'' !== personalizeUserContext.trim()"
         :rerank-loading="rerankLoading"
         :personalize-applied="personalizeApplied"
-        @rerank="rerank" />
+        @rerank="rerank"
+      />
     </template>
   </Layout>
 </template>
@@ -173,7 +237,12 @@ import SearchSettingsModal from '~/components/documents/search-settings/SearchSe
 import { reactiveComputed } from '@vueuse/core'
 import { field as filterField } from 'meilisearch-filters'
 import type { SearchParams } from 'meilisearch'
-import { TOAST_FAILURE, usePromisifiedDialogs, useToasts, useVersion } from '~/stores'
+import {
+  TOAST_FAILURE,
+  usePromisifiedDialogs,
+  useToasts,
+  useVersion,
+} from '~/stores'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -187,35 +256,61 @@ const { openDialog } = usePromisifiedDialogs()
 // there's no capability endpoint to probe whether the instance's Cohere key is actually
 // configured — that can only be discovered by a failing search, handled below.
 const personalizeAvailable = computed(() => satisfiesVersion('>=1.25.0'))
-const searchClient = reactiveComputed(() => (tenant.tenantToken ? useMeiliClient(tenant.tenantToken as string) : meili))
+const searchClient = reactiveComputed(() =>
+  tenant.tenantToken ? useMeiliClient(tenant.tenantToken as string) : meili,
+)
 const { formatDate } = useDateFormatter()
 const index = await tryOrThrow(() => meili.getIndex(indexUid as string))
 const filterPanelOpen = ref(false)
-const [primaryKey, rawFilterableAttributes, sortableAttributes, searchableAttributes, stats] = await Promise.all([
+const [
+  primaryKey,
+  rawFilterableAttributes,
+  sortableAttributes,
+  searchableAttributes,
+  stats,
+] = await Promise.all([
   index.fetchPrimaryKey() as Promise<string>,
   index.getFilterableAttributes(),
   index.getSortableAttributes(),
   index.getSearchableAttributes(),
   index.getStats(),
 ])
-const filterableAttributes = getFilterableAttributePatterns(rawFilterableAttributes)
-const facetSearchableAttributes = getFacetSearchableAttributePatterns(rawFilterableAttributes)
+const filterableAttributes = getFilterableAttributePatterns(
+  rawFilterableAttributes,
+)
+const facetSearchableAttributes = getFacetSearchableAttributePatterns(
+  rawFilterableAttributes,
+)
 
-const { fields } = useFields(primaryKey, Object.keys(stats.fieldDistribution), index.uid)
-const { appliedSort, facets, itemsPerPage, viewMode, searchSettings, similarDocumentsEmbedder } = useIndexLocalSettings(
+const { fields } = useFields(
+  primaryKey,
+  Object.keys(stats.fieldDistribution),
   index.uid,
 )
+const {
+  appliedSort,
+  facets,
+  itemsPerPage,
+  viewMode,
+  searchSettings,
+  similarDocumentsEmbedder,
+} = useIndexLocalSettings(index.uid)
 const appliedFilters = reactive(new AppliedFilters()) as AppliedFilters
 
 // Facets/sort stored while connected to this index may no longer be filterable/sortable (removed
 // from the index settings since last visit) — reconcile against the live lists *before* they can
 // ever be sent to Meilisearch, which would otherwise reject the search and break the page.
-const validFacets = facets.value.filter((facet) => filterableAttributes.includes(facet))
+const validFacets = facets.value.filter((facet) =>
+  filterableAttributes.includes(facet),
+)
 if (validFacets.length !== facets.value.length) facets.value = validFacets
-const validSort = appliedSort.value.filter((sort) => sortableAttributes.includes(sort.replace(/:(asc|desc)$/, '')))
+const validSort = appliedSort.value.filter((sort) =>
+  sortableAttributes.includes(sort.replace(/:(asc|desc)$/, '')),
+)
 if (validSort.length !== appliedSort.value.length) appliedSort.value = validSort
 const searchTerms = ref('')
-const { offset, totalItems, currentPage, previousPage, nextPage, lastPage } = usePagination(itemsPerPage)
+const { offset, totalItems, currentPage, previousPage, nextPage, lastPage } =
+  usePagination(itemsPerPage)
 
 // Settings are only ever replaced wholesale (the modal hands back a full object), so patching a
 // single knob goes through here rather than mutating the stored object in place.
@@ -247,8 +342,12 @@ const resetHybridSearch = () =>
 // last configured hybrid search) — reconcile against the live list *before* it can ever be
 // sent to Meilisearch, which would otherwise reject the search and break the page.
 if (!hasEmbedders) {
-  if (searchSettings.value.hybridEnabled || searchSettings.value.hybridEmbedder) resetHybridSearch()
-} else if (searchSettings.value.hybridEmbedder && !embedderNames.includes(searchSettings.value.hybridEmbedder)) {
+  if (searchSettings.value.hybridEnabled || searchSettings.value.hybridEmbedder)
+    resetHybridSearch()
+} else if (
+  searchSettings.value.hybridEmbedder &&
+  !embedderNames.includes(searchSettings.value.hybridEmbedder)
+) {
   resetHybridSearch()
 }
 // Pre-select an embedder for convenience once one exists — this only fills the dropdown,
@@ -261,7 +360,10 @@ if (hasEmbedders && !searchSettings.value.hybridEmbedder) {
 // remembered per index: a stored embedder that no longer exists must never reach a search request.
 if (!hasEmbedders) {
   similarDocumentsEmbedder.value = null
-} else if (!similarDocumentsEmbedder.value || !embedderNames.includes(similarDocumentsEmbedder.value)) {
+} else if (
+  !similarDocumentsEmbedder.value ||
+  !embedderNames.includes(similarDocumentsEmbedder.value)
+) {
   similarDocumentsEmbedder.value = embedderNames[0] as string
 }
 // Non-null wherever the banner is rendered: the mode can only be entered when an embedder exists.
@@ -273,7 +375,11 @@ const selectedEmbedder = computed({
 // The document the results are currently compared to, together with the embedding it was compared
 // on. Both are kept in a single ref so the embedder and its vector can never be out of sync — a
 // vector of the wrong dimensions would make every subsequent search fail. `null` = plain search.
-type SimilarDocuments = { documentId: DocumentId; embedder: string; vector: Array<number> }
+type SimilarDocuments = {
+  documentId: DocumentId
+  embedder: string
+  vector: Array<number>
+}
 const similarDocuments = ref<SimilarDocuments | null>(null)
 const clearSimilarDocuments = () => {
   similarDocuments.value = null
@@ -288,7 +394,9 @@ const findSimilarDocuments = async (documentId: DocumentId) => {
   const embedder = similarDocumentsEmbedder.value
   if (!embedder) return
   try {
-    const document = await meili.index(index.uid).getDocument(documentId, { retrieveVectors: true })
+    const document = await meili
+      .index(index.uid)
+      .getDocument(documentId, { retrieveVectors: true })
     const vector = extractEmbedding(document, embedder)
     if (null === vector) throw new Error(t('errors.noEmbedding', { embedder }))
     searchTerms.value = ''
@@ -326,7 +434,9 @@ const canExcludeSimilarDocument = filterableAttributes.includes(primaryKey)
 const searchFilter = computed(() => {
   const applied = `${appliedFilters}`
   if (!similarDocuments.value || !canExcludeSimilarDocument) return applied
-  const exclusion = filterField(primaryKey).notEquals(similarDocuments.value.documentId).toString()
+  const exclusion = filterField(primaryKey)
+    .notEquals(similarDocuments.value.documentId)
+    .toString()
   return applied ? `(${applied}) AND ${exclusion}` : exclusion
 })
 
@@ -334,7 +444,8 @@ const searchFilter = computed(() => {
 // newer instance can't leak into a request against an older one.
 const effectiveSettings = computed<SearchSettings>(() => ({
   ...searchSettings.value,
-  showPerformanceDetails: searchSettings.value.showPerformanceDetails && satisfiesVersion('>=1.35.0'),
+  showPerformanceDetails:
+    searchSettings.value.showPerformanceDetails && satisfiesVersion('>=1.35.0'),
 }))
 const searchParams = computed<SearchParams>(() => ({
   q: searchTerms.value,
@@ -355,18 +466,26 @@ const hasCustomSearchSettings = computed(
     Object.keys(buildSearchParams(effectiveSettings.value)).length > 0 ||
     '' !== searchSettings.value.personalizeUserContext,
 )
-const resultset = ref(await tryOrThrow(() => searchClient.index(index.uid).search(null, searchParams.value)))
+const resultset = ref(
+  await tryOrThrow(() =>
+    searchClient.index(index.uid).search(null, searchParams.value),
+  ),
+)
 
 // Highlighted matches come back wrapped in the configured markers; StringRenderer strips them and
 // paints the matches. Cropped-only attributes carry no markers, hence the guard on highlighting.
 provideHighlightTags(() =>
   searchSettings.value.attributesToHighlight.length > 0
-    ? { preTag: searchSettings.value.highlightPreTag, postTag: searchSettings.value.highlightPostTag }
+    ? {
+        preTag: searchSettings.value.highlightPreTag,
+        postTag: searchSettings.value.highlightPostTag,
+      }
     : null,
 )
 
 const displayFields = computed(() => {
-  const { attributesToRetrieve, showRankingScore, showRankingScoreDetails } = searchSettings.value
+  const { attributesToRetrieve, showRankingScore, showRankingScoreDetails } =
+    searchSettings.value
   // An empty list means Meilisearch returns everything — see SearchSettings.
   const retrieved =
     0 === attributesToRetrieve.length
@@ -378,8 +497,12 @@ const displayFields = computed(() => {
     ...(showRankingScoreDetails ? ['_rankingScoreDetails'] : []),
   ]
 })
-const hasGeoDocuments = computed(() => Object.keys(stats.fieldDistribution).includes('_geo'))
-const canFilterGeoDocuments = computed(() => filterableAttributes.includes('_geo'))
+const hasGeoDocuments = computed(() =>
+  Object.keys(stats.fieldDistribution).includes('_geo'),
+)
+const canFilterGeoDocuments = computed(() =>
+  filterableAttributes.includes('_geo'),
+)
 const self = reactive({
   resultset,
   totalItems,
@@ -394,14 +517,19 @@ const hits = computed(() => {
   // above) — it is then dropped here, at the cost of one row missing from the page.
   const documents =
     similarDocuments.value && !canExcludeSimilarDocument
-      ? self.resultset.hits.filter((hit: any) => `${hit[primaryKey]}` !== `${similarDocuments.value?.documentId}`)
+      ? self.resultset.hits.filter(
+          (hit: any) =>
+            `${hit[primaryKey]}` !== `${similarDocuments.value?.documentId}`,
+        )
       : self.resultset.hits
   const formattedAttributes = getFormattedAttributes(searchSettings.value)
   if (0 === formattedAttributes.length) return documents
   return documents.map(({ _formatted, ...hit }: Record<string, any>) => ({
     ...hit,
     ...Object.fromEntries(
-      formattedAttributes.filter((field) => field in (_formatted ?? {})).map((field) => [field, _formatted[field]]),
+      formattedAttributes
+        .filter((field) => field in (_formatted ?? {}))
+        .map((field) => [field, _formatted[field]]),
     ),
   }))
 })
@@ -434,7 +562,9 @@ const openSearchSettings = async () => {
 
 // Clicking a document id anywhere in the results (table cells, cards) opens the CRUD slideover.
 // It is loaded on demand: it pulls in vanilla-jsoneditor, which weighs more than this page does.
-const DocumentSlideOver = defineAsyncComponent(() => import('~/components/documents/DocumentSlideOver.vue'))
+const DocumentSlideOver = defineAsyncComponent(
+  () => import('~/components/documents/DocumentSlideOver.vue'),
+)
 const openedDocumentId = ref<DocumentId | null>(null)
 const documentSlideOverOpen = ref(false)
 provideDocumentViewer((documentId: DocumentId) => {
@@ -442,7 +572,9 @@ provideDocumentViewer((documentId: DocumentId) => {
   documentSlideOverOpen.value = true
 })
 const refreshDocuments = async () => {
-  self.resultset = await searchClient.index(index.uid).search(null, searchParams.value)
+  self.resultset = await searchClient
+    .index(index.uid)
+    .search(null, searchParams.value)
   personalizeApplied.value = false
 }
 
@@ -454,13 +586,17 @@ const rerankLoading = ref(false)
 const personalizeApplied = ref(false)
 // An empty user context is what "personalization off" looks like now that the modal has no
 // switch for it: there is nothing to personalize on.
-const personalizeUserContext = computed(() => searchSettings.value.personalizeUserContext)
+const personalizeUserContext = computed(
+  () => searchSettings.value.personalizeUserContext,
+)
 const rerank = async () => {
   // Toggle: re-clicking while personalized results are showing reverts to the plain search
   // instead of reranking again.
   if (personalizeApplied.value) {
     rerankLoading.value = true
-    self.resultset = await searchClient.index(index.uid).search(null, searchParams.value)
+    self.resultset = await searchClient
+      .index(index.uid)
+      .search(null, searchParams.value)
     personalizeApplied.value = false
     rerankLoading.value = false
     return
@@ -498,10 +634,13 @@ watch(searchTerms, (searchTerms) => {
 })
 // Switching embedder re-compares the same document on the new one.
 watch(similarDocumentsEmbedder, () => {
-  if (similarDocuments.value) findSimilarDocuments(similarDocuments.value.documentId)
+  if (similarDocuments.value)
+    findSimilarDocuments(similarDocuments.value.documentId)
 })
 watch(searchParams, async (searchParams) => {
-  self.resultset = await searchClient.index(index.uid).search(null, searchParams)
+  self.resultset = await searchClient
+    .index(index.uid)
+    .search(null, searchParams)
   personalizeApplied.value = false
 })
 watch(resultset, () => (self.totalItems = self.resultset.estimatedTotalHits), {

@@ -10,40 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: yarn install
+        run: bun install --frozen-lockfile
 
       - name: Check code style
-        run: yarn lint
+        run: bun run check
 
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: yarn install
+        run: bun install --frozen-lockfile
 
       - name: Build application
-        run: yarn build
+        run: bun run build

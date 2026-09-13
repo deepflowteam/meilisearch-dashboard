@@ -75,23 +75,32 @@ export const DEFAULT_SEARCH_SETTINGS: SearchSettings = {
 export const buildSearchParams = (settings: SearchSettings): SearchParams => {
   const params: SearchParams = {}
   if (settings.hybridEnabled && settings.hybridEmbedder) {
-    params.hybrid = { embedder: settings.hybridEmbedder, semanticRatio: settings.hybridSemanticRatio }
+    params.hybrid = {
+      embedder: settings.hybridEmbedder,
+      semanticRatio: settings.hybridSemanticRatio,
+    }
   }
   if (settings.distinct) params.distinct = settings.distinct
-  if (settings.attributesToRetrieve.length > 0) params.attributesToRetrieve = settings.attributesToRetrieve
-  if (settings.attributesToSearchOn.length > 0) params.attributesToSearchOn = settings.attributesToSearchOn
+  if (settings.attributesToRetrieve.length > 0)
+    params.attributesToRetrieve = settings.attributesToRetrieve
+  if (settings.attributesToSearchOn.length > 0)
+    params.attributesToSearchOn = settings.attributesToSearchOn
   if (settings.attributesToHighlight.length > 0) {
     params.attributesToHighlight = settings.attributesToHighlight
-    if (settings.highlightPreTag) params.highlightPreTag = settings.highlightPreTag
-    if (settings.highlightPostTag) params.highlightPostTag = settings.highlightPostTag
+    if (settings.highlightPreTag)
+      params.highlightPreTag = settings.highlightPreTag
+    if (settings.highlightPostTag)
+      params.highlightPostTag = settings.highlightPostTag
   }
   if (settings.attributesToCrop.length > 0) {
     params.attributesToCrop = settings.attributesToCrop
     if (settings.cropLength) params.cropLength = settings.cropLength
     if (settings.cropMarker) params.cropMarker = settings.cropMarker
   }
-  if (settings.matchingStrategy !== DEFAULT_MATCHING_STRATEGY) params.matchingStrategy = settings.matchingStrategy
-  if (null !== settings.rankingScoreThreshold) params.rankingScoreThreshold = settings.rankingScoreThreshold
+  if (settings.matchingStrategy !== DEFAULT_MATCHING_STRATEGY)
+    params.matchingStrategy = settings.matchingStrategy
+  if (null !== settings.rankingScoreThreshold)
+    params.rankingScoreThreshold = settings.rankingScoreThreshold
   if (settings.locales.length > 0) params.locales = settings.locales
   if (settings.showRankingScore) params.showRankingScore = true
   if (settings.showRankingScoreDetails) params.showRankingScoreDetails = true
@@ -100,7 +109,9 @@ export const buildSearchParams = (settings: SearchSettings): SearchParams => {
 }
 
 /** The attributes whose `_formatted` counterpart is worth displaying instead of the raw value. */
-export const getFormattedAttributes = (settings: SearchSettings): Array<string> => [
+export const getFormattedAttributes = (
+  settings: SearchSettings,
+): Array<string> => [
   ...new Set([...settings.attributesToHighlight, ...settings.attributesToCrop]),
 ]
 
@@ -109,4 +120,5 @@ export const getFormattedAttributes = (settings: SearchSettings): Array<string> 
  * modal draft) that `structuredClone` refuses to copy. A JSON round-trip is both the simplest deep
  * copy for this shape and the one that unwraps proxies on the way.
  */
-export const cloneSearchSettings = (settings: SearchSettings): SearchSettings => JSON.parse(JSON.stringify(settings))
+export const cloneSearchSettings = (settings: SearchSettings): SearchSettings =>
+  JSON.parse(JSON.stringify(settings))

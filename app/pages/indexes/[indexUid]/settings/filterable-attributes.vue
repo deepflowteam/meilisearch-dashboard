@@ -1,8 +1,12 @@
 <template>
   <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submit()">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#filterable-attributes" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#filterable-attributes"
+      />
     </h3>
 
     <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -13,46 +17,87 @@
       {{ t('notice.text') }}
     </Alert>
 
-    <div class="overflow-hidden rounded-lg border border-gray-200">
-      <table class="min-w-full divide-y divide-gray-200 text-sm">
-        <thead class="bg-gray-50">
+    <div
+      class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800"
+    >
+      <table
+        class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-800"
+      >
+        <thead class="bg-gray-50 dark:bg-gray-800">
           <tr>
-            <th class="py-2 pr-2 pl-4 text-left font-medium text-gray-700">{{ t('table.pattern') }}</th>
-            <th class="px-2 py-2 text-center font-medium text-gray-700">{{ t('table.facetSearch') }}</th>
-            <th class="px-2 py-2 text-center font-medium text-gray-700">{{ t('table.equality') }}</th>
-            <th class="px-2 py-2 text-center font-medium text-gray-700">{{ t('table.comparison') }}</th>
-            <th class="py-2 pr-4 pl-2 text-right font-medium text-gray-700"></th>
+            <th
+              class="py-2 pr-2 pl-4 text-left font-medium text-gray-700 dark:text-gray-300"
+            >
+              {{ t('table.pattern') }}
+            </th>
+            <th
+              class="px-2 py-2 text-center font-medium text-gray-700 dark:text-gray-300"
+            >
+              {{ t('table.facetSearch') }}
+            </th>
+            <th
+              class="px-2 py-2 text-center font-medium text-gray-700 dark:text-gray-300"
+            >
+              {{ t('table.equality') }}
+            </th>
+            <th
+              class="px-2 py-2 text-center font-medium text-gray-700 dark:text-gray-300"
+            >
+              {{ t('table.comparison') }}
+            </th>
+            <th
+              class="py-2 pr-4 pl-2 text-right font-medium text-gray-700 dark:text-gray-300"
+            ></th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100 bg-white">
+        <tbody
+          class="divide-y divide-gray-100 bg-white dark:divide-gray-800 dark:bg-gray-900"
+        >
           <tr v-for="(row, i) in rows" :key="i" class="group">
             <td class="py-1.5 pr-2 pl-4">
               <input
                 v-model="row.pattern"
                 type="text"
                 class="form-input w-full text-sm"
-                :placeholder="t('placeholders.pattern')" />
+                :placeholder="t('placeholders.pattern')"
+              />
             </td>
             <td class="px-2 py-1.5 text-center">
-              <input v-model="row.facetSearch" type="checkbox" class="form-checkbox" />
+              <input
+                v-model="row.facetSearch"
+                type="checkbox"
+                class="form-checkbox"
+              />
             </td>
             <td class="px-2 py-1.5 text-center">
-              <input v-model="row.equalityFilter" type="checkbox" class="form-checkbox" />
+              <input
+                v-model="row.equalityFilter"
+                type="checkbox"
+                class="form-checkbox"
+              />
             </td>
             <td class="px-2 py-1.5 text-center">
-              <input v-model="row.comparisonFilter" type="checkbox" class="form-checkbox" />
+              <input
+                v-model="row.comparisonFilter"
+                type="checkbox"
+                class="form-checkbox"
+              />
             </td>
             <td class="py-1.5 pr-4 pl-2 text-right">
               <button
                 type="button"
-                class="text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500"
-                @click="removeRow(i)">
+                class="text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500 dark:text-gray-500"
+                @click="removeRow(i)"
+              >
                 <Icon name="mdi:close" />
               </button>
             </td>
           </tr>
           <tr v-if="rows.length === 0">
-            <td colspan="5" class="px-4 py-4 text-center text-sm text-gray-400 italic">
+            <td
+              colspan="5"
+              class="px-4 py-4 text-center text-sm text-gray-400 italic dark:text-gray-500"
+            >
               {{ t('emptyState') }}
             </td>
           </tr>
@@ -60,7 +105,13 @@
       </table>
     </div>
 
-    <Button type="button" theme="secondary" icon="mdi:plus" size="small" @click="addRow()">
+    <Button
+      type="button"
+      theme="secondary"
+      icon="mdi:plus"
+      size="small"
+      @click="addRow()"
+    >
       {{ t('actions.addPattern') }}
     </Button>
 
@@ -78,7 +129,11 @@ import Button from '~/components/layout/forms/Button.vue'
 import Buttons from '~/components/layout/forms/Buttons.vue'
 import DocumentationLink from '~/components/layout/DocumentationLink.vue'
 import Alert from '~/components/layout/Alert.vue'
-import { decodeFilterableAttributes, encodeFilterableAttributes, type FilterableAttributeRow } from '~/utils'
+import {
+  decodeFilterableAttributes,
+  encodeFilterableAttributes,
+  type FilterableAttributeRow,
+} from '~/utils'
 import { TOAST_FAILURE, TOAST_SUCCESS, useToasts } from '~/stores/toasts'
 import { useFormSubmit, useTask } from '~/composables'
 
@@ -93,20 +148,33 @@ const index = meili.index(props.indexUid)
 
 const rawFilterableAttributes = await index.getFilterableAttributes()
 
-const savedRows = ref<FilterableAttributeRow[]>(decodeFilterableAttributes(rawFilterableAttributes))
-const rows = ref<FilterableAttributeRow[]>(decodeFilterableAttributes(rawFilterableAttributes))
+const savedRows = ref<FilterableAttributeRow[]>(
+  decodeFilterableAttributes(rawFilterableAttributes),
+)
+const rows = ref<FilterableAttributeRow[]>(
+  decodeFilterableAttributes(rawFilterableAttributes),
+)
 
 const encodedKey = (r: FilterableAttributeRow[]) =>
-  JSON.stringify(encodeFilterableAttributes(r.filter((row) => row.pattern.trim() !== '')))
+  JSON.stringify(
+    encodeFilterableAttributes(r.filter((row) => row.pattern.trim() !== '')),
+  )
 
-const modified = computed(() => encodedKey(rows.value) !== encodedKey(savedRows.value))
+const modified = computed(
+  () => encodedKey(rows.value) !== encodedKey(savedRows.value),
+)
 
 const reset = () => {
   rows.value = savedRows.value.map((r) => ({ ...r }))
 }
 
 const addRow = () => {
-  rows.value.push({ pattern: '', facetSearch: true, equalityFilter: true, comparisonFilter: true })
+  rows.value.push({
+    pattern: '',
+    facetSearch: true,
+    equalityFilter: true,
+    comparisonFilter: true,
+  })
 }
 
 const removeRow = (index: number) => {

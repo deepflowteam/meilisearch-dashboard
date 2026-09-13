@@ -3,7 +3,9 @@ import type { InjectionKey, MaybeRefOrGetter, Ref } from 'vue'
 export type HighlightTags = { preTag: string; postTag: string }
 export type HighlightMatch = [start: number, end: number]
 
-const HIGHLIGHT_TAGS = Symbol('search-highlight-tags') as InjectionKey<Ref<HighlightTags | null>>
+const HIGHLIGHT_TAGS = Symbol('search-highlight-tags') as InjectionKey<
+  Ref<HighlightTags | null>
+>
 /** Styled by `::highlight(meili-search-match)` in app/assets/css/main.css. */
 const HIGHLIGHT_NAME = 'meili-search-match'
 
@@ -12,7 +14,9 @@ const HIGHLIGHT_NAME = 'meili-search-match'
  * travel down through several layers of renderers before reaching the text nodes that must show
  * them. Provide/inject keeps that plumbing out of the components in between.
  */
-export const provideHighlightTags = (tags: MaybeRefOrGetter<HighlightTags | null>) =>
+export const provideHighlightTags = (
+  tags: MaybeRefOrGetter<HighlightTags | null>,
+) =>
   provide(
     HIGHLIGHT_TAGS,
     computed(() => toValue(tags)),
@@ -33,7 +37,8 @@ export const parseHighlightMarkers = (
   value: string,
   { preTag, postTag }: HighlightTags,
 ): { text: string; matches: Array<HighlightMatch> } => {
-  if (!preTag || !postTag || !value.includes(preTag)) return { text: value, matches: [] }
+  if (!preTag || !postTag || !value.includes(preTag))
+    return { text: value, matches: [] }
 
   const matches: Array<HighlightMatch> = []
   let text = ''
@@ -59,7 +64,8 @@ const getRegistry = () => {
   // Unsupported in older browsers (and the API is behind `CSS.highlights`) — matches then simply
   // render without emphasis, which is why parsing still strips the markers unconditionally.
   if ('undefined' === typeof Highlight || !CSS?.highlights) return null
-  if (!registry) CSS.highlights.set(HIGHLIGHT_NAME, (registry = new Highlight()))
+  if (!registry)
+    CSS.highlights.set(HIGHLIGHT_NAME, (registry = new Highlight()))
   return registry
 }
 
@@ -75,7 +81,8 @@ export const useTextHighlight = (
     (onCleanup) => {
       const highlights = getRegistry()
       const textNode = toValue(element)?.firstChild
-      if (!highlights || !textNode || Node.TEXT_NODE !== textNode.nodeType) return
+      if (!highlights || !textNode || Node.TEXT_NODE !== textNode.nodeType)
+        return
 
       const ranges = toValue(matches).map(([start, end]) => {
         const range = new Range()

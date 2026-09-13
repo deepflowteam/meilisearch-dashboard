@@ -1,9 +1,20 @@
 <template>
-  <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submitPrimaryKey()">
+  <form
+    class="space-y-4"
+    @reset.prevent="reset()"
+    @submit.prevent="submitPrimaryKey()"
+  >
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-2">
       <Label required :for="id">{{ t('labels.primaryKey') }}</Label>
-      <input v-model="primaryKey" required autofocus autocomplete="off" type="text" class="form-input" />
-      <p class="text-xs text-gray-600 italic">
+      <input
+        v-model="primaryKey"
+        required
+        autofocus
+        autocomplete="off"
+        type="text"
+        class="form-input"
+      />
+      <p class="text-xs text-gray-600 italic dark:text-gray-400">
         {{ t('notices.primaryKey.text') }}
       </p>
     </UniqueId>
@@ -11,7 +22,11 @@
     <footer class="flex flex-col items-center justify-end sm:flex-row">
       <Buttons>
         <Button type="reset" :disabled="!modified || loading" />
-        <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -38,7 +53,11 @@ const processTask = useTask()
 const { createToast } = useToasts()
 
 const initialPrimaryKey = await props.index.fetchPrimaryKey()
-const { value: primaryKey, reset, modified } = resettableRef(initialPrimaryKey as string)
+const {
+  value: primaryKey,
+  reset,
+  modified,
+} = resettableRef(initialPrimaryKey as string)
 const { loading, handle } = useFormSubmit({
   confirm: { text: t('confirmations.primaryKey.text') },
 })
@@ -55,24 +74,27 @@ const submitPrimaryKey = async () => {
   })
   await handle(async () => {
     toast.spawn()
-    await processTask(() => props.index.update({ primaryKey: self.primaryKey }), {
-      onSuccess: async () => {
-        toast.update({ ...TOAST_SUCCESS(t) })
-        reset(self.primaryKey)
+    await processTask(
+      () => props.index.update({ primaryKey: self.primaryKey }),
+      {
+        onSuccess: async () => {
+          toast.update({ ...TOAST_SUCCESS(t) })
+          reset(self.primaryKey)
+        },
+        onCanceled: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.canceledTask'),
+          }),
+        onFailure: (task: Task) => {
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.failedTask'),
+          })
+          emit('error', task.error as TaskError)
+        },
       },
-      onCanceled: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.canceledTask'),
-        }),
-      onFailure: (task: Task) => {
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.failedTask'),
-        })
-        emit('error', task.error as TaskError)
-      },
-    })
+    )
   })
 }
 </script>

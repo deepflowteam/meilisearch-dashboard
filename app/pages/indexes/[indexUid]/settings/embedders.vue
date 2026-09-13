@@ -3,19 +3,30 @@
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">
           {{ t('description') }}
         </span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#embedders" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#embedders"
+      />
     </h3>
 
     <template v-for="embedder of embedders">
       <EmbedderEntry :embedder="embedder as [string, Embedder]" />
     </template>
 
-    <div class="flex" :class="embedders.length > 0 ? 'justify-end' : 'justify-center py-16'">
-      <Button size="small" theme="primary" type="button" icon="mdi:plus" @click="addEmbedder()">
+    <div
+      class="flex"
+      :class="embedders.length > 0 ? 'justify-end' : 'justify-center py-16'"
+    >
+      <Button
+        size="small"
+        theme="primary"
+        type="button"
+        icon="mdi:plus"
+        @click="addEmbedder()"
+      >
         {{ t('actions.addEmbedder') }}
       </Button>
     </div>
@@ -26,12 +37,17 @@
         theme="primary"
         icon="mdi:bin"
         :disabled="loading || 0 === embedders.length"
-        @click="resetToInitialValue()">
+        @click="resetToInitialValue()"
+      >
         {{ t('actions.clearEmbedders') }}
       </Button>
       <Buttons>
         <Button type="reset" :disabled="!modified || loading" />
-        <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -67,9 +83,21 @@ const { createToast } = useToasts()
 const { confirm } = useConfirmationDialog()
 const parseEmbedders = (embedders: Embedders) =>
   Object.entries(embedders ?? {}).map(([name, embedder]) => {
-    const request = JSON.stringify((embedder as RestEmbedder).request ?? {}, null, 2)
-    const response = JSON.stringify((embedder as RestEmbedder).response ?? {}, null, 2)
-    const headers = JSON.stringify((embedder as RestEmbedder).headers ?? {}, null, 2)
+    const request = JSON.stringify(
+      (embedder as RestEmbedder).request ?? {},
+      null,
+      2,
+    )
+    const response = JSON.stringify(
+      (embedder as RestEmbedder).response ?? {},
+      null,
+      2,
+    )
+    const headers = JSON.stringify(
+      (embedder as RestEmbedder).headers ?? {},
+      null,
+      2,
+    )
     return [
       name,
       {
@@ -105,7 +133,11 @@ const normalizeEmbedders = (embedders: [string, Embedder][]) =>
       return [name, embedder]
     }),
   )
-const { value: embedders, reset, modified } = resettableRef(parseEmbedders(await index.getEmbedders()))
+const {
+  value: embedders,
+  reset,
+  modified,
+} = resettableRef(parseEmbedders(await index.getEmbedders()))
 const self = reactive({ embedders })
 const addEmbedder = () => {
   self.embedders.push([
@@ -137,7 +169,9 @@ const submit = async () => {
   })
   try {
     const embedderEntries = toRaw(self.embedders)
-    const embeddersObject: any = normalizeEmbedders(embedderEntries as [string, Embedder][])
+    const embeddersObject: any = normalizeEmbedders(
+      embedderEntries as [string, Embedder][],
+    )
     await handle(async () => {
       await processTask(() => index.updateEmbedders(embeddersObject), {
         onSuccess: async () => {

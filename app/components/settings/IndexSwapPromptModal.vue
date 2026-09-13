@@ -1,19 +1,40 @@
 <template>
-  <PromisifiedDialog :title="t('title', { indexUid })" v-slot="{ resolve, close }">
-    <form class="space-y-4" @submit.prevent="resolve(self.targetIndexUid)" @reset.prevent="close()">
+  <PromisifiedDialog
+    :title="t('title', { indexUid })"
+    v-slot="{ resolve, close }"
+  >
+    <form
+      class="space-y-4"
+      @submit.prevent="resolve(self.targetIndexUid)"
+      @reset.prevent="close()"
+    >
       <Alert theme="warning" :title="t('warnings.title')">
         {{ t('warnings.swap') }}
       </Alert>
 
       <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
         <Label required :for="id">{{ t('labels.targetIndexUid') }}</Label>
-        <Select :id="id" required :disabled="self.loading" v-model="self.targetIndexUid">
+        <Select
+          :id="id"
+          required
+          :disabled="self.loading"
+          v-model="self.targetIndexUid"
+        >
           <option value="" disabled>
-            {{ self.loading ? t('placeholders.loading') : t('placeholders.pickAnIndex') }}
+            {{
+              self.loading
+                ? t('placeholders.loading')
+                : t('placeholders.pickAnIndex')
+            }}
           </option>
-          <option v-for="uid of self.otherIndexes" :key="uid" :value="uid">{{ uid }}</option>
+          <option v-for="uid of self.otherIndexes" :key="uid" :value="uid">
+            {{ uid }}
+          </option>
         </Select>
-        <p v-if="!self.loading && 0 === self.otherIndexes.length" class="text-xs text-red-600 italic">
+        <p
+          v-if="!self.loading && 0 === self.otherIndexes.length"
+          class="text-xs text-red-600 italic"
+        >
           {{ t('notices.noOtherIndexes') }}
         </p>
       </UniqueId>
@@ -52,7 +73,9 @@ const self = reactive({
 
 onMounted(async () => {
   const { results } = await meili.getIndexes({ limit: 1000 })
-  self.otherIndexes = results.map(({ uid }) => uid).filter((uid) => uid !== props.indexUid)
+  self.otherIndexes = results
+    .map(({ uid }) => uid)
+    .filter((uid) => uid !== props.indexUid)
   self.loading = false
 })
 </script>

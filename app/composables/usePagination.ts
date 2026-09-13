@@ -13,7 +13,9 @@ type UsePagination = {
   getPageOffset: (page: number) => number
 }
 
-export const usePagination = (itemsPerPage: MaybeRef<number>): SafeToRefs<UsePagination> => {
+export const usePagination = (
+  itemsPerPage: MaybeRef<number>,
+): SafeToRefs<UsePagination> => {
   const totalItems: Ref<number> = ref(0)
   const offset: Ref<number> = ref(0)
   const self: UsePagination = reactive({
@@ -29,7 +31,10 @@ export const usePagination = (itemsPerPage: MaybeRef<number>): SafeToRefs<UsePag
     currentPage: computed(() =>
       match(0, [
         [[self.itemsPerPage, self.totalItems], 1],
-        [match.default, Math.ceil((self.offset + self.itemsPerPage) / self.itemsPerPage)],
+        [
+          match.default,
+          Math.ceil((self.offset + self.itemsPerPage) / self.itemsPerPage),
+        ],
       ]),
     ),
     previousPage: computed(() =>
@@ -44,7 +49,8 @@ export const usePagination = (itemsPerPage: MaybeRef<number>): SafeToRefs<UsePag
         [match.default, self.currentPage + 1],
       ]),
     ),
-    getPageOffset: (page: number) => self.itemsPerPage * page - self.itemsPerPage,
+    getPageOffset: (page: number) =>
+      self.itemsPerPage * page - self.itemsPerPage,
   })
 
   watch(toRef(self, 'itemsPerPage'), () => {

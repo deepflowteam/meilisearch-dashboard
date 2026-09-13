@@ -31,7 +31,12 @@ export const SEARCH_RULES_FEATURE = 'dynamicSearchRules'
  */
 export const SEARCH_RULE_UID_PATTERN = '[a-zA-Z0-9_\\-]+'
 
-export type { SearchRuleAction, SearchRuleListPayload, SearchRulePinAction, SearchRuleSelector } from 'meilisearch'
+export type {
+  SearchRuleAction,
+  SearchRuleListPayload,
+  SearchRulePinAction,
+  SearchRuleSelector,
+} from 'meilisearch'
 
 /**
  * Matches searches whose own filter carries these attribute/value pairs. Meilisearch 1.53 accepts
@@ -70,9 +75,12 @@ export const useSearchRules = () => {
   // The casts below only widen the client's types with the two fields it hasn't caught up with
   // (`conditions.filter`, `lastUpdatedAt`); drop them once meilisearch-js declares them.
   const list = (parameters?: SearchRuleListPayload) =>
-    meili.getDynamicSearchRules(parameters) as Promise<ResourceResults<SearchRule[]>>
+    meili.getDynamicSearchRules(parameters) as Promise<
+      ResourceResults<SearchRule[]>
+    >
 
-  const get = (uid: string) => meili.getDynamicSearchRule(uid) as Promise<SearchRule>
+  const get = (uid: string) =>
+    meili.getDynamicSearchRule(uid) as Promise<SearchRule>
 
   /** Creates the rule when `uid` is unknown, patches it otherwise. */
   const save = (uid: string, rule: SearchRulePayload) =>

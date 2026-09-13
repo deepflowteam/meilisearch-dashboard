@@ -6,14 +6,24 @@
     side="right"
     :overlay="false"
     :dismissible="!loading"
-    :ui="{ content: 'max-w-5xl', title: 'text-2xl font-semibold' }">
+    :ui="{ content: 'max-w-5xl', title: 'text-2xl font-semibold' }"
+  >
     <template #body>
-      <form class="flex h-full flex-col gap-4" @reset.prevent="reset()" @submit.prevent="save()">
+      <form
+        class="flex h-full flex-col gap-4"
+        @reset.prevent="reset()"
+        @submit.prevent="save()"
+      >
         <Alert v-if="error" dismissable theme="danger" @close="error = null">
           {{ error }}
         </Alert>
 
-        <p v-if="fetching" class="text-sm font-light text-gray-500 italic">{{ t('loading') }}</p>
+        <p
+          v-if="fetching"
+          class="text-sm font-light text-gray-500 italic dark:text-gray-400"
+        >
+          {{ t('loading') }}
+        </p>
 
         <JsonEditorVue
           v-else
@@ -21,9 +31,12 @@
           mode="text"
           :read-only="loading"
           :onRenderMenu="hideTableMode"
-          class="json-editor min-h-0 flex-1" />
+          class="json-editor min-h-0 flex-1"
+        />
 
-        <footer class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <footer
+          class="flex flex-col items-center justify-between gap-4 sm:flex-row"
+        >
           <Buttons>
             <Button
               type="button"
@@ -31,7 +44,8 @@
               :disabled="fetching || loading"
               :loading="'delete' === pendingAction"
               class="hover:text-red-600"
-              @click="remove()">
+              @click="remove()"
+            >
               {{ t('actions.delete') }}
             </Button>
             <Button
@@ -39,13 +53,18 @@
               type="button"
               icon="ph:graph"
               :disabled="fetching || loading"
-              @click="findSimilar()">
+              @click="findSimilar()"
+            >
               {{ t('actions.findSimilar') }}
             </Button>
           </Buttons>
           <Buttons>
             <Button type="reset" :disabled="fetching || loading" />
-            <Button type="submit" :disabled="fetching || loading" :loading="'save' === pendingAction" />
+            <Button
+              type="submit"
+              :disabled="fetching || loading"
+              :loading="'save' === pendingAction"
+            />
           </Buttons>
         </footer>
       </form>
@@ -58,8 +77,20 @@ import JsonEditorVue from 'json-editor-vue'
 import Alert from '~/components/layout/Alert.vue'
 import Button from '~/components/layout/forms/Button.vue'
 import Buttons from '~/components/layout/forms/Buttons.vue'
-import { useFormSubmit, useMeiliClient, useSimilarDocuments, useTask, type DocumentId } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useConfirmationDialog, useToasts } from '~/stores'
+import {
+  useFormSubmit,
+  useMeiliClient,
+  useSimilarDocuments,
+  useTask,
+  type DocumentId,
+} from '~/composables'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useConfirmationDialog,
+  useToasts,
+} from '~/stores'
 
 type Props = {
   indexUid: string
@@ -106,14 +137,19 @@ type MenuItem = { type: string; text?: string; className?: string }
 const hideTableMode = (items: MenuItem[]) =>
   items
     .filter(({ text }) => 'table' !== text)
-    .map((item) => ('tree' === item.text ? { ...item, className: `${item.className ?? ''} jse-last` } : item))
+    .map((item) =>
+      'tree' === item.text
+        ? { ...item, className: `${item.className ?? ''} jse-last` }
+        : item,
+    )
 
 /**
  * `mode="text"` hands back the raw text (`stringified` defaults to `true`), but the built-in mode
  * switcher lets the user move to tree/table mode, where the binding value becomes parsed JSON.
  * Normalizing here keeps both cases working — and surfaces malformed JSON as a plain parse error.
  */
-const parseJson = (value: unknown) => ('string' === typeof value ? JSON.parse(value) : value)
+const parseJson = (value: unknown) =>
+  'string' === typeof value ? JSON.parse(value) : value
 
 const reset = () => {
   error.value = null
@@ -124,7 +160,9 @@ const load = async () =>
   handle(async () => {
     fetching.value = true
     try {
-      savedDocument.value = await meili.index(props.indexUid).getDocument(props.documentId)
+      savedDocument.value = await meili
+        .index(props.indexUid)
+        .getDocument(props.documentId)
       reset()
     } finally {
       fetching.value = false
@@ -132,7 +170,9 @@ const load = async () =>
   })
 
 // The slideover is kept mounted between openings: (re)load whenever it opens on a document.
-watch([open, () => props.documentId], ([isOpen]) => isOpen && load(), { immediate: true })
+watch([open, () => props.documentId], ([isOpen]) => isOpen && load(), {
+  immediate: true,
+})
 
 const save = () =>
   handle(async () => {
@@ -140,15 +180,24 @@ const save = () =>
     // `addDocuments` replaces the document matching the primary key. A changed id would silently
     // create a second document instead of editing this one, so refuse it rather than surprise.
     if (`${payload?.[props.primaryKey]}` !== `${props.documentId}`) {
-      throw new Error(t('errors.primaryKeyChanged', { primaryKey: props.primaryKey }))
+      throw new Error(
+        t('errors.primaryKeyChanged', { primaryKey: props.primaryKey }),
+      )
     }
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.saving') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.saving'),
+    })
     pendingAction.value = 'save'
     try {
-      const task = await processTask(() => meili.index(props.indexUid).addDocuments([payload]))
+      const task = await processTask(() =>
+        meili.index(props.indexUid).addDocuments([payload]),
+      )
       if ('succeeded' !== task.status) {
         // `error` only exists on a resolved Task, not on the enqueued one returned on timeout.
-        throw new Error(('error' in task && task.error?.message) || t('toasts.failed'))
+        throw new Error(
+          ('error' in task && task.error?.message) || t('toasts.failed'),
+        )
       }
       toast.update({ ...TOAST_SUCCESS(t) })
       savedDocument.value = payload
@@ -163,15 +212,26 @@ const save = () =>
 
 const remove = () =>
   handle(async () => {
-    if (!(await confirm({ text: t('confirmations.delete', { documentId: props.documentId }) }))) {
+    if (
+      !(await confirm({
+        text: t('confirmations.delete', { documentId: props.documentId }),
+      }))
+    ) {
       return
     }
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.deleting') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.deleting'),
+    })
     pendingAction.value = 'delete'
     try {
-      const task = await processTask(() => meili.index(props.indexUid).deleteDocument(props.documentId))
+      const task = await processTask(() =>
+        meili.index(props.indexUid).deleteDocument(props.documentId),
+      )
       if ('succeeded' !== task.status) {
-        throw new Error(('error' in task && task.error?.message) || t('toasts.failed'))
+        throw new Error(
+          ('error' in task && task.error?.message) || t('toasts.failed'),
+        )
       }
       toast.update({ ...TOAST_SUCCESS(t) })
       open.value = false

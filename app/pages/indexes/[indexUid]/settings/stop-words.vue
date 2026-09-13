@@ -3,11 +3,13 @@
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">
           {{ t('description') }}
         </span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#stop-words" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#stop-words"
+      />
     </h3>
 
     <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -28,7 +30,11 @@
       </Button>
       <Buttons>
         <Button type="reset" :disabled="!modified || loading" />
-        <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -59,7 +65,11 @@ const { loading, error, handle } = useFormSubmit({
 })
 const processTask = useTask()
 const { createToast } = useToasts()
-const { value: stopWords, reset, modified } = resettableRef(await index.getStopWords())
+const {
+  value: stopWords,
+  reset,
+  modified,
+} = resettableRef(await index.getStopWords())
 const self = reactive({ stopWords })
 const editableStopWords = computed({
   get: () => self.stopWords.join('\n'),

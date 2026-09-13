@@ -1,8 +1,12 @@
 <template>
   <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submit()">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings/get-foreignkeys" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings/get-foreignkeys"
+      />
     </h3>
 
     <Alert v-if="!featureEnabled" theme="warning" :title="t('disabled.title')">
@@ -12,7 +16,11 @@
       </NuxtLink>
     </Alert>
 
-    <Alert v-else-if="endpointUnavailable" theme="danger" :title="t('unavailable.title')">
+    <Alert
+      v-else-if="endpointUnavailable"
+      theme="danger"
+      :title="t('unavailable.title')"
+    >
       {{ t('unavailable.text') }}
     </Alert>
 
@@ -25,41 +33,73 @@
         {{ t('notice.text') }}
       </Alert>
 
-      <div class="overflow-hidden rounded-lg border border-gray-200">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-          <thead class="bg-gray-50">
+      <div
+        class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800"
+      >
+        <table
+          class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-800"
+        >
+          <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th class="py-2 pr-2 pl-4 text-left font-medium text-gray-700">{{ t('table.fieldName') }}</th>
-              <th class="px-2 py-2 text-left font-medium text-gray-700">{{ t('table.foreignIndex') }}</th>
-              <th class="py-2 pr-4 pl-2 text-right font-medium text-gray-700"></th>
+              <th
+                class="py-2 pr-2 pl-4 text-left font-medium text-gray-700 dark:text-gray-300"
+              >
+                {{ t('table.fieldName') }}
+              </th>
+              <th
+                class="px-2 py-2 text-left font-medium text-gray-700 dark:text-gray-300"
+              >
+                {{ t('table.foreignIndex') }}
+              </th>
+              <th
+                class="py-2 pr-4 pl-2 text-right font-medium text-gray-700 dark:text-gray-300"
+              ></th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 bg-white">
+          <tbody
+            class="divide-y divide-gray-100 bg-white dark:divide-gray-800 dark:bg-gray-900"
+          >
             <tr v-for="(row, i) in rows" :key="i" class="group">
               <td class="py-1.5 pr-2 pl-4">
                 <input
                   v-model="row.fieldName"
                   type="text"
                   class="form-input w-full text-sm"
-                  :placeholder="t('placeholders.fieldName')" />
+                  :placeholder="t('placeholders.fieldName')"
+                />
               </td>
               <td class="px-2 py-1.5">
-                <select v-model="row.foreignIndexUid" class="w-full form-select text-sm">
-                  <option value="" disabled>{{ t('placeholders.foreignIndex') }}</option>
-                  <option v-for="uid in indexUidsFor(row)" :key="uid" :value="uid">{{ uid }}</option>
+                <select
+                  v-model="row.foreignIndexUid"
+                  class="w-full form-select text-sm"
+                >
+                  <option value="" disabled>
+                    {{ t('placeholders.foreignIndex') }}
+                  </option>
+                  <option
+                    v-for="uid in indexUidsFor(row)"
+                    :key="uid"
+                    :value="uid"
+                  >
+                    {{ uid }}
+                  </option>
                 </select>
               </td>
               <td class="py-1.5 pr-4 pl-2 text-right">
                 <button
                   type="button"
-                  class="text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500"
-                  @click="removeRow(i)">
+                  class="text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500 dark:text-gray-500"
+                  @click="removeRow(i)"
+                >
                   <Icon name="mdi:close" />
                 </button>
               </td>
             </tr>
             <tr v-if="rows.length === 0">
-              <td colspan="3" class="px-4 py-4 text-center text-sm text-gray-400 italic">
+              <td
+                colspan="3"
+                class="px-4 py-4 text-center text-sm text-gray-400 italic dark:text-gray-500"
+              >
                 {{ t('emptyState') }}
               </td>
             </tr>
@@ -67,7 +107,13 @@
         </table>
       </div>
 
-      <Button type="button" theme="secondary" icon="mdi:plus" size="small" @click="addRow()">
+      <Button
+        type="button"
+        theme="secondary"
+        icon="mdi:plus"
+        size="small"
+        @click="addRow()"
+      >
         {{ t('actions.addForeignKey') }}
       </Button>
 
@@ -87,7 +133,12 @@ import Button from '~/components/layout/forms/Button.vue'
 import Buttons from '~/components/layout/forms/Buttons.vue'
 import DocumentationLink from '~/components/layout/DocumentationLink.vue'
 import Alert from '~/components/layout/Alert.vue'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useToasts } from '~/stores/toasts'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useToasts,
+} from '~/stores/toasts'
 import { useFormSubmit, useMeiliClient, useTask } from '~/composables'
 import type { EnqueuedTask } from 'meilisearch'
 
@@ -116,7 +167,10 @@ let featureEnabled = false
 try {
   // Direct call (not tryOrThrow): degrade gracefully rather than route to the global error page,
   // since an older instance may not expose this endpoint at all.
-  const features = (await meili.getExperimentalFeatures()) as Record<string, boolean>
+  const features = (await meili.getExperimentalFeatures()) as Record<
+    string,
+    boolean
+  >
   featureEnabled = features.foreignKeys === true
 } catch {
   // Older instances return 404 here — treat as "not enabled".
@@ -135,7 +189,9 @@ const endpointUnavailable = ref(false)
 // otherwise misreport as "requires >= 1.42". This keeps the "enable the flag" message accurate.
 if (featureEnabled) {
   try {
-    const current = await meili.httpRequest.get<ForeignKey[]>({ path: foreignKeysPath })
+    const current = await meili.httpRequest.get<ForeignKey[]>({
+      path: foreignKeysPath,
+    })
     savedRows.value = current.map((r) => ({ ...r }))
     rows.value = current.map((r) => ({ ...r }))
   } catch {
@@ -143,15 +199,22 @@ if (featureEnabled) {
   }
 }
 
-const cleaned = (list: ForeignKey[]) => list.filter((r) => r.fieldName.trim() !== '' && r.foreignIndexUid.trim() !== '')
+const cleaned = (list: ForeignKey[]) =>
+  list.filter(
+    (r) => r.fieldName.trim() !== '' && r.foreignIndexUid.trim() !== '',
+  )
 
 const encodedKey = (list: ForeignKey[]) => JSON.stringify(cleaned(list))
 
-const modified = computed(() => encodedKey(rows.value) !== encodedKey(savedRows.value))
+const modified = computed(
+  () => encodedKey(rows.value) !== encodedKey(savedRows.value),
+)
 
 // Keep a row's current value selectable even if it points to an index that no longer exists.
 const indexUidsFor = (row: ForeignKey) =>
-  row.foreignIndexUid && !indexUids.includes(row.foreignIndexUid) ? [...indexUids, row.foreignIndexUid] : indexUids
+  row.foreignIndexUid && !indexUids.includes(row.foreignIndexUid)
+    ? [...indexUids, row.foreignIndexUid]
+    : indexUids
 
 const reset = () => {
   rows.value = savedRows.value.map((r) => ({ ...r }))
@@ -182,7 +245,11 @@ const submit = async () => {
     toast.spawn()
     const cleanRows = cleaned(rows.value)
     await processTask(
-      () => meili.httpRequest.put({ path: foreignKeysPath, body: cleanRows }) as Promise<EnqueuedTask>,
+      () =>
+        meili.httpRequest.put({
+          path: foreignKeysPath,
+          body: cleanRows,
+        }) as Promise<EnqueuedTask>,
       {
         onSuccess: async () => {
           toast.update({ ...TOAST_SUCCESS(t) })

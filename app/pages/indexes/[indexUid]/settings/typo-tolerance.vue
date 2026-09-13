@@ -3,21 +3,35 @@
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">
           {{ t('description') }}
         </span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#typo-tolerance" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#typo-tolerance"
+      />
     </h3>
 
-    <UniqueId as="section" v-slot="{ id }" class="flex items-center justify-between gap-2">
+    <UniqueId
+      as="section"
+      v-slot="{ id }"
+      class="flex items-center justify-between gap-2"
+    >
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.enabled') }}</span>
       </Label>
-      <input v-model="typoTolerance!.enabled" autocomplete="off" type="checkbox" />
+      <input
+        v-model="typoTolerance!.enabled"
+        autocomplete="off"
+        type="checkbox"
+      />
     </UniqueId>
 
-    <UniqueId as="section" v-slot="{ id }" class="flex items-center justify-between gap-2">
+    <UniqueId
+      as="section"
+      v-slot="{ id }"
+      class="flex items-center justify-between gap-2"
+    >
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.minWordSizeForOneTypo') }}</span>
       </Label>
@@ -27,10 +41,15 @@
         autocomplete="off"
         type="number"
         class="form-input"
-        min="0" />
+        min="0"
+      />
     </UniqueId>
 
-    <UniqueId as="section" v-slot="{ id }" class="flex items-center justify-between gap-2">
+    <UniqueId
+      as="section"
+      v-slot="{ id }"
+      class="flex items-center justify-between gap-2"
+    >
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.minWordSizeForTwoTypos') }}</span>
       </Label>
@@ -40,24 +59,32 @@
         autocomplete="off"
         type="number"
         class="form-input"
-        min="0" />
+        min="0"
+      />
     </UniqueId>
 
     <UniqueId v-slot="{ id }" as="div" class="col-span-8">
       <Label :for="id">{{ t('labels.disableOnWords') }}</Label>
-      <SplitLinesTextarea v-model="typoTolerance!.disableOnWords!" class="h-20 w-full text-sm" />
+      <SplitLinesTextarea
+        v-model="typoTolerance!.disableOnWords!"
+        class="h-20 w-full text-sm"
+      />
     </UniqueId>
 
     <UniqueId v-slot="{ id }" as="div" class="col-span-8">
       <Label :for="id">{{ t('labels.disableOnAttributes') }}</Label>
-      <SplitLinesTextarea v-model="typoTolerance!.disableOnAttributes!" class="h-20 w-full text-sm" />
+      <SplitLinesTextarea
+        v-model="typoTolerance!.disableOnAttributes!"
+        class="h-20 w-full text-sm"
+      />
     </UniqueId>
 
     <UniqueId
       v-if="satisfiesVersion('^1.15')"
       as="section"
       v-slot="{ id }"
-      class="flex items-center justify-between gap-2">
+      class="flex items-center justify-between gap-2"
+    >
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.disableOnNumbers') }}</span>
       </Label>
@@ -65,12 +92,22 @@
     </UniqueId>
 
     <footer class="flex flex-col items-center justify-between sm:flex-row">
-      <Button type="button" theme="primary" icon="mdi:bin" :disabled="loading" @click="resetToInitialValue()">
+      <Button
+        type="button"
+        theme="primary"
+        icon="mdi:bin"
+        :disabled="loading"
+        @click="resetToInitialValue()"
+      >
         {{ t('actions.resetTypoTolerance') }}
       </Button>
       <Buttons>
         <Button type="reset" :disabled="!modified || loading" />
-        <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -106,7 +143,11 @@ const { satisfiesVersion } = useVersion()
 const processTask = useTask()
 const { createToast } = useToasts()
 const { confirm } = useConfirmationDialog()
-const { value: typoTolerance, reset, modified } = resettableRef(await index.getTypoTolerance())
+const {
+  value: typoTolerance,
+  reset,
+  modified,
+} = resettableRef(await index.getTypoTolerance())
 const self = reactive({ typoTolerance })
 
 const submit = async () => {

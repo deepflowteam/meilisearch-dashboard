@@ -27,14 +27,17 @@ export const WEBHOOK_REDACTION_MARKER = 'XXX...'
 /** Meilisearch caps the number of editable (user-defined) webhooks. */
 export const WEBHOOK_MAX_EDITABLE = 5
 
-export const isRedactedHeaderValue = (value: string) => value.includes(WEBHOOK_REDACTION_MARKER)
+export const isRedactedHeaderValue = (value: string) =>
+  value.includes(WEBHOOK_REDACTION_MARKER)
 
 export const useWebhooks = () => {
   const meili = useMeiliClient()
 
-  const list = () => meili.httpRequest.get<{ results: Webhook[] }>({ path: 'webhooks' })
+  const list = () =>
+    meili.httpRequest.get<{ results: Webhook[] }>({ path: 'webhooks' })
 
-  const get = (uuid: string) => meili.httpRequest.get<Webhook>({ path: `webhooks/${uuid}` })
+  const get = (uuid: string) =>
+    meili.httpRequest.get<Webhook>({ path: `webhooks/${uuid}` })
 
   const create = (body: { url: string; headers?: Record<string, string> }) =>
     meili.httpRequest.post<Webhook>({ path: 'webhooks', body })
@@ -45,10 +48,13 @@ export const useWebhooks = () => {
    * responsible for omitting unchanged (redacted) secrets and setting removed
    * headers to `null`.
    */
-  const update = (uuid: string, body: { url?: string; headers?: Record<string, string | null> }) =>
-    meili.httpRequest.patch<Webhook>({ path: `webhooks/${uuid}`, body })
+  const update = (
+    uuid: string,
+    body: { url?: string; headers?: Record<string, string | null> },
+  ) => meili.httpRequest.patch<Webhook>({ path: `webhooks/${uuid}`, body })
 
-  const remove = (uuid: string) => meili.httpRequest.delete({ path: `webhooks/${uuid}` })
+  const remove = (uuid: string) =>
+    meili.httpRequest.delete({ path: `webhooks/${uuid}` })
 
   return { list, get, create, update, remove }
 }

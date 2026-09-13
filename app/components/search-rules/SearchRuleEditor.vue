@@ -4,11 +4,18 @@
     :title="rule ? t('title.edit') : t('title.create')"
     side="right"
     :overlay="false"
-    :ui="{ content: 'max-w-2xl', title: 'text-2xl font-semibold' }">
+    :ui="{ content: 'max-w-2xl', title: 'text-2xl font-semibold' }"
+  >
     <template #body>
-      <form class="space-y-6" @reset.prevent="reset()" @submit.prevent="submit()">
+      <form
+        class="space-y-6"
+        @reset.prevent="reset()"
+        @submit.prevent="submit()"
+      >
         <p class="inline-flex w-full items-center justify-end">
-          <DocumentationLink href="https://www.meilisearch.com/docs/capabilities/search_rules/getting_started" />
+          <DocumentationLink
+            href="https://www.meilisearch.com/docs/capabilities/search_rules/getting_started"
+          />
         </p>
 
         <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -26,27 +33,51 @@
               autocapitalize="off"
               autocomplete="off"
               spellcheck="false"
-              class="w-full" />
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField :label="t('labels.precedence')" :help="t('hints.precedence')">
-            <UInput v-model="form.precedence" type="number" :min="0" :step="1" class="w-full" />
+          <UFormField
+            :label="t('labels.precedence')"
+            :help="t('hints.precedence')"
+          >
+            <UInput
+              v-model="form.precedence"
+              type="number"
+              :min="0"
+              :step="1"
+              class="w-full"
+            />
           </UFormField>
         </section>
 
         <UFormField :label="t('labels.description')">
-          <UInput v-model="form.description" :placeholder="t('placeholders.description')" class="w-full" />
+          <UInput
+            v-model="form.description"
+            :placeholder="t('placeholders.description')"
+            class="w-full"
+          />
         </UFormField>
 
         <USwitch v-model="form.active" size="lg" :label="t('labels.active')" />
 
-        <section class="space-y-4 rounded-lg border border-gray-200 p-4">
-          <h4 class="font-semibold text-gray-900">{{ t('sections.conditions') }}</h4>
-          <p class="text-sm font-light text-gray-600">{{ t('hints.conditions') }}</p>
+        <section
+          class="space-y-4 rounded-lg border border-gray-200 p-4 dark:border-gray-800"
+        >
+          <h4 class="font-semibold text-gray-900 dark:text-gray-100">
+            {{ t('sections.conditions') }}
+          </h4>
+          <p class="text-sm font-light text-gray-600 dark:text-gray-400">
+            {{ t('hints.conditions') }}
+          </p>
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <UFormField :label="t('labels.queryKind')">
-              <USelect v-model="form.queryKind" :items="queryKindItems" class="w-full" />
+              <USelect
+                v-model="form.queryKind"
+                :items="queryKindItems"
+                class="w-full"
+              />
             </UFormField>
 
             <UFormField :label="t('labels.words')" :help="t('hints.words')">
@@ -57,30 +88,55 @@
                 autocapitalize="off"
                 autocomplete="off"
                 spellcheck="false"
-                class="w-full" />
+                class="w-full"
+              />
             </UFormField>
 
             <UFormField :label="t('labels.startsAt')">
-              <UInput v-model="form.start" type="datetime-local" class="w-full" />
+              <UInput
+                v-model="form.start"
+                type="datetime-local"
+                class="w-full"
+              />
             </UFormField>
 
             <UFormField :label="t('labels.endsAt')">
               <UInput v-model="form.end" type="datetime-local" class="w-full" />
             </UFormField>
           </div>
-          <p class="text-xs font-light text-gray-500">{{ t('hints.timeWindow') }}</p>
+          <p class="text-xs font-light text-gray-500 dark:text-gray-400">
+            {{ t('hints.timeWindow') }}
+          </p>
 
-          <p v-if="hasFilterConditions" class="text-xs font-light text-gray-500 italic">
+          <p
+            v-if="hasFilterConditions"
+            class="text-xs font-light text-gray-500 italic dark:text-gray-400"
+          >
             {{ t('hints.filterConditions') }}
           </p>
         </section>
 
-        <section class="space-y-3 rounded-lg border border-gray-200 p-4">
-          <h4 class="font-semibold text-gray-900">{{ t('sections.pins') }}</h4>
-          <p class="text-sm font-light text-gray-600">{{ t('hints.pins') }}</p>
+        <section
+          class="space-y-3 rounded-lg border border-gray-200 p-4 dark:border-gray-800"
+        >
+          <h4 class="font-semibold text-gray-900 dark:text-gray-100">
+            {{ t('sections.pins') }}
+          </h4>
+          <p class="text-sm font-light text-gray-600 dark:text-gray-400">
+            {{ t('hints.pins') }}
+          </p>
 
-          <div v-for="(pin, i) of form.pins" :key="pin.id" class="flex items-center gap-2">
-            <USelect v-model="pin.indexUid" :items="indexUidItems" size="sm" class="w-1/3" />
+          <div
+            v-for="(pin, i) of form.pins"
+            :key="pin.id"
+            class="flex items-center gap-2"
+          >
+            <USelect
+              v-model="pin.indexUid"
+              :items="indexUidItems"
+              size="sm"
+              class="w-1/3"
+            />
             <UInput
               v-model="pin.documentId"
               required
@@ -89,7 +145,8 @@
               autocapitalize="off"
               autocomplete="off"
               spellcheck="false"
-              class="flex-1" />
+              class="flex-1"
+            />
             <UInput
               v-model="pin.position"
               type="number"
@@ -98,7 +155,8 @@
               required
               size="sm"
               v-tippy="t('labels.position')"
-              class="w-24" />
+              class="w-24"
+            />
             <UButton
               type="button"
               variant="ghost"
@@ -106,12 +164,23 @@
               icon="heroicons:trash"
               v-tippy="t('actions.removePin')"
               class="shrink-0 hover:text-red-600"
-              @click="form.pins.splice(i, 1)" />
+              @click="form.pins.splice(i, 1)"
+            />
           </div>
 
-          <p v-if="!form.pins.length" class="text-sm font-light text-gray-400 italic">{{ t('emptyPins') }}</p>
+          <p
+            v-if="!form.pins.length"
+            class="text-sm font-light text-gray-400 italic dark:text-gray-500"
+          >
+            {{ t('emptyPins') }}
+          </p>
 
-          <Button type="button" size="small" icon="heroicons:plus" @click="addPin()">
+          <Button
+            type="button"
+            size="small"
+            icon="heroicons:plus"
+            @click="addPin()"
+          >
             {{ t('actions.addPin') }}
           </Button>
         </section>
@@ -142,7 +211,12 @@ import {
   type SearchRulePayload,
   type SearchRule,
 } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useToasts } from '~/stores'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useToasts,
+} from '~/stores'
 
 type Props = {
   /** Existing rule to edit, or `null`/`undefined` to create a new one. */
@@ -161,7 +235,12 @@ const { createToast } = useToasts()
 const { loading, error, handle } = useFormSubmit()
 
 /** Each pin row keeps a stable `id` for the `v-for` key; the rest maps 1:1 to a `pin` action. */
-type PinRow = { id: string; indexUid: string; documentId: string; position: number }
+type PinRow = {
+  id: string
+  indexUid: string
+  documentId: string
+  position: number
+}
 
 const queryKindItems = computed(() => [
   { label: t('queryKinds.any'), value: 'any' },
@@ -207,9 +286,15 @@ const factory = () => {
     description: props.rule?.description ?? '',
     // Kept as a string: number inputs hand back strings, and '' means "unset".
     precedence:
-      null === props.rule?.precedence || undefined === props.rule?.precedence ? '' : `${props.rule.precedence}`,
+      null === props.rule?.precedence || undefined === props.rule?.precedence
+        ? ''
+        : `${props.rule.precedence}`,
     active: props.rule?.active ?? true,
-    queryKind: (true === isEmpty ? 'empty' : false === isEmpty ? 'notEmpty' : 'any') as 'any' | 'empty' | 'notEmpty',
+    queryKind: (true === isEmpty
+      ? 'empty'
+      : false === isEmpty
+        ? 'notEmpty'
+        : 'any') as 'any' | 'empty' | 'notEmpty',
     words: conditions?.query?.words ?? '',
     start: toDateTimeLocal(conditions?.time?.start),
     end: toDateTimeLocal(conditions?.time?.end),
@@ -230,7 +315,13 @@ watch(open, (isOpen) => isOpen && reset())
 /** Filter conditions are not editable here; we only warn that they exist and are preserved. */
 const hasFilterConditions = computed(() => !!props.rule?.conditions?.filter)
 
-const addPin = () => form.pins.push({ id: ulid(), indexUid: ANY_INDEX, documentId: '', position: form.pins.length })
+const addPin = () =>
+  form.pins.push({
+    id: ulid(),
+    indexUid: ANY_INDEX,
+    documentId: '',
+    position: form.pins.length,
+  })
 
 /**
  * Unlike top-level keys, `conditions` is replaced wholesale by the API, so we rebuild it
@@ -277,19 +368,29 @@ const buildPayload = (): SearchRulePayload => ({
   actions: form.pins
     .filter(({ documentId }) => documentId.trim())
     .map(({ indexUid, documentId, position }) => ({
-      selector: { indexUid: ANY_INDEX === indexUid ? null : indexUid, id: documentId.trim() },
+      selector: {
+        indexUid: ANY_INDEX === indexUid ? null : indexUid,
+        id: documentId.trim(),
+      },
       action: { type: 'pin' as const, position: Number(position) },
     })),
 })
 
 const submit = () =>
   handle(async () => {
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.saving') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.saving'),
+    })
     try {
-      const task = await processTask(() => save(form.uid.trim(), buildPayload()))
+      const task = await processTask(() =>
+        save(form.uid.trim(), buildPayload()),
+      )
       if ('succeeded' !== task.status) {
         // `error` only exists on a resolved Task, not on the enqueued one returned on timeout.
-        throw new Error(('error' in task && task.error?.message) || t('toasts.failed'))
+        throw new Error(
+          ('error' in task && task.error?.message) || t('toasts.failed'),
+        )
       }
       toast.update({ ...TOAST_SUCCESS(t) })
       open.value = false

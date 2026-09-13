@@ -3,11 +3,13 @@
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">
           {{ t('description') }}
         </span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings/update-chat" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings/update-chat"
+      />
     </h3>
 
     <ChatUnavailableAlert v-if="!available" />
@@ -17,26 +19,59 @@
         {{ error }}
       </Alert>
 
-      <UFormField :label="t('labels.description')" :help="t('hints.description')">
-        <UTextarea v-model="self.settings.description" class="w-full" :rows="3" />
+      <UFormField
+        :label="t('labels.description')"
+        :help="t('hints.description')"
+      >
+        <UTextarea
+          v-model="self.settings.description"
+          class="w-full"
+          :rows="3"
+        />
       </UFormField>
 
-      <UFormField :label="t('labels.documentTemplate')" :help="t('hints.documentTemplate')">
-        <UTextarea v-model="self.settings.documentTemplate" class="w-full font-mono text-xs" :rows="6" />
+      <UFormField
+        :label="t('labels.documentTemplate')"
+        :help="t('hints.documentTemplate')"
+      >
+        <UTextarea
+          v-model="self.settings.documentTemplate"
+          class="w-full font-mono text-xs"
+          :rows="6"
+        />
       </UFormField>
 
-      <UFormField :label="t('labels.documentTemplateMaxBytes')" :help="t('hints.documentTemplateMaxBytes')">
-        <UInput v-model="self.settings.documentTemplateMaxBytes" type="number" :min="1" class="w-40" />
+      <UFormField
+        :label="t('labels.documentTemplateMaxBytes')"
+        :help="t('hints.documentTemplateMaxBytes')"
+      >
+        <UInput
+          v-model="self.settings.documentTemplateMaxBytes"
+          type="number"
+          :min="1"
+          class="w-40"
+        />
       </UFormField>
 
-      <UFormField :label="t('labels.searchParameters')" :help="t('hints.searchParameters')">
-        <UTextarea v-model="self.settings.searchParameters" class="w-full font-mono text-xs" :rows="8" />
+      <UFormField
+        :label="t('labels.searchParameters')"
+        :help="t('hints.searchParameters')"
+      >
+        <UTextarea
+          v-model="self.settings.searchParameters"
+          class="w-full font-mono text-xs"
+          :rows="8"
+        />
       </UFormField>
 
       <footer class="flex justify-end">
         <Buttons>
           <Button type="reset" :disabled="!modified || loading" />
-          <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+          <Button
+            type="submit"
+            :disabled="!modified || loading"
+            :loading="loading"
+          />
         </Buttons>
       </footer>
     </template>
@@ -52,7 +87,13 @@ import DocumentationLink from '~/components/layout/DocumentationLink.vue'
 import Button from '~/components/layout/forms/Button.vue'
 import Buttons from '~/components/layout/forms/Buttons.vue'
 import { useFormSubmit, useTask } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useChatAvailability, useToasts } from '~/stores'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useChatAvailability,
+  useToasts,
+} from '~/stores'
 import { resettableRef, safeToRefs } from '~/utils'
 
 type Props = {
@@ -66,12 +107,19 @@ const index = meili.index(props.indexUid)
 const { loading, error, handle } = useFormSubmit()
 const processTask = useTask()
 const { createToast } = useToasts()
-const { available, loading: checkingAvailability } = safeToRefs(useChatAvailability())
+const { available, loading: checkingAvailability } = safeToRefs(
+  useChatAvailability(),
+)
 
 useHead({ title: `${t('title')} - ${index.uid}` })
 
 /** `searchParameters` is free-form search options, edited as raw JSON rather than as a form. */
-const asForm = ({ description, documentTemplate, documentTemplateMaxBytes, searchParameters }: ChatSettings) => ({
+const asForm = ({
+  description,
+  documentTemplate,
+  documentTemplateMaxBytes,
+  searchParameters,
+}: ChatSettings) => ({
   description: description ?? '',
   documentTemplate: documentTemplate ?? '',
   documentTemplateMaxBytes: documentTemplateMaxBytes ?? 400,
@@ -84,11 +132,18 @@ const {
   value: settings,
   reset,
   modified,
-} = resettableRef(asForm(available.value ? await index.getChat() : ({} as ChatSettings)))
+} = resettableRef(
+  asForm(available.value ? await index.getChat() : ({} as ChatSettings)),
+)
 const self = reactive({ settings })
 
 const payload = () => {
-  const { description, documentTemplate, documentTemplateMaxBytes, searchParameters } = self.settings
+  const {
+    description,
+    documentTemplate,
+    documentTemplateMaxBytes,
+    searchParameters,
+  } = self.settings
   try {
     return {
       description,
@@ -105,14 +160,25 @@ const submit = async () =>
   handle(async () => {
     // Inside `handle` so an unparseable JSON surfaces in the form's error alert.
     const body = payload()
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.saving') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.saving'),
+    })
     await processTask(() => index.updateChat(body), {
       onSuccess: () => {
         toast.update({ ...TOAST_SUCCESS(t) })
         reset(toRaw(self.settings))
       },
-      onCanceled: () => toast.update({ ...TOAST_FAILURE(t), text: t('toasts.texts.canceledTask') }),
-      onFailure: () => toast.update({ ...TOAST_FAILURE(t), text: t('toasts.texts.failedTask') }),
+      onCanceled: () =>
+        toast.update({
+          ...TOAST_FAILURE(t),
+          text: t('toasts.texts.canceledTask'),
+        }),
+      onFailure: () =>
+        toast.update({
+          ...TOAST_FAILURE(t),
+          text: t('toasts.texts.failedTask'),
+        }),
     })
   })
 </script>

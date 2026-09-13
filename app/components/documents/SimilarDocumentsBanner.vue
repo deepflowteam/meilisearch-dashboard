@@ -1,12 +1,24 @@
 <template>
-  <div class="inline-flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5">
+  <div
+    class="inline-flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5"
+  >
     <Icon name="ph:graph" class="size-5 shrink-0 text-primary-600" />
-    <span class="font-medium text-nowrap text-gray-600">{{ t('labels.similarTo', { documentId }) }}</span>
-    <label class="inline-flex items-center gap-1 text-nowrap text-gray-500">
+    <span class="font-medium text-nowrap text-gray-600 dark:text-gray-400">{{
+      t('labels.similarTo', { documentId })
+    }}</span>
+    <label
+      class="inline-flex items-center gap-1 text-nowrap text-gray-500 dark:text-gray-400"
+    >
       {{ t('labels.embedder') }}
       <USelect v-model="embedder" :items="embedders" size="sm" class="w-40" />
     </label>
-    <Button v-tippy="t('actions.close')" no-padding no-border no-rounded @click="emit('close')">
+    <Button
+      v-tippy="t('actions.close')"
+      no-padding
+      no-border
+      no-rounded
+      @click="emit('close')"
+    >
       <Icon name="uil:times" class="size-6 text-primary-600" />
     </Button>
   </div>

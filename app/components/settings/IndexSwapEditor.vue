@@ -1,11 +1,17 @@
 <template>
   <form @submit.prevent="swapIndex()" class="space-y-4">
-    <p class="text-xs text-gray-600 italic">
+    <p class="text-xs text-gray-600 italic dark:text-gray-400">
       {{ t('notices.swapIndex.text') }}
     </p>
 
     <div class="flex justify-end">
-      <Button type="submit" :loading="self.isSwapping" icon-on-right theme="primary" icon="heroicons:arrows-right-left">
+      <Button
+        type="submit"
+        :loading="self.isSwapping"
+        icon-on-right
+        theme="primary"
+        icon="heroicons:arrows-right-left"
+      >
         {{ t('actions.swapIndex') }}
       </Button>
     </div>

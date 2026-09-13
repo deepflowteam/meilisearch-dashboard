@@ -1,6 +1,13 @@
 <template>
-  <PromisifiedDialog :title="shardName ? t('title.edit') : t('title.create')" v-slot="{ resolve, close }">
-    <form class="space-y-4" @submit.prevent="resolve(payload())" @reset.prevent="close()">
+  <PromisifiedDialog
+    :title="shardName ? t('title.edit') : t('title.create')"
+    v-slot="{ resolve, close }"
+  >
+    <form
+      class="space-y-4"
+      @submit.prevent="resolve(payload())"
+      @reset.prevent="close()"
+    >
       <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
         <Label required :for="id">{{ t('labels.name') }}</Label>
         <input
@@ -14,19 +21,23 @@
           spellcheck="false"
           type="text"
           :placeholder="t('placeholders.name')"
-          class="form-input disabled:cursor-not-allowed disabled:bg-gray-100" />
+          class="form-input disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
+        />
       </UniqueId>
 
       <section class="flex flex-col gap-1">
         <Label>{{ t('labels.remotes') }}</Label>
-        <p class="text-sm font-light text-gray-600">{{ t('hints.remotes') }}</p>
+        <p class="text-sm font-light text-gray-600 dark:text-gray-400">
+          {{ t('hints.remotes') }}
+        </p>
         <UInputMenu
           v-model="form.remotes"
           multiple
           open-on-click
           open-on-focus
           :items="remoteNames"
-          :placeholder="t('placeholders.remotes')" />
+          :placeholder="t('placeholders.remotes')"
+        />
       </section>
 
       <Buttons>

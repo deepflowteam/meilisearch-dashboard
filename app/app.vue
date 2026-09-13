@@ -1,10 +1,13 @@
 <template>
   <UApp>
     <div class="relative h-dvh">
-      <NuxtPage :page-key="pageKey" />
+      <NuxtLayout>
+        <NuxtPage :page-key="pageKey" />
+      </NuxtLayout>
       <DebugMemory
         v-if="IS_DEV_MODE && config.public.debugMemoryUsage"
-        class="absolute bottom-0 flex w-full items-center justify-center gap-4 pb-6 text-xs text-gray-600" />
+        class="absolute bottom-0 flex w-full items-center justify-center gap-4 pb-6 text-xs text-gray-600 dark:text-gray-400"
+      />
     </div>
     <ConfirmationDialog v-if="confirmationDialog" v-bind="confirmationDialog" />
     <PromisifiedDialogs />
@@ -15,8 +18,11 @@
 import ConfirmationDialog from '~/components/layout/ConfirmationDialog.vue'
 import PromisifiedDialogs from '~/components/layout/dialogs/PromisifiedDialogs.vue'
 import { safeToRefs } from '~/utils'
+import { useAppTheme } from '~/composables'
 import { useConfirmationDialog, useCredentials } from '~/stores'
 import { toRefs } from 'vue'
+
+useAppTheme()
 
 const route = useRoute()
 const { locale } = useI18n()
@@ -38,7 +44,7 @@ useHead({
     class: 'h-dvh',
   },
   bodyAttrs: {
-    class: 'h-full',
+    class: 'h-full bg-default text-default',
   },
   titleTemplate: (titleChunk) => {
     let appName = 'Meiliweb'

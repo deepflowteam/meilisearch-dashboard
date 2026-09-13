@@ -5,7 +5,8 @@
     :title="title ?? defaultTitle"
     :close="dismissable"
     :ui="{ title: 'text-lg font-semibold', description: 'text-sm' }"
-    @update:open="emit('close')">
+    @update:open="emit('close')"
+  >
     <template #description>
       <slot />
     </template>
@@ -41,7 +42,9 @@ const color = computed(
 // Only the `danger` theme has a sensible fallback title ("An error occured.").
 // Other themes render no title when none is given, rather than misleadingly
 // borrowing the error copy.
-const defaultTitle = computed(() => ('danger' === props.theme ? t('errorTitle') : undefined))
+const defaultTitle = computed(() =>
+  'danger' === props.theme ? t('errorTitle') : undefined,
+)
 </script>
 
 <i18n>

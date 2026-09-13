@@ -3,7 +3,9 @@
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-2">
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.proximityPrecision') }}</span>
-        <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#proximity-precision" />
+        <DocumentationLink
+          href="https://www.meilisearch.com/docs/reference/api/settings#proximity-precision"
+        />
       </Label>
       <Select :id v-model="self.proximityPrecision">
         <option value="byAttribute">
@@ -16,12 +18,22 @@
     </UniqueId>
 
     <footer class="flex flex-col items-center justify-between sm:flex-row">
-      <Button size="small" type="button" :disabled="loading" @click="resetToInitialValue()">
+      <Button
+        size="small"
+        type="button"
+        :disabled="loading"
+        @click="resetToInitialValue()"
+      >
         {{ t('buttons.reset') }}
       </Button>
       <Buttons>
         <Button size="small" type="reset" :disabled="!modified || loading" />
-        <Button size="small" type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          size="small"
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -50,7 +62,11 @@ const processTask = useTask()
 const { createToast } = useToasts()
 
 const initialProximityPrecision = await props.index.getProximityPrecision()
-const { value: proximityPrecision, reset, modified } = resettableRef(initialProximityPrecision as string)
+const {
+  value: proximityPrecision,
+  reset,
+  modified,
+} = resettableRef(initialProximityPrecision as string)
 const { loading, handle } = useFormSubmit({
   confirm: { text: t('confirmations.proximityPrecision.text') },
 })
@@ -68,7 +84,10 @@ const submit = async () => {
   await handle(async () => {
     toast.spawn()
     await processTask(
-      () => props.index.updateProximityPrecision(self.proximityPrecision as unknown as ProximityPrecision),
+      () =>
+        props.index.updateProximityPrecision(
+          self.proximityPrecision as unknown as ProximityPrecision,
+        ),
       {
         onSuccess: async () => {
           toast.update({ ...TOAST_SUCCESS(t) })

@@ -1,22 +1,36 @@
 <template>
-  <form class="max-w-2xl space-y-8" @reset.prevent="reset()" @submit.prevent="submit()">
+  <form
+    class="max-w-2xl space-y-8"
+    @reset.prevent="reset()"
+    @submit.prevent="submit()"
+  >
     <Alert v-if="error" dismissable theme="danger" @close="error = null">
       {{ error }}
     </Alert>
 
     <section class="space-y-4">
       <UFormField :label="t('labels.source')" required>
-        <USelect v-model="form.source" :items="sourceItems" required class="w-full" />
+        <USelect
+          v-model="form.source"
+          :items="sourceItems"
+          required
+          class="w-full"
+        />
       </UFormField>
 
-      <UFormField :label="t('labels.baseUrl')" :help="t('hints.baseUrl')" :required="'vLlm' === form.source">
+      <UFormField
+        :label="t('labels.baseUrl')"
+        :help="t('hints.baseUrl')"
+        :required="'vLlm' === form.source"
+      >
         <UInput
           v-model="form.baseUrl"
           :required="'vLlm' === form.source"
           autocomplete="off"
           type="url"
           :placeholder="t('placeholders.baseUrl')"
-          class="w-full" />
+          class="w-full"
+        />
       </UFormField>
 
       <UFormField :label="t('labels.apiKey')" :help="t('hints.apiKey')">
@@ -25,17 +39,23 @@
           autocomplete="off"
           type="password"
           :placeholder="t('placeholders.apiKey')"
-          class="w-full" />
+          class="w-full"
+        />
       </UFormField>
 
       <OpenAiChatSourceForm v-if="'openAi' === form.source" v-model="form" />
-      <AzureOpenAiChatSourceForm v-if="'azureOpenAi' === form.source" v-model="form" />
+      <AzureOpenAiChatSourceForm
+        v-if="'azureOpenAi' === form.source"
+        v-model="form"
+      />
     </section>
 
     <section class="space-y-4">
       <div>
         <h3 class="text-lg font-semibold">{{ t('sections.prompts') }}</h3>
-        <p class="text-sm font-light text-gray-500">{{ t('hints.prompts') }}</p>
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+          {{ t('hints.prompts') }}
+        </p>
       </div>
 
       <UFormField :label="t('labels.prompts.system')">
@@ -43,24 +63,47 @@
       </UFormField>
 
       <UFormField :label="t('labels.prompts.searchDescription')">
-        <UTextarea v-model="form.prompts.searchDescription" class="w-full" :rows="3" />
+        <UTextarea
+          v-model="form.prompts.searchDescription"
+          class="w-full"
+          :rows="3"
+        />
       </UFormField>
 
       <UFormField :label="t('labels.prompts.searchQParam')">
-        <UTextarea v-model="form.prompts.searchQParam" class="w-full" :rows="2" />
+        <UTextarea
+          v-model="form.prompts.searchQParam"
+          class="w-full"
+          :rows="2"
+        />
       </UFormField>
 
       <UFormField :label="t('labels.prompts.searchFilterParam')">
-        <UTextarea v-model="form.prompts.searchFilterParam" class="w-full" :rows="2" />
+        <UTextarea
+          v-model="form.prompts.searchFilterParam"
+          class="w-full"
+          :rows="2"
+        />
       </UFormField>
 
       <UFormField :label="t('labels.prompts.searchIndexUidParam')">
-        <UTextarea v-model="form.prompts.searchIndexUidParam" class="w-full" :rows="2" />
+        <UTextarea
+          v-model="form.prompts.searchIndexUidParam"
+          class="w-full"
+          :rows="2"
+        />
       </UFormField>
     </section>
 
-    <footer class="flex flex-col items-center justify-between gap-2 sm:flex-row">
-      <Button type="button" icon="mdi:backup-restore" :disabled="loading" @click="resetToDefaults()">
+    <footer
+      class="flex flex-col items-center justify-between gap-2 sm:flex-row"
+    >
+      <Button
+        type="button"
+        icon="mdi:backup-restore"
+        :disabled="loading"
+        @click="resetToDefaults()"
+      >
         {{ t('actions.resetToDefaults') }}
       </Button>
       <Buttons>
@@ -77,8 +120,19 @@ import OpenAiChatSourceForm from '~/components/chat/source/OpenAiChatSourceForm.
 import Alert from '~/components/layout/Alert.vue'
 import Button from '~/components/layout/forms/Button.vue'
 import Buttons from '~/components/layout/forms/Buttons.vue'
-import { CHAT_SOURCES, useChatWorkspaces, useFormSubmit, type ChatWorkspaceSettings } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useConfirmationDialog, useToasts } from '~/stores'
+import {
+  CHAT_SOURCES,
+  useChatWorkspaces,
+  useFormSubmit,
+  type ChatWorkspaceSettings,
+} from '~/composables'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useConfirmationDialog,
+  useToasts,
+} from '~/stores'
 
 type Props = {
   uid: string
@@ -100,7 +154,10 @@ const sourceLabels: Record<string, string> = {
   gemini: 'Gemini',
   vLlm: 'vLLM',
 }
-const sourceItems = CHAT_SOURCES.map((source) => ({ label: sourceLabels[source], value: source }))
+const sourceItems = CHAT_SOURCES.map((source) => ({
+  label: sourceLabels[source],
+  value: source,
+}))
 
 /**
  * The API key is never prefilled: Meilisearch redacts it when reading the settings back, so
@@ -133,7 +190,16 @@ const reset = () => (form.value = factory())
 const orNull = (value: string) => (value.trim().length ? value.trim() : null)
 
 const payload = () => {
-  const { source, baseUrl, apiKey, orgId, projectId, deploymentId, apiVersion, prompts } = form.value
+  const {
+    source,
+    baseUrl,
+    apiKey,
+    orgId,
+    projectId,
+    deploymentId,
+    apiVersion,
+    prompts,
+  } = form.value
   const body: Partial<ChatWorkspaceSettings> = {
     source,
     baseUrl: orNull(baseUrl),
@@ -158,7 +224,10 @@ const payload = () => {
 
 const submit = () =>
   handle(async () => {
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.saving') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.saving'),
+    })
     try {
       const settings = await updateSettings(props.uid, payload())
       toast.update({ ...TOAST_SUCCESS(t) })
@@ -175,7 +244,10 @@ const resetToDefaults = () =>
     if (!(await confirm({ text: t('confirmations.resetToDefaults') }))) {
       return
     }
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.resetting') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.resetting'),
+    })
     try {
       await resetSettings(props.uid)
       // The reset endpoint answers 204, so read the defaults back to refresh the form.

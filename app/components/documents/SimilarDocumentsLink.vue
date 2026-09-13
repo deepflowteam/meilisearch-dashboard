@@ -3,8 +3,9 @@
     v-if="findSimilarDocuments"
     type="button"
     v-tippy="t('actions.findSimilar')"
-    class="cursor-pointer align-middle text-gray-400 hover:text-primary-600"
-    @click="findSimilarDocuments(documentId)">
+    class="cursor-pointer align-middle text-gray-400 hover:text-primary-600 dark:text-gray-500"
+    @click="findSimilarDocuments(documentId)"
+  >
     <Icon name="ph:graph" class="size-4" />
   </button>
 </template>

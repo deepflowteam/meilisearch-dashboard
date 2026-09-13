@@ -1,24 +1,36 @@
 <template>
-  <div class="divide-y divide-gray-200">
+  <div class="divide-y divide-gray-200 dark:divide-gray-800">
     <section class="space-y-2 px-4 pt-6 pb-6 sm:px-6">
       <h3 class="text-md font-medium">{{ t('titles.sort') }}</h3>
       <UniqueId v-if="sortableAttributes.length > 0" v-slot="{ id }">
         <div class="flex items-center justify-between gap-1 text-sm">
-          <Label :for="id" class="text-gray-400">
+          <Label :for="id" class="text-gray-400 dark:text-gray-500">
             {{ t('labels.sortBy') }}
           </Label>
           <Select :id="id" v-model="appliedSort" class="w-56">
             <option :value="[]">Default</option>
             <template v-for="attribute of sortableAttributes">
-              <option :value="[`${attribute}:asc`]">{{ humanizeString(attribute) }} ⬆</option>
-              <option :value="[`${attribute}:desc`]">{{ humanizeString(attribute) }} ⬇</option>
+              <option :value="[`${attribute}:asc`]">
+                {{ humanizeString(attribute) }} ⬆
+              </option>
+              <option :value="[`${attribute}:desc`]">
+                {{ humanizeString(attribute) }} ⬇
+              </option>
             </template>
           </Select>
         </div>
       </UniqueId>
-      <i18n-t v-else keypath="emptyStates.sort.text" tag="p" class="text-sm font-light text-gray-600 italic">
+      <i18n-t
+        v-else
+        keypath="emptyStates.sort.text"
+        tag="p"
+        class="text-sm font-light text-gray-600 italic dark:text-gray-400"
+      >
         <template v-slot:link>
-          <NuxtLink :to="`/indexes/${indexUid}/settings/sortable-attributes`" class="text-primary-600">
+          <NuxtLink
+            :to="`/indexes/${indexUid}/settings/sortable-attributes`"
+            class="text-primary-600"
+          >
             {{ t('emptyStates.sort.link') }}
           </NuxtLink>
         </template>
@@ -37,19 +49,31 @@
             :items="filterableAttributes.filter((a) => '_geo' !== a)"
             :placeholder="t('placeholders.enableFacets')"
             class="block w-full"
-            :ui="{ base: 'text-xs' }" />
+            :ui="{ base: 'text-xs' }"
+          />
         </div>
       </UniqueId>
-      <i18n-t v-else keypath="emptyStates.facets.text" tag="p" class="text-sm font-light text-gray-600 italic">
+      <i18n-t
+        v-else
+        keypath="emptyStates.facets.text"
+        tag="p"
+        class="text-sm font-light text-gray-600 italic dark:text-gray-400"
+      >
         <template v-slot:link>
-          <NuxtLink :to="`/indexes/${indexUid}/settings/filterable-attributes`" class="text-primary-600">
+          <NuxtLink
+            :to="`/indexes/${indexUid}/settings/filterable-attributes`"
+            class="text-primary-600"
+          >
             {{ t('emptyStates.facets.link') }}
           </NuxtLink>
         </template>
       </i18n-t>
     </section>
 
-    <section v-if="(facets as NonNullable<string[]>).length > 0" class="space-y-6 pt-6 pb-6">
+    <section
+      v-if="(facets as NonNullable<string[]>).length > 0"
+      class="space-y-6 pt-6 pb-6"
+    >
       <h3 class="text-md px-4 font-medium sm:px-6">
         {{ t('titles.filters') }}
       </h3>
@@ -59,14 +83,16 @@
           :client
           :index-uid="indexUid"
           :facet
-          :applied-filters="appliedFilters" />
+          :applied-filters="appliedFilters"
+        />
         <RangeFacet
           v-if="FACET_TYPE_RANGE === facetsTypeMap.get(facet)"
           :index-uid="indexUid"
           :facet
           :min="facetStats[facet].min"
           :max="facetStats[facet].max"
-          :applied-filters="appliedFilters" />
+          :applied-filters="appliedFilters"
+        />
       </template>
     </section>
   </div>
@@ -76,7 +102,11 @@
 import { useMeiliClient } from '~/composables'
 import StringFacet from '~/components/documents/StringFacet.vue'
 import type { AppliedFilters } from '~/utils/applied-filters'
-import { type FacetDistribution, type FacetStats, Meilisearch } from 'meilisearch'
+import {
+  type FacetDistribution,
+  type FacetStats,
+  Meilisearch,
+} from 'meilisearch'
 import RangeFacet from '~/components/documents/RangeFacet.vue'
 import Select from '~/components/layout/forms/Select.vue'
 import Label from '~/components/layout/forms/Label.vue'
@@ -92,7 +122,9 @@ const props = defineProps<Props>()
 const { t } = useI18n()
 const meili = useMeiliClient()
 const appliedSort = defineModel<string[]>('appliedSort')
-const appliedFilters = defineModel<AppliedFilters>('appliedFilters') as unknown as AppliedFilters
+const appliedFilters = defineModel<AppliedFilters>(
+  'appliedFilters',
+) as unknown as AppliedFilters
 const facets = defineModel<string[]>('facets')
 const FACET_TYPE_STRING = Symbol()
 const FACET_TYPE_RANGE = Symbol()
@@ -118,12 +150,16 @@ const hydrateFacetsTypes = async (facets: string[]) => {
       facets,
     }),
   )
-  const stringFacets = Object.keys(search.facetDistribution as FacetDistribution)
+  const stringFacets = Object.keys(
+    search.facetDistribution as FacetDistribution,
+  )
   const numericFacets = Object.keys(search.facetStats as FacetStats)
   const isProbablyRangeFacet = (attribute: string) =>
     numericFacets.includes(attribute) &&
     (!stringFacets.includes(attribute) ||
-      Object.keys(search.facetDistribution![attribute] ?? {}).every((key: any) => !isNaN(key)))
+      Object.keys(search.facetDistribution![attribute] ?? {}).every(
+        (key: any) => !isNaN(key),
+      ))
 
   for (const attribute of facets) {
     if ('_geo' === attribute) {

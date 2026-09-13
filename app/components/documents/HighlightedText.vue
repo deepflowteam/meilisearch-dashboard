@@ -4,7 +4,11 @@
 
 <script setup lang="ts">
 import { templateRef } from '@vueuse/core'
-import { parseHighlightMarkers, useHighlightTags, useTextHighlight } from '~/composables'
+import {
+  parseHighlightMarkers,
+  useHighlightTags,
+  useTextHighlight,
+} from '~/composables'
 
 type Props = {
   value: string | number | boolean

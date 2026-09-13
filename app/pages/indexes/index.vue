@@ -1,7 +1,13 @@
 <template>
   <Layout :title="t('title')">
     <template #actions>
-      <Button v-if="indexes.length > 0" :as="NuxtLink" to="/indexes/create" theme="primary" icon="pajamas:doc-new">
+      <Button
+        v-if="indexes.length > 0"
+        :as="NuxtLink"
+        to="/indexes/create"
+        theme="primary"
+        icon="pajamas:doc-new"
+      >
         {{ t('actions.create') }}
       </Button>
     </template>
@@ -16,12 +22,17 @@
           'fieldsCount',
           'numberOfEmbeddings',
           'indexSize',
-        ]">
+        ]"
+      >
         <template #columns>
           <th scope="col" class="relative isolate">
             {{ t('columns.index') }}
-            <div class="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200" />
-            <div class="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200" />
+            <div
+              class="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200 dark:border-b-gray-800"
+            />
+            <div
+              class="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200"
+            />
           </th>
           <th scope="col">
             {{ t('columns.primaryKey') }}
@@ -54,15 +65,20 @@
             <span class="inline-flex items-center gap-2">
               <NuxtLink
                 :to="`/indexes/${item.uid}/documents`"
-                class="font-semibold hover:text-primary-700 hover:underline">
+                class="font-semibold hover:text-primary-700 hover:underline"
+              >
                 {{ item.uid }}
               </NuxtLink>
               <Badge v-if="item.isIndexing" class="text-xs uppercase">
                 {{ t('labels.isIndexing') }}
               </Badge>
             </span>
-            <div class="absolute right-full bottom-0 h-px w-screen bg-gray-100" />
-            <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-100" />
+            <div
+              class="absolute right-full bottom-0 h-px w-screen bg-gray-100 dark:bg-gray-800"
+            />
+            <div
+              class="absolute bottom-0 left-0 h-px w-screen bg-gray-100 dark:bg-gray-800"
+            />
           </td>
           <td>
             <Badge theme="neutral">{{ item.primaryKey }}</Badge>
@@ -76,24 +92,39 @@
           </td>
           <td class="text-right">
             <template v-if="item.numberOfEmbeddings > 0">
-              <span v-tippy="embeddingsTooltip(item)">{{ item.numberOfEmbeddings }}</span>
+              <span v-tippy="embeddingsTooltip(item)">{{
+                item.numberOfEmbeddings
+              }}</span>
             </template>
-            <span v-else class="text-gray-300">—</span>
+            <span v-else class="text-gray-300 dark:text-gray-600">—</span>
           </td>
           <td class="text-right" v-tippy="sizeTooltip(item)">
             <template v-if="item.indexSize != null">
-              <div class="font-medium">{{ filesize(item.indexSize).human() }}</div>
-              <div class="text-xs text-gray-400">
-                {{ t('labels.used', { size: filesize(item.usedIndexSize ?? 0).human() }) }}
+              <div class="font-medium">
+                {{ filesize(item.indexSize).human() }}
+              </div>
+              <div class="text-xs text-gray-400 dark:text-gray-500">
+                {{
+                  t('labels.used', {
+                    size: filesize(item.usedIndexSize ?? 0).human(),
+                  })
+                }}
               </div>
             </template>
-            <div v-else class="font-medium">{{ filesize(item.rawDocumentDbSize ?? 0).human() }}</div>
+            <div v-else class="font-medium">
+              {{ filesize(item.rawDocumentDbSize ?? 0).human() }}
+            </div>
           </td>
           <td class="text-right">
-            <UDropdownMenu :items="indexMenuItems(item)" :content="{ align: 'end' }" :ui="{ content: 'w-48' }">
+            <UDropdownMenu
+              :items="indexMenuItems(item)"
+              :content="{ align: 'end' }"
+              :ui="{ content: 'w-48' }"
+            >
               <button
                 type="button"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden">
+                class="inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-500 dark:hover:text-gray-300"
+              >
                 <span class="sr-only">{{ t('actions.openMenu') }}</span>
                 <Icon name="heroicons-solid:dots-vertical" aria-hidden="true" />
               </button>
@@ -111,16 +142,24 @@
           :sibling-count="2"
           active-color="primary"
           variant="ghost"
-          @update:page="handlePageChange" />
+          @update:page="handlePageChange"
+        />
       </div>
 
       <ServerStats class="mt-6" />
     </template>
 
     <div v-else class="flex flex-col items-center justify-center gap-6 py-20">
-      <p class="text-5xl font-light text-gray-700">🫠</p>
-      <p class="text-2xl font-light text-gray-700">{{ t('emptyState') }}</p>
-      <Button :as="NuxtLink" :to="`/indexes/create`" theme="primary" icon="pajamas:doc-new">
+      <p class="text-5xl font-light text-gray-700 dark:text-gray-300">🫠</p>
+      <p class="text-2xl font-light text-gray-700 dark:text-gray-300">
+        {{ t('emptyState') }}
+      </p>
+      <Button
+        :as="NuxtLink"
+        :to="`/indexes/create`"
+        theme="primary"
+        icon="pajamas:doc-new"
+      >
         {{ t('actions.createExpanded') }}
       </Button>
     </div>
@@ -129,7 +168,13 @@
 
 <script setup lang="ts">
 import { tryOrThrow } from '~/utils'
-import { EXPORT_MIN_VERSION, useDateFormatter, useIndexOperations, useMeiliClient, usePagination } from '~/composables'
+import {
+  EXPORT_MIN_VERSION,
+  useDateFormatter,
+  useIndexOperations,
+  useMeiliClient,
+  usePagination,
+} from '~/composables'
 import { DismissedDialog, useVersion } from '~/stores'
 import { NuxtLink } from '#components'
 import ServerStats from '~/components/settings/ServerStats.vue'
@@ -151,7 +196,8 @@ useHead({
 const meili = useMeiliClient()
 const { formatDate } = useDateFormatter()
 const itemsPerPage = ref(20)
-const { offset, totalItems, currentPage, previousPage, nextPage, lastPage } = usePagination(itemsPerPage)
+const { offset, totalItems, currentPage, previousPage, nextPage, lastPage } =
+  usePagination(itemsPerPage)
 const self = reactive({
   indexes: [] as Index[],
   totalItems,
@@ -167,7 +213,9 @@ const fetchIndexes = async (offset = self.offset, limit = self.itemsPerPage) =>
   tryOrThrow(async () => {
     const indexes = await meili.getIndexes({ offset, limit })
     self.totalItems = indexes.total
-    return Promise.all(indexes.results.map((index) => meili.getIndex(index.uid)))
+    return Promise.all(
+      indexes.results.map((index) => meili.getIndex(index.uid)),
+    )
   })
 
 whenever(
@@ -187,7 +235,13 @@ whenever(
 
 const { satisfiesVersion } = useVersion()
 
-const sizeTooltip = (item: Index & { indexSize?: number; rawDocumentDbSize?: number; avgDocumentSize?: number }) =>
+const sizeTooltip = (
+  item: Index & {
+    indexSize?: number
+    rawDocumentDbSize?: number
+    avgDocumentSize?: number
+  },
+) =>
   item.indexSize != null
     ? t('labels.sizeTooltip', {
         rawDocumentDbSize: filesize(item.rawDocumentDbSize ?? 0).human(),
@@ -197,8 +251,12 @@ const sizeTooltip = (item: Index & { indexSize?: number; rawDocumentDbSize?: num
         avgDocumentSize: filesize(item.avgDocumentSize ?? 0).human(),
       })
 
-const embeddingsTooltip = (item: Index & { numberOfEmbeddedDocuments?: number }) =>
-  t('labels.embeddingsTooltip', { numberOfEmbeddedDocuments: item.numberOfEmbeddedDocuments ?? 0 })
+const embeddingsTooltip = (
+  item: Index & { numberOfEmbeddedDocuments?: number },
+) =>
+  t('labels.embeddingsTooltip', {
+    numberOfEmbeddedDocuments: item.numberOfEmbeddedDocuments ?? 0,
+  })
 
 const { duplicateIndex: doDuplicateIndex } = useIndexOperations()
 const duplicateIndex = async (indexUid: string) => {
@@ -276,7 +334,8 @@ watch(itemsPerPage, async (itemsPerPage) => {
   self.indexes = []
   self.indexes = await fetchIndexes(0, itemsPerPage)
 })
-const handlePageChange = (page: number) => (self.offset = (page - 1) * self.itemsPerPage)
+const handlePageChange = (page: number) =>
+  (self.offset = (page - 1) * self.itemsPerPage)
 self.indexes = await fetchIndexes()
 </script>
 

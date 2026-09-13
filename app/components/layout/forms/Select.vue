@@ -15,7 +15,15 @@ const props = withDefaults(defineProps<Props>(), {
   noRounded: false,
 })
 const classes = computed(() => {
-  const classes = ['focus:outline-hidden', 'focus:ring-2', 'focus:ring-primary-600']
+  const classes = [
+    'bg-white',
+    'text-gray-900',
+    'dark:bg-gray-800',
+    'dark:text-gray-100',
+    'focus:outline-hidden',
+    'focus:ring-2',
+    'focus:ring-primary-600',
+  ]
 
   props.noBorder || classes.push('border')
   props.noPadding || classes.push('px-2', 'py-1.5')

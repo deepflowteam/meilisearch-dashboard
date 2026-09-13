@@ -4,13 +4,24 @@
       <NuxtLink v-tippy="t('actions.backToList')" to="/chat">
         <Icon name="gg:list" />
       </NuxtLink>
-      <DocumentationLink href="https://www.meilisearch.com/docs/capabilities/conversational_search/overview" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/capabilities/conversational_search/overview"
+      />
     </template>
     <template #actions>
-      <Button :as="NuxtLink" :to="`/chat/${workspace}/settings`" icon="heroicons:cog-6-tooth">
+      <Button
+        :as="NuxtLink"
+        :to="`/chat/${workspace}/settings`"
+        icon="heroicons:cog-6-tooth"
+      >
         {{ t('actions.settings') }}
       </Button>
-      <Button v-if="turns.length" icon="heroicons:trash" :disabled="streaming" @click="clear()">
+      <Button
+        v-if="turns.length"
+        icon="heroicons:trash"
+        :disabled="streaming"
+        @click="clear()"
+      >
         {{ t('actions.clear') }}
       </Button>
     </template>
@@ -22,7 +33,10 @@
         {{ error }}
       </Alert>
 
-      <div v-if="!turns.length" class="flex grow flex-col items-center justify-center gap-4 text-gray-500">
+      <div
+        v-if="!turns.length"
+        class="flex grow flex-col items-center justify-center gap-4 text-gray-500 dark:text-gray-400"
+      >
         <p class="text-5xl font-light">💬</p>
         <p class="text-lg font-light">{{ t('empty') }}</p>
       </div>
@@ -34,37 +48,68 @@
         should-auto-scroll
         :spacing-offset="160"
         :assistant="{ side: 'left', variant: 'soft' }"
-        :user="{ side: 'right', variant: 'solid', color: 'primary' }">
+        :user="{ side: 'right', variant: 'solid', color: 'primary' }"
+      >
         <template #content="{ message }">
           <p class="whitespace-pre-wrap">{{ contentOf(message) }}</p>
-          <p v-if="progressOf(message)" class="flex items-center gap-2 text-xs text-gray-500 italic">
+          <p
+            v-if="progressOf(message)"
+            class="flex items-center gap-2 text-xs text-gray-500 italic dark:text-gray-400"
+          >
             <span class="size-2 animate-pulse rounded-full bg-primary-600" />
             {{ progressLabel(progressOf(message)!) }}
           </p>
-          <span v-else-if="isThinking(message)" class="text-xs text-gray-500">{{ t('thinking') }}</span>
-          <ChatSources v-if="sourcesOf(message).length" :documents="sourcesOf(message)" class="mt-2 max-w-2xl" />
+          <span
+            v-else-if="isThinking(message)"
+            class="text-xs text-gray-500 dark:text-gray-400"
+            >{{ t('thinking') }}</span
+          >
+          <ChatSources
+            v-if="sourcesOf(message).length"
+            :documents="sourcesOf(message)"
+            class="mt-2 max-w-2xl"
+          />
         </template>
       </UChatMessages>
 
       <!-- Sticky to the page's own scroll container (see Layout.vue), so the translucent
       prompt floats over the tail of the conversation instead of fighting it for height. -->
-      <div class="sticky bottom-0 z-10 flex flex-col gap-2 bg-white/75 pt-2 backdrop-blur">
-        <UChatPrompt v-model="prompt" v-focus :status :maxrows="4" @submit="submit()">
+      <div
+        class="sticky bottom-0 z-10 flex flex-col gap-2 bg-white/75 pt-2 backdrop-blur dark:bg-gray-900/75"
+      >
+        <UChatPrompt
+          v-model="prompt"
+          v-focus
+          :status
+          :maxrows="4"
+          @submit="submit()"
+        >
           <UChatPromptSubmit @stop="stop()" />
         </UChatPrompt>
 
-        <div class="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:gap-6">
+        <div
+          class="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:gap-6"
+        >
           <UFormField :label="t('labels.model')">
-            <UInput v-model="model" size="xs" class="w-56" :placeholder="DEFAULT_MODEL" />
+            <UInput
+              v-model="model"
+              size="xs"
+              class="w-56"
+              :placeholder="DEFAULT_MODEL"
+            />
           </UFormField>
-          <UFormField v-tippy="t('hints.accessKey')" :label="t('labels.accessKey')">
+          <UFormField
+            v-tippy="t('hints.accessKey')"
+            :label="t('labels.accessKey')"
+          >
             <UInput
               v-model="accessKey"
               type="password"
               autocomplete="off"
               size="xs"
               class="w-56"
-              :placeholder="t('placeholders.accessKey')" />
+              :placeholder="t('placeholders.accessKey')"
+            />
           </UFormField>
         </div>
       </div>
@@ -80,8 +125,16 @@ import ChatUnavailableAlert from '~/components/chat/ChatUnavailableAlert.vue'
 import Alert from '~/components/layout/Alert.vue'
 import DocumentationLink from '~/components/layout/DocumentationLink.vue'
 import Button from '~/components/layout/forms/Button.vue'
-import { useChatCompletion, type ChatProgress, type ChatTurn } from '~/composables'
-import { useCredentials, useChatAvailability, type CredentialsRecord } from '~/stores'
+import {
+  useChatCompletion,
+  type ChatProgress,
+  type ChatTurn,
+} from '~/composables'
+import {
+  useCredentials,
+  useChatAvailability,
+  type CredentialsRecord,
+} from '~/stores'
 import { safeToRefs } from '~/utils'
 
 /** Meilisearch forwards `model` to the provider as-is, so it has to come from the user. */
@@ -103,7 +156,10 @@ const preference = `${(credentials as CredentialsRecord).baseUri}-chat-${workspa
 const model = useLocalStorage(`${preference}-model`, DEFAULT_MODEL)
 const accessKey = useLocalStorage(`${preference}-access-key`, '')
 
-const { turns, streaming, error, send, stop, clear } = useChatCompletion(workspace, accessKey)
+const { turns, streaming, error, send, stop, clear } = useChatCompletion(
+  workspace,
+  accessKey,
+)
 const prompt = ref('')
 
 // `UChatMessages`/`UChatPrompt` speak the AI SDK message shape; the index doubles as the id
@@ -117,12 +173,16 @@ const messages = computed(() =>
 )
 const status = computed(() => (streaming.value ? 'streaming' : 'ready'))
 
-const turnOf = (message: { id: string }): ChatTurn => turns.value[Number(message.id)]
+const turnOf = (message: { id: string }): ChatTurn =>
+  turns.value[Number(message.id)]
 const contentOf = (message: { id: string }) => turnOf(message).content
 const sourcesOf = (message: { id: string }) => turnOf(message).sources
 const progressOf = (message: { id: string }) => turnOf(message).progress
 const isThinking = (message: { id: string }) =>
-  streaming.value && 'assistant' === message.role && !turnOf(message).content && !turnOf(message).progress
+  streaming.value &&
+  'assistant' === message.role &&
+  !turnOf(message).content &&
+  !turnOf(message).progress
 
 const submit = async () => {
   const value = prompt.value

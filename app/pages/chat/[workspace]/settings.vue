@@ -4,17 +4,29 @@
       <NuxtLink v-tippy="t('actions.backToList')" to="/chat">
         <Icon name="gg:list" />
       </NuxtLink>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/chats" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/chats"
+      />
     </template>
     <template #actions>
-      <Button v-if="available" :as="NuxtLink" :to="`/chat/${workspace}`" icon="heroicons:chat-bubble-left-right">
+      <Button
+        v-if="available"
+        :as="NuxtLink"
+        :to="`/chat/${workspace}`"
+        icon="heroicons:chat-bubble-left-right"
+      >
         {{ t('actions.openChat') }}
       </Button>
     </template>
 
     <ChatUnavailableAlert v-if="!available" />
 
-    <ChatWorkspaceSettingsForm v-else :uid="workspace" :settings="settings" @saved="settings = $event" />
+    <ChatWorkspaceSettingsForm
+      v-else
+      :uid="workspace"
+      :settings="settings"
+      @saved="settings = $event"
+    />
   </Layout>
 </template>
 

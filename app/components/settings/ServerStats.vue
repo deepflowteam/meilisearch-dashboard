@@ -1,10 +1,14 @@
 <template>
   <div class="grid justify-items-stretch gap-6 md:grid-cols-3">
     <DefineCard v-slot="{ $slots, title, icon }">
-      <section class="flex gap-6 rounded-xl border border-gray-300 p-4">
+      <section
+        class="flex gap-6 rounded-xl border border-gray-300 p-4 dark:border-gray-700"
+      >
         <Icon :name="icon" class="size-14 text-primary-700" />
         <div class="space-y-4">
-          <h2 class="block text-lg font-light text-gray-600">{{ title }}</h2>
+          <h2 class="block text-lg font-light text-gray-600 dark:text-gray-400">
+            {{ title }}
+          </h2>
           <span class="font-bold tracking-wide text-primary-700">
             <Component :is="$slots.default" />
           </span>
@@ -19,8 +23,13 @@
     <Card :title="t('titles.dbSize')" icon="gravity-ui:database-fill">
       <div class="flex items-center gap-2">
         <div>{{ filesize(stats.databaseSize).human() }}</div>
-        <div v-if="stats.usedDatabaseSize != null" class="text-xs font-normal text-gray-400">
-          {{ t('labels.used', { size: filesize(stats.usedDatabaseSize).human() }) }}
+        <div
+          v-if="stats.usedDatabaseSize != null"
+          class="text-xs font-normal text-gray-400 dark:text-gray-500"
+        >
+          {{
+            t('labels.used', { size: filesize(stats.usedDatabaseSize).human() })
+          }}
         </div>
       </div>
     </Card>
@@ -40,7 +49,10 @@ const [DefineCard, Card] = createReusableTemplate()
 const meili = useMeiliClient()
 const { t } = useI18n()
 const { formatDate } = useDateFormatter()
-const [version, stats] = await Promise.all([meili.getVersion(), meili.getStats()])
+const [version, stats] = await Promise.all([
+  meili.getVersion(),
+  meili.getStats(),
+])
 </script>
 
 <i18n>

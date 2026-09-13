@@ -4,11 +4,18 @@
     :title="webhook ? t('title.edit') : t('title.create')"
     side="right"
     :overlay="false"
-    :ui="{ content: 'max-w-lg', title: 'text-2xl font-semibold' }">
+    :ui="{ content: 'max-w-lg', title: 'text-2xl font-semibold' }"
+  >
     <template #body>
-      <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submit()">
+      <form
+        class="space-y-4"
+        @reset.prevent="reset()"
+        @submit.prevent="submit()"
+      >
         <p class="inline-flex w-full items-center justify-end">
-          <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/webhooks" />
+          <DocumentationLink
+            href="https://www.meilisearch.com/docs/reference/api/webhooks"
+          />
         </p>
 
         <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -24,20 +31,28 @@
             required
             autofocus
             :placeholder="t('placeholders.url')"
-            class="form-input w-full" />
+            class="form-input w-full"
+          />
         </UniqueId>
 
         <section class="space-y-2">
           <Label>{{ t('labels.headers') }}</Label>
-          <p class="text-sm font-light text-gray-600">{{ t('hints.headers') }}</p>
-          <div v-for="(header, i) of form.headers" :key="header.id" class="flex items-start gap-2">
+          <p class="text-sm font-light text-gray-600 dark:text-gray-400">
+            {{ t('hints.headers') }}
+          </p>
+          <div
+            v-for="(header, i) of form.headers"
+            :key="header.id"
+            class="flex items-start gap-2"
+          >
             <input
               v-model="header.key"
               :placeholder="t('placeholders.headerKey')"
               class="form-input w-1/3"
               autocapitalize="off"
               autocomplete="off"
-              spellcheck="false" />
+              spellcheck="false"
+            />
             <div class="flex-1">
               <input
                 v-model="header.value"
@@ -46,20 +61,30 @@
                 autocapitalize="off"
                 autocomplete="off"
                 spellcheck="false"
-                @input="header.redacted = false" />
-              <p v-if="header.redacted" class="mt-1 text-xs font-light text-gray-500 italic">
+                @input="header.redacted = false"
+              />
+              <p
+                v-if="header.redacted"
+                class="mt-1 text-xs font-light text-gray-500 italic dark:text-gray-400"
+              >
                 {{ t('hints.redacted') }}
               </p>
             </div>
             <button
               type="button"
               v-tippy="t('actions.removeHeader')"
-              class="mt-2 shrink-0 text-gray-400 hover:text-red-600"
-              @click="form.headers.splice(i, 1)">
+              class="mt-2 shrink-0 text-gray-400 hover:text-red-600 dark:text-gray-500"
+              @click="form.headers.splice(i, 1)"
+            >
               <Icon name="heroicons:trash" />
             </button>
           </div>
-          <Button type="button" size="small" icon="heroicons:plus" @click="addHeader()">
+          <Button
+            type="button"
+            size="small"
+            icon="heroicons:plus"
+            @click="addHeader()"
+          >
             {{ t('actions.addHeader') }}
           </Button>
         </section>
@@ -83,8 +108,18 @@ import Button from '~/components/layout/forms/Button.vue'
 import Buttons from '~/components/layout/forms/Buttons.vue'
 import Alert from '~/components/layout/Alert.vue'
 import DocumentationLink from '~/components/layout/DocumentationLink.vue'
-import { isRedactedHeaderValue, useFormSubmit, useWebhooks, type Webhook } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useToasts } from '~/stores'
+import {
+  isRedactedHeaderValue,
+  useFormSubmit,
+  useWebhooks,
+  type Webhook,
+} from '~/composables'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useToasts,
+} from '~/stores'
 
 type Props = {
   /** Existing webhook to edit, or `null`/`undefined` to create a new one. */
@@ -108,12 +143,14 @@ const { loading, error, handle } = useFormSubmit()
 type HeaderRow = { id: string; key: string; value: string; redacted: boolean }
 
 const factory = () => {
-  const headers = Object.entries(props.webhook?.headers ?? {}).map(([key, value]) => ({
-    id: ulid(),
-    key,
-    value,
-    redacted: isRedactedHeaderValue(value),
-  }))
+  const headers = Object.entries(props.webhook?.headers ?? {}).map(
+    ([key, value]) => ({
+      id: ulid(),
+      key,
+      value,
+      redacted: isRedactedHeaderValue(value),
+    }),
+  )
   return {
     url: props.webhook?.url ?? '',
     headers: headers as HeaderRow[],
@@ -125,14 +162,21 @@ const reset = () => Object.assign(form, factory())
 // Re-seed the form whenever the editor is (re)opened for a different webhook.
 watch(open, (isOpen) => isOpen && reset())
 
-const addHeader = () => form.headers.push({ id: ulid(), key: '', value: '', redacted: false })
+const addHeader = () =>
+  form.headers.push({ id: ulid(), key: '', value: '', redacted: false })
 
 const submit = () =>
   handle(async () => {
-    const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.saving') })
+    const toast = createToast({
+      ...TOAST_PLEASEWAIT(t),
+      title: t('toasts.saving'),
+    })
     try {
       if (props.webhook) {
-        await update(props.webhook.uuid, { url: form.url, headers: diffHeaders() })
+        await update(props.webhook.uuid, {
+          url: form.url,
+          headers: diffHeaders(),
+        })
       } else {
         await create({ url: form.url, headers: collectHeaders() })
       }

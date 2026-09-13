@@ -2,7 +2,11 @@
   <Layout :title="t('title')">
     <PageTabs :items="tabs" />
 
-    <Alert v-if="!satisfiesVersion(EXPORT_MIN_VERSION)" theme="warning" :title="t('unavailable.title')">
+    <Alert
+      v-if="!satisfiesVersion(EXPORT_MIN_VERSION)"
+      theme="warning"
+      :title="t('unavailable.title')"
+    >
       {{ t('unavailable.text') }}
     </Alert>
     <ExportForm v-else />

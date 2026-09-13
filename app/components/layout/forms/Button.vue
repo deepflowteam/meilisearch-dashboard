@@ -10,7 +10,8 @@
     :variant="variant"
     :size="'small' === size ? 'sm' : 'md'"
     :class="themeClasses"
-    :ui="{ base: 'justify-center gap-2' }">
+    :ui="{ base: 'justify-center gap-2' }"
+  >
     <span v-if="loading">{{ loadingText ?? t('loadingText') }}</span>
     <slot v-else>{{ text }}</slot>
   </UButton>
@@ -44,18 +45,29 @@ const props = withDefaults(defineProps<Props>(), {
   noRounded: false,
 })
 const { t } = useI18n()
-const type = computed(() => props.type ?? ('button' === props.as ? 'button' : undefined))
-const isPrimary = computed(() => 'submit' === props.type || 'primary' === props.theme)
-const isSecondary = computed(() => 'reset' === props.type || 'secondary' === props.theme)
+const type = computed(
+  () => props.type ?? ('button' === props.as ? 'button' : undefined),
+)
+const isPrimary = computed(
+  () => 'submit' === props.type || 'primary' === props.theme,
+)
+const isSecondary = computed(
+  () => 'reset' === props.type || 'secondary' === props.theme,
+)
 const color = computed(() => (isPrimary.value ? 'primary' : 'neutral'))
-const variant = computed(() => (isPrimary.value || isSecondary.value ? 'solid' : 'outline'))
+const variant = computed(() =>
+  isPrimary.value || isSecondary.value ? 'solid' : 'outline',
+)
 const themeClasses = computed(() => {
   const classes = []
 
   props.noBorder && classes.push('ring-0')
   props.noPadding && classes.push('p-0')
   props.noRounded ? classes.push('rounded-none') : classes.push('rounded-lg')
-  isSecondary.value && classes.push('bg-gray-700 enabled:hover:bg-gray-600')
+  isSecondary.value &&
+    classes.push(
+      'bg-gray-700 enabled:hover:bg-gray-600 dark:bg-gray-600 dark:enabled:hover:bg-gray-500',
+    )
 
   return classes
 })

@@ -18,7 +18,9 @@
             {{ tasks.results[index].status }}
           </Badge>
         </td>
-        <td v-if="uidLabel" class="whitespace-nowrap">{{ tasks.results[index].details?.dumpUid }}</td>
+        <td v-if="uidLabel" class="whitespace-nowrap">
+          {{ tasks.results[index].details?.dumpUid }}
+        </td>
         <td class="text-right">
           <template v-if="tasks.results[index].duration">
             {{ formatDuration(tasks.results[index].duration) }}
@@ -29,8 +31,10 @@
   </template>
 
   <div v-else class="flex flex-col items-center justify-center gap-6 py-20">
-    <p class="text-5xl font-light text-gray-700">🗄️</p>
-    <p class="text-2xl font-light text-gray-700">{{ emptyText }}</p>
+    <p class="text-5xl font-light text-gray-700 dark:text-gray-300">🗄️</p>
+    <p class="text-2xl font-light text-gray-700 dark:text-gray-300">
+      {{ emptyText }}
+    </p>
   </div>
 </template>
 

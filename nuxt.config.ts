@@ -11,8 +11,7 @@ export default defineNuxtConfig({
   },
   css: ['@vueform/slider/themes/default.css', '~/assets/css/main.css'],
   ui: {
-    // The app is light-only and loads its font via @nuxtjs/google-fonts
-    colorMode: false,
+    // Loads its font via @nuxtjs/google-fonts
     fonts: false,
   },
   icon: {
@@ -57,13 +56,13 @@ export default defineNuxtConfig({
         'json-editor-vue',
         'json-oneline-stringify',
         'jwt-encode', // CJS
+        'maplibre-gl',
         'match-operator',
         'meilisearch',
         'meilisearch-filters',
         'semver/preload', // CJS
         'ulid',
         'vue-tippy',
-        'vue3-leaflet',
         'vue3-sortablejs',
         'xxh32',
         'yaml',

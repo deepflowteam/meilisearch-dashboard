@@ -1,9 +1,14 @@
 <template>
   <div class="bg-bubbles flex h-dvh flex-col items-center justify-center gap-6">
     <div
-      class="-mt-20 w-full max-w-lg space-y-6 rounded-lg border-gray-200 bg-white/90 px-6 py-4 md:w-1/2 md:border md:px-0 md:shadow-lg">
+      class="-mt-20 w-full max-w-lg space-y-6 rounded-lg border-gray-200 bg-white/90 px-6 py-4 md:w-1/2 md:border md:px-0 md:shadow-lg dark:border-gray-800 dark:bg-gray-900/90"
+    >
       <NuxtLink to="/indexes" class="flex items-center justify-center gap-2">
-        <img class="-ml-10 size-16 shrink-0 grow-0" src="~/assets/images/logo.svg" alt="Meiliweb" />
+        <img
+          class="-ml-10 size-16 shrink-0 grow-0"
+          src="~/assets/images/logo.svg"
+          alt="Meiliweb"
+        />
         <span class="text-3xl font-semibold">Meiliweb</span>
       </NuxtLink>
 
@@ -25,12 +30,17 @@
             type="url"
             class="form-input"
             :placeholder="DEFAULT_BASE_URI"
-            @keydown.tab="autofillBaseUri()" />
+            @keydown.tab="autofillBaseUri()"
+          />
         </UniqueId>
 
         <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
           <label :for="id">{{ t('labels.accessToken') }}</label>
-          <input v-model="credentials.accessKey" type="password" class="form-input" />
+          <input
+            v-model="credentials.accessKey"
+            type="password"
+            class="form-input"
+          />
         </UniqueId>
 
         <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
@@ -40,10 +50,16 @@
             type="text"
             class="form-input"
             :placeholder="suggestedName"
-            @keydown.tab="autofillName()" />
+            @keydown.tab="autofillName()"
+          />
         </UniqueId>
 
-        <Button type="submit" icon="solar:login-linear" :loading="loading" class="w-full">
+        <Button
+          type="submit"
+          icon="solar:login-linear"
+          :loading="loading"
+          class="w-full"
+        >
           <span>{{ t('labels.submit') }}</span>
         </Button>
       </form>
@@ -61,6 +77,8 @@ import Button from '~/components/layout/forms/Button.vue'
 import { toRefs } from 'vue'
 import GithubButton from '~/components/layout/GithubButton.vue'
 
+definePageMeta({ layout: 'blank' })
+
 const { auth, factory } = useCredentials()
 const { loading, error, handle } = useFormSubmit()
 const credentials = ref(factory())
@@ -68,7 +86,8 @@ const self: any = reactive({
   credentials,
   error,
   suggestedName: computed(() =>
-    '' === self.credentials.baseUri || self.credentials.baseUri?.indexOf('localhost') > -1
+    '' === self.credentials.baseUri ||
+    self.credentials.baseUri?.indexOf('localhost') > -1
       ? t('placeholders.localInstance')
       : t('placeholders.productionInstance'),
   ),

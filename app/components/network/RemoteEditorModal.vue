@@ -1,6 +1,13 @@
 <template>
-  <PromisifiedDialog :title="remote ? t('title.edit') : t('title.create')" v-slot="{ resolve, close }">
-    <form class="space-y-4" @submit.prevent="resolve(payload())" @reset.prevent="close()">
+  <PromisifiedDialog
+    :title="remote ? t('title.edit') : t('title.create')"
+    v-slot="{ resolve, close }"
+  >
+    <form
+      class="space-y-4"
+      @submit.prevent="resolve(payload())"
+      @reset.prevent="close()"
+    >
       <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
         <Label required :for="id">{{ t('labels.name') }}</Label>
         <input
@@ -14,7 +21,8 @@
           spellcheck="false"
           type="text"
           :placeholder="t('placeholders.name')"
-          class="form-input disabled:cursor-not-allowed disabled:bg-gray-100" />
+          class="form-input disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
+        />
       </UniqueId>
 
       <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
@@ -28,7 +36,8 @@
           autocapitalize="off"
           spellcheck="false"
           :placeholder="t('placeholders.url')"
-          class="form-input" />
+          class="form-input"
+        />
       </UniqueId>
 
       <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
@@ -41,7 +50,8 @@
           autocapitalize="off"
           spellcheck="false"
           :placeholder="t('placeholders.optional')"
-          class="form-input" />
+          class="form-input"
+        />
       </UniqueId>
 
       <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
@@ -54,7 +64,8 @@
           autocapitalize="off"
           spellcheck="false"
           :placeholder="t('placeholders.optional')"
-          class="form-input" />
+          class="form-input"
+        />
       </UniqueId>
 
       <Buttons>

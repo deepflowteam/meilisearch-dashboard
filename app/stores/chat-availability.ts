@@ -21,19 +21,25 @@ export const useChatAvailability = defineStore('chat-availability', () => {
 
   // `undefined` (rather than `false`) as the initial value is what makes `loading` able to
   // tell "not fetched yet" from "fetched, and disabled".
-  const chatCompletionsEnabled = asyncComputed<boolean | undefined>(async () => {
-    // Instantiating the client inside the evaluator makes this re-run when the active
-    // instance changes, since `useMeiliClient()` reads the credentials store reactively.
-    const meili = useMeiliClient()
-    try {
-      // Direct call (not tryOrThrow): instances older than the endpoint answer 404, and a
-      // missing experimental-features route just means "unavailable", not "fatal error".
-      const features = (await meili.getExperimentalFeatures()) as Record<string, boolean>
-      return !!features[CHAT_EXPERIMENTAL_FEATURE]
-    } catch {
-      return false
-    }
-  }, undefined)
+  const chatCompletionsEnabled = asyncComputed<boolean | undefined>(
+    async () => {
+      // Instantiating the client inside the evaluator makes this re-run when the active
+      // instance changes, since `useMeiliClient()` reads the credentials store reactively.
+      const meili = useMeiliClient()
+      try {
+        // Direct call (not tryOrThrow): instances older than the endpoint answer 404, and a
+        // missing experimental-features route just means "unavailable", not "fatal error".
+        const features = (await meili.getExperimentalFeatures()) as Record<
+          string,
+          boolean
+        >
+        return !!features[CHAT_EXPERIMENTAL_FEATURE]
+      } catch {
+        return false
+      }
+    },
+    undefined,
+  )
 
   const self = reactive({
     version,
@@ -42,9 +48,15 @@ export const useChatAvailability = defineStore('chat-availability', () => {
   })
 
   return {
-    available: computed(() => self.versionSupported && true === self.chatCompletionsEnabled),
-    loading: computed(() => !self.version || undefined === self.chatCompletionsEnabled),
+    available: computed(
+      () => self.versionSupported && true === self.chatCompletionsEnabled,
+    ),
+    loading: computed(
+      () => !self.version || undefined === self.chatCompletionsEnabled,
+    ),
     versionSupported: computed(() => self.versionSupported),
-    chatCompletionsEnabled: computed(() => true === self.chatCompletionsEnabled),
+    chatCompletionsEnabled: computed(
+      () => true === self.chatCompletionsEnabled,
+    ),
   }
 })

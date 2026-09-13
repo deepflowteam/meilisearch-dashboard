@@ -2,8 +2,15 @@
   <form @submit.prevent="duplicateIndex()" class="space-y-4">
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
       <Label required :for="id">{{ t('labels.duplicateIndexUid') }}</Label>
-      <input v-model="self.duplicateIndexUid" required autofocus autocomplete="off" type="text" class="form-input" />
-      <p class="text-xs text-gray-600 italic">
+      <input
+        v-model="self.duplicateIndexUid"
+        required
+        autofocus
+        autocomplete="off"
+        type="text"
+        class="form-input"
+      />
+      <p class="text-xs text-gray-600 italic dark:text-gray-400">
         {{ t('notices.duplicateIndex.text') }}
       </p>
     </UniqueId>
@@ -14,7 +21,8 @@
         :loading="self.isDuplicating"
         icon-on-right
         theme="primary"
-        icon="heroicons:document-duplicate">
+        icon="heroicons:document-duplicate"
+      >
         {{ t('actions.duplicateIndex') }}
       </Button>
     </div>

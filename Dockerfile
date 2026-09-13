@@ -1,18 +1,16 @@
-FROM node:22-alpine
-
-RUN apk add --no-cache bash git openssh
-
+FROM oven/bun:alpine AS build
 WORKDIR /app
-
-COPY package*.json yarn.lock ./
-
 COPY . .
+RUN bun install --frozen-lockfile
+RUN bun run build
 
-WORKDIR /app/app
+FROM oven/bun:alpine
+WORKDIR /app
+COPY --from=build /app/.output ./
 
-RUN yarn install
-RUN yarn build
+ENV HOST=0.0.0.0
+ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["yarn", "preview"]
+CMD [ "bun", "server/index.mjs" ]

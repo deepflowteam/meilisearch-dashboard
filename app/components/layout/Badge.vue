@@ -26,5 +26,7 @@ const color = computed(
       ['neutral', 'neutral'],
     ]) as 'primary' | 'success' | 'error' | 'neutral',
 )
-const variant = computed(() => ('neutral' === props.theme ? 'outline' : 'solid'))
+const variant = computed(() =>
+  'neutral' === props.theme ? 'outline' : 'solid',
+)
 </script>

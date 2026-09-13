@@ -3,7 +3,9 @@
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-2">
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.facetSearch') }}</span>
-        <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#facet-search" />
+        <DocumentationLink
+          href="https://www.meilisearch.com/docs/reference/api/settings#facet-search"
+        />
       </Label>
       <Select :id v-model="self.facetSearch">
         <option :value="false">
@@ -16,12 +18,22 @@
     </UniqueId>
 
     <footer class="flex flex-col items-center justify-between sm:flex-row">
-      <Button size="small" type="button" :disabled="loading" @click="resetToInitialValue()">
+      <Button
+        size="small"
+        type="button"
+        :disabled="loading"
+        @click="resetToInitialValue()"
+      >
         {{ t('buttons.reset') }}
       </Button>
       <Buttons>
         <Button size="small" type="reset" :disabled="!modified || loading" />
-        <Button size="small" type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          size="small"
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -50,7 +62,11 @@ const processTask = useTask()
 const { createToast } = useToasts()
 
 const initialFacetSearch = await props.index.getFacetSearch()
-const { value: facetSearch, reset, modified } = resettableRef(initialFacetSearch)
+const {
+  value: facetSearch,
+  reset,
+  modified,
+} = resettableRef(initialFacetSearch)
 const { loading, handle } = useFormSubmit({
   confirm: { text: t('confirmations.facetSearch.text') },
 })

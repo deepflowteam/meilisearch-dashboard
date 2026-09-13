@@ -58,7 +58,12 @@ export const useToasts = defineStore('toasts', () => {
     duration: options.ttl ?? TOAST_DEFAULT_TTL,
     close: options.dismissable ?? true,
     ui: {
-      icon: ['size-6', ...(Array.isArray(options.iconClasses) ? options.iconClasses : [options.iconClasses ?? ''])]
+      icon: [
+        'size-6',
+        ...(Array.isArray(options.iconClasses)
+          ? options.iconClasses
+          : [options.iconClasses ?? '']),
+      ]
         .join(' ')
         .trim(),
     },

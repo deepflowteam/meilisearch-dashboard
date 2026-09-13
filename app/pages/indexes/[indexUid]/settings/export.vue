@@ -1,10 +1,16 @@
 <template>
   <section class="space-y-4">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
     </h3>
 
-    <Alert v-if="!satisfiesVersion(EXPORT_MIN_VERSION)" theme="warning" :title="t('unavailable.title')">
+    <Alert
+      v-if="!satisfiesVersion(EXPORT_MIN_VERSION)"
+      theme="warning"
+      :title="t('unavailable.title')"
+    >
       {{ t('unavailable.text') }}
     </Alert>
     <ExportForm v-else :index-uid="indexUid" />

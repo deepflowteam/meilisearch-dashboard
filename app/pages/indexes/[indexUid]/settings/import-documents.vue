@@ -1,6 +1,8 @@
 <template>
   <form class="space-y-4" @submit.prevent="submit()">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
     </h3>
 
@@ -10,7 +12,12 @@
 
     <UniqueId as="section" v-slot="{ id }" class="space-y-1 *:block">
       <Label required :for="id">{{ t('labels.pickAFile') }}</Label>
-      <input type="file" required class="form-input w-full" @change="file = $event.target?.files?.[0]" />
+      <input
+        type="file"
+        required
+        class="form-input w-full"
+        @change="file = $event.target?.files?.[0]"
+      />
     </UniqueId>
 
     <UniqueId as="section" v-slot="{ id }" class="space-y-1 *:block">
@@ -30,11 +37,17 @@
       v-if="satisfiesVersion('>=1.31.0')"
       v-model="skipCreation"
       :label="t('labels.skipCreation')"
-      :description="t('hints.skipCreation')" />
+      :description="t('hints.skipCreation')"
+    />
 
     <footer class="flex flex-col items-center justify-end sm:flex-row">
       <Buttons>
-        <Button type="submit" :disabled="!file" :loading icon="tabler:database-import">
+        <Button
+          type="submit"
+          :disabled="!file"
+          :loading
+          icon="tabler:database-import"
+        >
           {{ t('actions.import') }}
         </Button>
       </Buttons>
@@ -99,15 +112,27 @@ const submit = async () => {
     toast.update({ text: t('toasts.success.uploadText') })
     let enqueuedTask: EnqueuedTask
     try {
-      const queryParams = satisfiesVersion('>=1.31.0') ? { skipCreation: self.skipCreation } : {}
+      const queryParams = satisfiesVersion('>=1.31.0')
+        ? { skipCreation: self.skipCreation }
+        : {}
       enqueuedTask = await match(self.updateMode, [
         [
           'replace',
-          () => client.index(props.indexUid).addDocumentsFromString(documents, self.contentType, queryParams),
+          () =>
+            client
+              .index(props.indexUid)
+              .addDocumentsFromString(documents, self.contentType, queryParams),
         ],
         [
           'update',
-          () => client.index(props.indexUid).updateDocumentsFromString(documents, self.contentType, queryParams),
+          () =>
+            client
+              .index(props.indexUid)
+              .updateDocumentsFromString(
+                documents,
+                self.contentType,
+                queryParams,
+              ),
         ],
       ])
     } catch (e) {

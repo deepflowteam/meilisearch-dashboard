@@ -3,7 +3,9 @@
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-2">
       <Label :for="id" class="flex items-center gap-2">
         <span>{{ t('labels.prefixSearch') }}</span>
-        <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#prefix-search" />
+        <DocumentationLink
+          href="https://www.meilisearch.com/docs/reference/api/settings#prefix-search"
+        />
       </Label>
       <Select :id v-model="self.prefixSearch">
         <option value="disabled">
@@ -16,12 +18,22 @@
     </UniqueId>
 
     <footer class="flex flex-col items-center justify-between sm:flex-row">
-      <Button size="small" type="button" :disabled="loading" @click="resetToInitialValue()">
+      <Button
+        size="small"
+        type="button"
+        :disabled="loading"
+        @click="resetToInitialValue()"
+      >
         {{ t('buttons.reset') }}
       </Button>
       <Buttons>
         <Button size="small" type="reset" :disabled="!modified || loading" />
-        <Button size="small" type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          size="small"
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -50,7 +62,11 @@ const processTask = useTask()
 const { createToast } = useToasts()
 
 const initialPrefixSearch = await props.index.getPrefixSearch()
-const { value: prefixSearch, reset, modified } = resettableRef(initialPrefixSearch)
+const {
+  value: prefixSearch,
+  reset,
+  modified,
+} = resettableRef(initialPrefixSearch)
 const { loading, handle } = useFormSubmit({
   confirm: { text: t('confirmations.prefixSearch.text') },
 })
@@ -67,24 +83,30 @@ const submit = async () => {
   })
   await handle(async () => {
     toast.spawn()
-    await processTask(() => props.index.updatePrefixSearch(self.prefixSearch as unknown as PrefixSearch), {
-      onSuccess: async () => {
-        toast.update({ ...TOAST_SUCCESS(t) })
-        reset(self.prefixSearch)
+    await processTask(
+      () =>
+        props.index.updatePrefixSearch(
+          self.prefixSearch as unknown as PrefixSearch,
+        ),
+      {
+        onSuccess: async () => {
+          toast.update({ ...TOAST_SUCCESS(t) })
+          reset(self.prefixSearch)
+        },
+        onCanceled: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.canceledTask'),
+          }),
+        onFailure: (task: Task) => {
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.failedTask'),
+          })
+          emit('error', task.error as TaskError)
+        },
       },
-      onCanceled: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.canceledTask'),
-        }),
-      onFailure: (task: Task) => {
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.failedTask'),
-        })
-        emit('error', task.error as TaskError)
-      },
-    })
+    )
     reset(self.prefixSearch)
   })
 }

@@ -1,6 +1,10 @@
 import { tryOnScopeDispose } from '@vueuse/core'
 import type { MaybeRef } from 'vue'
-import { CHAT_TOOLS, useChatWorkspaces, type ChatMessage } from './useChatWorkspaces'
+import {
+  CHAT_TOOLS,
+  useChatWorkspaces,
+  type ChatMessage,
+} from './useChatWorkspaces'
 
 /** One entry of `_meiliSearchSources`; the document itself is arbitrary user data. */
 export type ChatSourceDocument = Record<string, any> & { indexUid?: string }
@@ -47,7 +51,10 @@ type OpenAiDelta = {
  *
  * @param accessKey Optional key the completions run under, see {@link useChatWorkspaces}.
  */
-export const useChatCompletion = (workspace: string, accessKey?: MaybeRef<string>) => {
+export const useChatCompletion = (
+  workspace: string,
+  accessKey?: MaybeRef<string>,
+) => {
   const { streamCompletion } = useChatWorkspaces(accessKey)
 
   const self = reactive({
@@ -73,19 +80,30 @@ export const useChatCompletion = (workspace: string, accessKey?: MaybeRef<string
    * string in `function_arguments` (e.g. `_meiliSearchInIndex` with `{index_uid, q, filter}`).
    * That inner parse must not tear down the stream if Meilisearch ever changes the shape.
    */
-  const parseProgress = (call: { function_name?: string; function_arguments?: string }): ChatProgress | null => {
+  const parseProgress = (call: {
+    function_name?: string
+    function_arguments?: string
+  }): ChatProgress | null => {
     if ('_meiliSearchInIndex' !== call.function_name) {
       return null
     }
     try {
       const args = JSON.parse(call.function_arguments ?? '{}')
-      return { indexUid: args.index_uid ?? '', query: args.q ?? '', filter: args.filter ?? '' }
+      return {
+        indexUid: args.index_uid ?? '',
+        query: args.q ?? '',
+        filter: args.filter ?? '',
+      }
     } catch {
       return null
     }
   }
 
-  const applyDelta = (turn: ChatTurn, delta: OpenAiDelta, toolArguments: Map<number, string>) => {
+  const applyDelta = (
+    turn: ChatTurn,
+    delta: OpenAiDelta,
+    toolArguments: Map<number, string>,
+  ) => {
     if (delta.content) {
       turn.content += delta.content
       // The answer has started, so whatever the search was reporting is now stale.
@@ -95,7 +113,8 @@ export const useChatCompletion = (workspace: string, accessKey?: MaybeRef<string
     for (const [position, call] of (delta.tool_calls ?? []).entries()) {
       const index = call.index ?? position
       const name = call.function?.name
-      const buffered = (toolArguments.get(index) ?? '') + (call.function?.arguments ?? '')
+      const buffered =
+        (toolArguments.get(index) ?? '') + (call.function?.arguments ?? '')
       toolArguments.set(index, buffered)
 
       let parsed: any
@@ -130,12 +149,22 @@ export const useChatCompletion = (workspace: string, accessKey?: MaybeRef<string
     }
 
     self.error = null
-    self.turns.push({ role: 'user', content: prompt.trim(), sources: [], progress: null })
+    self.turns.push({
+      role: 'user',
+      content: prompt.trim(),
+      sources: [],
+      progress: null,
+    })
     // A reactive object, because `self.turns` stores what it is handed as-is: mutating a plain
     // one through this local reference would never notify Vue. The answer would then only show
     // up when `streaming` flips at the very end — in one block, never streamed — and `progress`
     // would never paint at all, being nulled again before anything else triggers a render.
-    const turn = reactive<ChatTurn>({ role: 'assistant', content: '', sources: [], progress: null })
+    const turn = reactive<ChatTurn>({
+      role: 'assistant',
+      content: '',
+      sources: [],
+      progress: null,
+    })
     self.turns.push(turn)
 
     // History is sent verbatim, minus our own display-only fields.

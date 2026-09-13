@@ -3,11 +3,13 @@
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">
           {{ t('description') }}
         </span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#synonyms" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#synonyms"
+      />
     </h3>
 
     <template v-for="synonym of synonyms">
@@ -15,7 +17,13 @@
     </template>
 
     <div class="flex justify-end">
-      <Button size="small" theme="primary" type="button" icon="mdi:plus" @click="addSynonym()">
+      <Button
+        size="small"
+        theme="primary"
+        type="button"
+        icon="mdi:plus"
+        @click="addSynonym()"
+      >
         {{ t('actions.addSynonym') }}
       </Button>
     </div>
@@ -26,12 +34,17 @@
         theme="primary"
         icon="mdi:bin"
         :disabled="loading || 0 === synonyms.length"
-        @click="resetToInitialValue()">
+        @click="resetToInitialValue()"
+      >
         {{ t('actions.clearSynonyms') }}
       </Button>
       <Buttons>
         <Button type="reset" :disabled="!modified || loading" />
-        <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -66,7 +79,11 @@ const { loading, error, handle } = useFormSubmit({
 const processTask = useTask()
 const { createToast } = useToasts()
 const { confirm } = useConfirmationDialog()
-const { value: synonyms, reset, modified } = resettableRef(Object.entries(await index.getSynonyms()))
+const {
+  value: synonyms,
+  reset,
+  modified,
+} = resettableRef(Object.entries(await index.getSynonyms()))
 const self = reactive({ synonyms })
 const addSynonym = () => {
   self.synonyms.push(['', ['']])
@@ -81,7 +98,8 @@ const submit = async () => {
   await handle(async () => {
     toast.spawn()
     const synonymEntries = toRaw(self.synonyms).filter(
-      ([mainWord, [firstSynonym]]) => mainWord.trim().length > 0 && firstSynonym?.trim()?.length > 0,
+      ([mainWord, [firstSynonym]]) =>
+        mainWord.trim().length > 0 && firstSynonym?.trim()?.length > 0,
     )
     const synonymsObject: any = Object.fromEntries(synonymEntries)
     await processTask(() => index.updateSynonyms(synonymsObject), {

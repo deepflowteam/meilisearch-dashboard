@@ -1,12 +1,20 @@
 <template>
-  <PromisifiedDialog :title="t('title')" :ui="{ content: 'max-w-5xl', body: 'text-sm max-h-[70vh] overflow-y-auto' }">
+  <PromisifiedDialog
+    :title="t('title')"
+    :ui="{ content: 'max-w-5xl', body: 'text-sm max-h-[70vh] overflow-y-auto' }"
+  >
     <template #default="{ resolve }">
-      <form :id="formId" class="space-y-4" @submit.prevent="resolve(cloneSearchSettings(draft))">
+      <form
+        :id="formId"
+        class="space-y-4"
+        @submit.prevent="resolve(cloneSearchSettings(draft))"
+      >
         <HybridSearchSection
           v-model:enabled="draft.hybridEnabled"
           v-model:embedder="draft.hybridEmbedder"
           v-model:semantic-ratio="draft.hybridSemanticRatio"
-          :embedders />
+          :embedders
+        />
 
         <AttributesSection
           v-model:distinct="draft.distinct"
@@ -17,35 +25,49 @@
           :attributes
           :primary-key
           :filterable-attributes
-          :searchable-attributes />
+          :searchable-attributes
+        />
 
         <HighlightCropSection
           v-model:highlight-pre-tag="draft.highlightPreTag"
           v-model:highlight-post-tag="draft.highlightPostTag"
           v-model:crop-length="draft.cropLength"
-          v-model:crop-marker="draft.cropMarker" />
+          v-model:crop-marker="draft.cropMarker"
+        />
 
         <MatchingSection
           v-model:matching-strategy="draft.matchingStrategy"
-          v-model:ranking-score-threshold="draft.rankingScoreThreshold" />
+          v-model:ranking-score-threshold="draft.rankingScoreThreshold"
+        />
 
         <LocalesSection v-model="draft.locales" />
 
-        <PersonalizationSection v-if="personalizeAvailable" v-model="draft.personalizeUserContext" />
+        <PersonalizationSection
+          v-if="personalizeAvailable"
+          v-model="draft.personalizeUserContext"
+        />
 
         <DebugSection
           v-model:show-ranking-score="draft.showRankingScore"
           v-model:show-ranking-score-details="draft.showRankingScoreDetails"
-          v-model:show-performance-details="draft.showPerformanceDetails" />
+          v-model:show-performance-details="draft.showPerformanceDetails"
+        />
       </form>
     </template>
 
     <template #footer>
       <div class="flex w-full items-center justify-between gap-2">
-        <Button size="small" type="button" :disabled="isPristine" @click="resetToDefaults()">
+        <Button
+          size="small"
+          type="button"
+          :disabled="isPristine"
+          @click="resetToDefaults()"
+        >
           {{ t('buttons.reset') }}
         </Button>
-        <Button size="small" type="submit" :form="formId">{{ t('buttons.submit') }}</Button>
+        <Button size="small" type="submit" :form="formId">{{
+          t('buttons.submit')
+        }}</Button>
       </div>
     </template>
   </PromisifiedDialog>
@@ -54,7 +76,11 @@
 <script setup lang="ts">
 import PromisifiedDialog from '~/components/layout/dialogs/PromisifiedDialog.vue'
 import Button from '~/components/layout/forms/Button.vue'
-import { cloneSearchSettings, DEFAULT_SEARCH_SETTINGS, type SearchSettings } from '~/utils'
+import {
+  cloneSearchSettings,
+  DEFAULT_SEARCH_SETTINGS,
+  type SearchSettings,
+} from '~/utils'
 import AttributesSection from './AttributesSection.vue'
 import DebugSection from './DebugSection.vue'
 import HighlightCropSection from './HighlightCropSection.vue'
@@ -82,10 +108,13 @@ const { t } = useI18n()
 const draft = reactive<SearchSettings>(cloneSearchSettings(props.settings))
 // Cancelling is what the close button is for — "Reset" is the more useful of the two here, and
 // puts every knob back to what Meilisearch does out of the box.
-const resetToDefaults = () => Object.assign(draft, cloneSearchSettings(DEFAULT_SEARCH_SETTINGS))
+const resetToDefaults = () =>
+  Object.assign(draft, cloneSearchSettings(DEFAULT_SEARCH_SETTINGS))
 const isPristine = computed(() =>
   (Object.keys(DEFAULT_SEARCH_SETTINGS) as Array<keyof SearchSettings>).every(
-    (key) => JSON.stringify(draft[key]) === JSON.stringify(DEFAULT_SEARCH_SETTINGS[key]),
+    (key) =>
+      JSON.stringify(draft[key]) ===
+      JSON.stringify(DEFAULT_SEARCH_SETTINGS[key]),
   ),
 )
 const formId = useId()

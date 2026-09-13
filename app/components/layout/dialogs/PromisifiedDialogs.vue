@@ -4,7 +4,8 @@
       :is="dialogRef.dialog"
       v-if="dialogRef && dialogRef.wrapper === name"
       v-bind="dialogRef.props"
-      ref="dialogInstance"></component>
+      ref="dialogInstance"
+    ></component>
   </transition>
 </template>
 

@@ -42,6 +42,16 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 
+  .dark {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+      border-color: var(--color-gray-800, currentcolor);
+    }
+  }
+
   /* Tailwind v3 preflight compatibility: pointer cursor on buttons,
      gray placeholders (v4 defaults to currentcolor at 50% opacity) */
   button:not(:disabled),
@@ -53,16 +63,32 @@
     color: var(--color-gray-400);
     opacity: 1;
   }
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: var(--color-gray-500);
+  }
 }
 
 @utility form-input {
   /* @tailwindcss/forms enhancement */
   @apply rounded-md border-gray-300 shadow-xs focus:border-primary-300 focus:ring-2 focus:ring-primary-600 focus:outline-hidden;
+  @apply dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100;
+}
+
+@utility form-select {
+  @apply rounded-md border-gray-300 shadow-xs focus:border-primary-300 focus:ring-2 focus:ring-primary-600 focus:outline-hidden;
+  @apply dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100;
+}
+
+@utility form-textarea {
+  @apply rounded-md border-gray-300 shadow-xs focus:border-primary-300 focus:ring-2 focus:ring-primary-600 focus:outline-hidden;
+  @apply dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100;
 }
 
 @utility form-checkbox {
   @apply rounded-md border-gray-300 shadow-xs focus:border-primary-300 focus:ring-2 focus:ring-primary-600 focus:outline-hidden;
   @apply rounded-xs text-primary-600;
+  @apply dark:border-gray-700 dark:bg-gray-800;
 }
 
 @layer components {

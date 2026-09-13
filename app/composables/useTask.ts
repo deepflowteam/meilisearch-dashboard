@@ -1,5 +1,9 @@
 import match from 'match-operator'
-import { type EnqueuedTask, MeilisearchRequestTimeOutError, type Task } from 'meilisearch'
+import {
+  type EnqueuedTask,
+  MeilisearchRequestTimeOutError,
+  type Task,
+} from 'meilisearch'
 import { useMeiliClient } from '~/composables/index'
 
 type EnqueuedTaskPromise = () => Promise<EnqueuedTask>
@@ -8,7 +12,10 @@ type ProcessTaskOptions = {
   onSuccess: (task: Task) => void
   onCanceled: (task: Task) => void
   onFailure: (task: Task) => void
-  onTimeout: (e: MeilisearchRequestTimeOutError, enqueuedTask: EnqueuedTask) => void
+  onTimeout: (
+    e: MeilisearchRequestTimeOutError,
+    enqueuedTask: EnqueuedTask,
+  ) => void
 }
 
 export class TaskError extends Error {
@@ -36,7 +43,13 @@ export const useTask = () => {
     enqueue: EnqueuedTaskPromise,
     options: Partial<ProcessTaskOptions> = DEFAULT_OPTIONS,
   ): Promise<Task | EnqueuedTask> => {
-    const { timeOutMs, onSuccess, onCanceled, onFailure, onTimeout }: ProcessTaskOptions = {
+    const {
+      timeOutMs,
+      onSuccess,
+      onCanceled,
+      onFailure,
+      onTimeout,
+    }: ProcessTaskOptions = {
       ...DEFAULT_OPTIONS,
       ...options,
     }
@@ -46,7 +59,12 @@ export const useTask = () => {
         timeout: timeOutMs,
       })
       if (task.error) {
-        task.error = new TaskError(task.error.message, task.error.code, task.error.type, task.error.link)
+        task.error = new TaskError(
+          task.error.message,
+          task.error.code,
+          task.error.type,
+          task.error.link,
+        )
       }
       match(task.status, [
         ['succeeded', () => onSuccess(task)],

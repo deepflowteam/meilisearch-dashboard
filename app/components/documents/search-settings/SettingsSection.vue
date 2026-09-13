@@ -1,7 +1,11 @@
 <template>
-  <section class="space-y-3 rounded-lg border border-gray-200 p-4">
+  <section
+    class="space-y-3 rounded-lg border border-gray-200 p-4 dark:border-gray-800"
+  >
     <header class="flex items-center justify-between gap-2">
-      <h4 class="font-semibold text-gray-900">{{ title }}</h4>
+      <h4 class="font-semibold text-gray-900 dark:text-gray-100">
+        {{ title }}
+      </h4>
       <DocumentationLink v-if="href" :href />
     </header>
     <slot />

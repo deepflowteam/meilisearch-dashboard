@@ -1,13 +1,24 @@
 <template>
   <section class="space-y-4">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('titles.general') }}
     </h3>
 
-    <Alert v-if="self.error" dismissable theme="danger" @close="self.error = null">
+    <Alert
+      v-if="self.error"
+      dismissable
+      theme="danger"
+      @close="self.error = null"
+    >
       <div class="flex items-start justify-between">
         <p class="grow">{{ self.error }}</p>
-        <DocumentationLink v-if="self.error instanceof TaskError" :href="self.error.link" class="shrink-0 grow-0" />
+        <DocumentationLink
+          v-if="self.error instanceof TaskError"
+          :href="self.error.link"
+          class="shrink-0 grow-0"
+        />
       </div>
     </Alert>
 
@@ -20,38 +31,58 @@
 
       <MaxTotalHitsEditor :index="index" @error="self.error = $event" />
 
-      <SearchCutoffEditor v-if="satisfiesVersion('^1.8')" :index="index" @error="self.error = $event" />
+      <SearchCutoffEditor
+        v-if="satisfiesVersion('^1.8')"
+        :index="index"
+        @error="self.error = $event"
+      />
 
-      <PrefixSearchEditor v-if="satisfiesVersion('^1.12')" :index="index" @error="self.error = $event" />
+      <PrefixSearchEditor
+        v-if="satisfiesVersion('^1.12')"
+        :index="index"
+        @error="self.error = $event"
+      />
 
-      <FacetSearchEditor v-if="satisfiesVersion('^1.12')" :index="index" @error="self.error = $event" />
+      <FacetSearchEditor
+        v-if="satisfiesVersion('^1.12')"
+        :index="index"
+        @error="self.error = $event"
+      />
     </div>
 
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('titles.renameIndex') }}
     </h3>
 
     <IndexNameEditor :index-uid="indexUid" @error="self.error = $event" />
 
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('titles.duplicateIndex') }}
     </h3>
 
     <DuplicateIndexEditor :index-uid="indexUid" @error="self.error = $event" />
 
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('titles.swapIndex') }}
     </h3>
 
     <IndexSwapEditor :index-uid="indexUid" @error="self.error = $event" />
 
     <template v-if="satisfiesVersion('>=1.23.0')">
-      <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+      <h3
+        class="inline-flex w-full items-center justify-between text-xl font-semibold"
+      >
         {{ t('titles.compaction') }}
       </h3>
 
       <div class="space-y-2">
-        <p class="text-xs text-gray-600 italic">
+        <p class="text-xs text-gray-600 italic dark:text-gray-400">
           {{ t('notices.compaction.text') }}
         </p>
         <Button
@@ -60,13 +91,16 @@
           icon-on-right
           theme="primary"
           icon="heroicons:sparkles"
-          @click="compactIndex()">
+          @click="compactIndex()"
+        >
           {{ t('actions.compactIndex') }}
         </Button>
       </div>
     </template>
 
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('titles.dangerZone') }}
     </h3>
 
@@ -86,7 +120,13 @@
 </template>
 
 <script setup lang="ts">
-import { TaskError, useFormSubmit, useIndexOperations, useMeiliClient, useTask } from '~/composables'
+import {
+  TaskError,
+  useFormSubmit,
+  useIndexOperations,
+  useMeiliClient,
+  useTask,
+} from '~/composables'
 import { TOAST_FAILURE, TOAST_SUCCESS, useToasts } from '~/stores/toasts'
 import Alert from '~/components/layout/Alert.vue'
 import Button from '~/components/layout/forms/Button.vue'

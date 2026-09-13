@@ -1,5 +1,8 @@
 <template>
-  <SettingsSection :title="t('title')" href="https://www.meilisearch.com/docs/reference/api/search#highlight-tags">
+  <SettingsSection
+    :title="t('title')"
+    href="https://www.meilisearch.com/docs/reference/api/search#highlight-tags"
+  >
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
       <UFormField :label="t('labels.highlightPreTag')" :help="t('help.tags')">
         <UInput v-model="highlightPreTag" class="w-full" />
@@ -23,8 +26,12 @@
 <script setup lang="ts">
 import SettingsSection from './SettingsSection.vue'
 
-const highlightPreTag = defineModel<string>('highlightPreTag', { required: true })
-const highlightPostTag = defineModel<string>('highlightPostTag', { required: true })
+const highlightPreTag = defineModel<string>('highlightPreTag', {
+  required: true,
+})
+const highlightPostTag = defineModel<string>('highlightPostTag', {
+  required: true,
+})
 const cropLength = defineModel<number>('cropLength', { required: true })
 const cropMarker = defineModel<string>('cropMarker', { required: true })
 

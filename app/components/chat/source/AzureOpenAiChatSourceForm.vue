@@ -1,6 +1,10 @@
 <template>
   <UFormField :label="t('labels.deploymentId')">
-    <UInput v-model="settings!.deploymentId" autocomplete="off" class="w-full" />
+    <UInput
+      v-model="settings!.deploymentId"
+      autocomplete="off"
+      class="w-full"
+    />
   </UFormField>
 
   <UFormField :label="t('labels.apiVersion')">
@@ -8,7 +12,8 @@
       v-model="settings!.apiVersion"
       autocomplete="off"
       :placeholder="t('placeholders.apiVersion')"
-      class="w-full" />
+      class="w-full"
+    />
   </UFormField>
 </template>
 

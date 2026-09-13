@@ -4,15 +4,30 @@
       <ol role="list" class="flex items-center space-x-4">
         <li>
           <div class="flex">
-            <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-700">
-              <Icon name="heroicons:home-20-solid" class="h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
+            <a
+              href="/"
+              class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+              <Icon
+                name="heroicons:home-20-solid"
+                class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500"
+                aria-hidden="true"
+              />
             </a>
           </div>
         </li>
         <li>
           <div class="flex items-center">
-            <Icon name="heroicons:chevron-right-20-solid" class="h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-            <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Breadcrumbs</a>
+            <Icon
+              name="heroicons:chevron-right-20-solid"
+              class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500"
+              aria-hidden="true"
+            />
+            <a
+              href="#"
+              class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >Breadcrumbs</a
+            >
           </div>
         </li>
       </ol>
@@ -23,12 +38,17 @@
           <h1 class="text-3xl font-bold capitalize">{{ title }}</h1>
           <slot name="title-actions" />
         </div>
-        <h2 v-if="subtitle" class="text-sm font-light text-gray-500">
+        <h2
+          v-if="subtitle"
+          class="text-sm font-light text-gray-500 dark:text-gray-400"
+        >
           {{ subtitle }}
         </h2>
       </div>
 
-      <div class="mt-4 flex items-center justify-center gap-4 text-sm lg:mt-0 lg:justify-end">
+      <div
+        class="mt-4 flex items-center justify-center gap-4 text-sm lg:mt-0 lg:justify-end"
+      >
         <slot name="actions" />
       </div>
     </header>

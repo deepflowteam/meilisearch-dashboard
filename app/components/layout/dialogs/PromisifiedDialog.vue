@@ -3,7 +3,8 @@
     v-model:open="open"
     :title="title ? String(title) : undefined"
     :ui="{ body: 'text-sm', ...ui }"
-    @update:open="(value: boolean) => !value && rejectDialog()">
+    @update:open="(value: boolean) => !value && rejectDialog()"
+  >
     <template #body>
       <slot :resolve="resolveDialog" :close="rejectDialog" />
     </template>

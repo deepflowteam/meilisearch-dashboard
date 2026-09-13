@@ -1,6 +1,7 @@
 import type { ComputedRef, Ref, UnwrapRef } from 'vue'
 
-const DEFAULT_COMPARE_FN = (a: any, b: any) => JSON.stringify(a) === JSON.stringify(b)
+const DEFAULT_COMPARE_FN = (a: any, b: any) =>
+  JSON.stringify(a) === JSON.stringify(b)
 
 type ResettableRef<T> = {
   value: Ref<UnwrapRef<T>>
@@ -8,7 +9,10 @@ type ResettableRef<T> = {
   modified: ComputedRef<boolean>
 }
 
-export function resettableRef<T>(initialState: T, compareFn: Function = DEFAULT_COMPARE_FN): ResettableRef<T> {
+export function resettableRef<T>(
+  initialState: T,
+  compareFn: Function = DEFAULT_COMPARE_FN,
+): ResettableRef<T> {
   const $initialState = ref<T>(initialState)
   const handle = ref<T>(structuredClone(toRaw(initialState)))
 

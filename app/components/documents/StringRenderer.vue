@@ -1,10 +1,15 @@
 <template>
   <div :class="self.showExpandButton ? 'flex flex-col items-end gap-1' : ''">
-    <HighlightedText ref="textElement" :value :class="{ 'line-clamp-3': self.truncated }" />
+    <HighlightedText
+      ref="textElement"
+      :value
+      :class="{ 'line-clamp-3': self.truncated }"
+    />
     <button
       v-if="self.showExpandButton"
       @click="self.truncated = !self.truncated"
-      class="text-xs text-primary-500 hover:text-primary-700 focus:outline-hidden">
+      class="text-xs text-primary-500 hover:text-primary-700 focus:outline-hidden"
+    >
       <template v-if="self.truncated">
         {{ t('actions.showMore') }}
       </template>

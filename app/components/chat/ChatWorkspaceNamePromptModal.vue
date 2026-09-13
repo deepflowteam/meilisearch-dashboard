@@ -1,8 +1,18 @@
 <template>
   <PromisifiedDialog :title="t('title')" v-slot="{ resolve, close }">
-    <form class="space-y-4" @submit.prevent="resolve(uid)" @reset.prevent="close()">
+    <form
+      class="space-y-4"
+      @submit.prevent="resolve(uid)"
+      @reset.prevent="close()"
+    >
       <UFormField :label="t('labels.uid')" :help="t('hints.uid')" required>
-        <UInput v-model="uid" required v-focus autocomplete="off" class="w-full" />
+        <UInput
+          v-model="uid"
+          required
+          v-focus
+          autocomplete="off"
+          class="w-full"
+        />
       </UFormField>
 
       <Buttons>

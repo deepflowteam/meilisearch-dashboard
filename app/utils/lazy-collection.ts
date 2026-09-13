@@ -34,7 +34,10 @@ export class LazyCollection<T> implements AsyncIterable<T> {
 
   async *[Symbol.asyncIterator](): AsyncIterator<T> {
     while (true) {
-      if (this.currentResult === null || this.currentIndex >= this.currentResult.items.length) {
+      if (
+        this.currentResult === null ||
+        this.currentIndex >= this.currentResult.items.length
+      ) {
         if (this.isLastBatch) {
           break
         }

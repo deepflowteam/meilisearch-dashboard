@@ -1,26 +1,49 @@
 <template>
   <Layout :title="t('title')" :subtitle="t('subtitle')">
     <template #title-actions>
-      <DocumentationLink href="https://www.meilisearch.com/docs/capabilities/search_rules/getting_started" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/capabilities/search_rules/getting_started"
+      />
     </template>
 
     <template #actions>
       <div v-if="available" class="flex items-center gap-2">
-        <Button theme="primary" icon="pajamas:doc-new" @click="openEditor(null)">
+        <Button
+          theme="primary"
+          icon="pajamas:doc-new"
+          @click="openEditor(null)"
+        >
           {{ t('actions.create') }}
         </Button>
         <!-- Only disabled when the instance is provably empty: an empty *filtered* list says nothing. -->
-        <Button icon="heroicons:trash" :disabled="!filtered && !rules.length" @click="confirmDeleteAll()">
+        <Button
+          icon="heroicons:trash"
+          :disabled="!filtered && !rules.length"
+          @click="confirmDeleteAll()"
+        >
           {{ t('actions.deleteAll') }}
         </Button>
       </div>
     </template>
 
-    <Alert v-if="!versionSupported" theme="warning" :title="t('unsupported.title')">
-      {{ t('unsupported.text', { minVersion: SEARCH_RULES_MIN_VERSION, version: pkgVersion }) }}
+    <Alert
+      v-if="!versionSupported"
+      theme="warning"
+      :title="t('unsupported.title')"
+    >
+      {{
+        t('unsupported.text', {
+          minVersion: SEARCH_RULES_MIN_VERSION,
+          version: pkgVersion,
+        })
+      }}
     </Alert>
 
-    <Alert v-else-if="!featureEnabled" theme="warning" :title="t('disabled.title')">
+    <Alert
+      v-else-if="!featureEnabled"
+      theme="warning"
+      :title="t('disabled.title')"
+    >
       {{ t('disabled.text') }}
       <NuxtLink to="/experimental-features" class="font-medium underline">
         {{ t('disabled.link') }}
@@ -37,8 +60,13 @@
           autocapitalize="off"
           autocomplete="off"
           spellcheck="false"
-          class="flex-1" />
-        <USelect v-model="activeFilter" :items="activeFilterItems" class="sm:w-56" />
+          class="flex-1"
+        />
+        <USelect
+          v-model="activeFilter"
+          :items="activeFilterItems"
+          class="sm:w-56"
+        />
       </section>
 
       <template v-if="rules.length">
@@ -51,52 +79,87 @@
             t('columns.precedence'),
             t('columns.active'),
             t('columns.actions'),
-          ]">
+          ]"
+        >
           <template #default="{ item }">
             <td>
               <div class="flex flex-col">
                 <span class="font-mono font-medium">{{ item.uid }}</span>
-                <span v-if="item.description" class="text-sm font-light text-gray-500">{{ item.description }}</span>
-                <span v-if="item.lastUpdatedAt" class="text-xs font-light text-gray-400">
-                  {{ t('updatedAt', { date: formatDate(new Date(item.lastUpdatedAt)) }) }}
+                <span
+                  v-if="item.description"
+                  class="text-sm font-light text-gray-500 dark:text-gray-400"
+                  >{{ item.description }}</span
+                >
+                <span
+                  v-if="item.lastUpdatedAt"
+                  class="text-xs font-light text-gray-400 dark:text-gray-500"
+                >
+                  {{
+                    t('updatedAt', {
+                      date: formatDate(new Date(item.lastUpdatedAt)),
+                    })
+                  }}
                 </span>
               </div>
             </td>
             <td>
               <div class="flex flex-wrap gap-1">
-                <Badge v-for="(part, i) of conditionsSummary(item)" :key="i" theme="neutral">{{ part }}</Badge>
+                <Badge
+                  v-for="(part, i) of conditionsSummary(item)"
+                  :key="i"
+                  theme="neutral"
+                  >{{ part }}</Badge
+                >
               </div>
             </td>
             <td>
-              <span v-if="item.actions.length" v-tippy="pinsDetail(item)" class="text-sm whitespace-nowrap">
+              <span
+                v-if="item.actions.length"
+                v-tippy="pinsDetail(item)"
+                class="text-sm whitespace-nowrap"
+              >
                 {{ t('pinCount', item.actions.length) }}
               </span>
-              <span v-else class="text-sm font-light text-gray-500 italic">{{ t('placeholders.noPins') }}</span>
+              <span
+                v-else
+                class="text-sm font-light text-gray-500 italic dark:text-gray-400"
+                >{{ t('placeholders.noPins') }}</span
+              >
             </td>
             <td class="text-sm">
-              <span v-if="null !== item.precedence && undefined !== item.precedence">{{ item.precedence }}</span>
-              <span v-else class="font-light text-gray-500 italic">{{ t('placeholders.noPrecedence') }}</span>
+              <span
+                v-if="null !== item.precedence && undefined !== item.precedence"
+                >{{ item.precedence }}</span
+              >
+              <span
+                v-else
+                class="font-light text-gray-500 italic dark:text-gray-400"
+                >{{ t('placeholders.noPrecedence') }}</span
+              >
             </td>
             <td>
               <USwitch
                 :model-value="!!item.active"
                 :disabled="pending.has(item.uid)"
-                @update:model-value="toggleActive(item, $event)" />
+                @update:model-value="toggleActive(item, $event)"
+              />
             </td>
             <td>
               <div class="flex items-center gap-2">
                 <button
                   type="button"
                   v-tippy="t('actions.edit')"
-                  class="text-gray-500 hover:text-primary-600"
-                  @click="openEditor(item)">
+                  class="text-gray-500 hover:text-primary-600 dark:text-gray-400"
+                  @click="openEditor(item)"
+                >
                   <Icon name="heroicons:pencil-square" />
                 </button>
                 <button
                   type="button"
                   v-tippy="t('actions.delete')"
-                  class="text-gray-500 hover:text-red-600"
-                  @click="confirmDelete(item)">
+                  class="text-gray-500 hover:text-red-600 dark:text-gray-400"
+                  @click="confirmDelete(item)"
+                >
                   <Icon name="heroicons:trash" />
                 </button>
               </div>
@@ -113,19 +176,32 @@
             :sibling-count="2"
             active-color="primary"
             variant="ghost"
-            @update:page="handlePageChange" />
+            @update:page="handlePageChange"
+          />
         </div>
       </template>
 
       <div v-else class="flex flex-col items-center justify-center gap-6 py-20">
-        <p class="text-5xl font-light text-gray-700">📌</p>
-        <p class="text-2xl font-light text-gray-700">{{ filtered ? t('noMatch') : t('emptyState') }}</p>
-        <Button v-if="!filtered" theme="primary" icon="pajamas:doc-new" @click="openEditor(null)">
+        <p class="text-5xl font-light text-gray-700 dark:text-gray-300">📌</p>
+        <p class="text-2xl font-light text-gray-700 dark:text-gray-300">
+          {{ filtered ? t('noMatch') : t('emptyState') }}
+        </p>
+        <Button
+          v-if="!filtered"
+          theme="primary"
+          icon="pajamas:doc-new"
+          @click="openEditor(null)"
+        >
           {{ t('actions.create') }}
         </Button>
       </div>
 
-      <SearchRuleEditor v-model:open="editorOpen" :rule="editing" :index-uids="indexUids" @saved="refresh()" />
+      <SearchRuleEditor
+        v-model:open="editorOpen"
+        :rule="editing"
+        :index-uids="indexUids"
+        @saved="refresh()"
+      />
     </template>
   </Layout>
 </template>
@@ -151,7 +227,13 @@ import {
   useTask,
   type SearchRule,
 } from '~/composables'
-import { TOAST_FAILURE, TOAST_PLEASEWAIT, TOAST_SUCCESS, useConfirmationDialog, useToasts } from '~/stores'
+import {
+  TOAST_FAILURE,
+  TOAST_PLEASEWAIT,
+  TOAST_SUCCESS,
+  useConfirmationDialog,
+  useToasts,
+} from '~/stores'
 import { tryOrThrow } from '~/utils'
 
 const { t } = useI18n()
@@ -165,7 +247,8 @@ const processTask = useTask()
 // Register lifecycle-bound composables before the first `await` so they keep their component context.
 useHead({ title: t('title') })
 const itemsPerPage = ref(20)
-const { offset, totalItems, currentPage, lastPage, getPageOffset } = usePagination(itemsPerPage)
+const { offset, totalItems, currentPage, lastPage, getPageOffset } =
+  usePagination(itemsPerPage)
 
 // Dynamic search rules need both a recent enough instance and the experimental flag: the routes
 // exist since 1.41 but changed in a breaking way until 1.50, so we only support the stable shape.
@@ -177,7 +260,10 @@ if (versionSupported) {
   try {
     // Direct call (not tryOrThrow): degrade to the explanatory alert rather than the global
     // error page, since an older instance may not expose this endpoint at all.
-    const features = (await meili.getExperimentalFeatures()) as Record<string, boolean>
+    const features = (await meili.getExperimentalFeatures()) as Record<
+      string,
+      boolean
+    >
     featureEnabled = true === features[SEARCH_RULES_FEATURE]
   } catch {
     // Treat an unreachable endpoint as "not enabled" — the alert points to the right place anyway.
@@ -210,7 +296,8 @@ const refresh = async () => {
     limit: self.itemsPerPage,
     filter: {
       query: self.query.trim() || null,
-      active: 'all' === self.activeFilter ? null : 'active' === self.activeFilter,
+      active:
+        'all' === self.activeFilter ? null : 'active' === self.activeFilter,
     },
   })
   self.rules = results
@@ -219,7 +306,9 @@ const refresh = async () => {
 
 if (available) {
   await tryOrThrow(() => refresh())
-  self.indexUids = (await meili.getRawIndexes({ limit: 1000 })).results.map(({ uid }) => uid)
+  self.indexUids = (await meili.getRawIndexes({ limit: 1000 })).results.map(
+    ({ uid }) => uid,
+  )
 }
 
 const resetToFirstPage = async () => {
@@ -236,7 +325,9 @@ const handlePageChange = (page: number) => {
 }
 
 // Typing in the search box shouldn't fire a request per keystroke; the other inputs are discrete.
-watchDebounced(toRef(self, 'query'), () => resetToFirstPage(), { debounce: 300 })
+watchDebounced(toRef(self, 'query'), () => resetToFirstPage(), {
+  debounce: 300,
+})
 watch([toRef(self, 'activeFilter'), itemsPerPage], () => resetToFirstPage())
 watch(toRef(self, 'offset'), () => refresh())
 
@@ -262,10 +353,15 @@ const conditionsSummary = (rule: SearchRule) => {
   }
   if (time?.start && time?.end) {
     parts.push(
-      t('conditions.between', { start: formatDate(new Date(time.start)), end: formatDate(new Date(time.end)) }),
+      t('conditions.between', {
+        start: formatDate(new Date(time.start)),
+        end: formatDate(new Date(time.end)),
+      }),
     )
   } else if (time?.start) {
-    parts.push(t('conditions.from', { start: formatDate(new Date(time.start)) }))
+    parts.push(
+      t('conditions.from', { start: formatDate(new Date(time.start)) }),
+    )
   } else if (time?.end) {
     parts.push(t('conditions.until', { end: formatDate(new Date(time.end)) }))
   }
@@ -279,14 +375,20 @@ const conditionsSummary = (rule: SearchRule) => {
 /** Tooltip listing every pin as `index#documentId → position`. */
 const pinsDetail = (rule: SearchRule) =>
   rule.actions
-    .map(({ selector, action }) => `${selector.indexUid ?? '*'}#${selector.id} → ${action.position}`)
+    .map(
+      ({ selector, action }) =>
+        `${selector.indexUid ?? '*'}#${selector.id} → ${action.position}`,
+    )
     .join('\n')
 
 const pending = reactive(new Set<string>())
 
 const toggleActive = async (rule: SearchRule, active: boolean) => {
   pending.add(rule.uid)
-  const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.toggling', { uid: rule.uid }) })
+  const toast = createToast({
+    ...TOAST_PLEASEWAIT(t),
+    title: t('toasts.toggling', { uid: rule.uid }),
+  })
   try {
     // PATCH merges top-level keys, so sending `active` alone leaves conditions and actions intact.
     await processTask(() => save(rule.uid, { active }))
@@ -300,10 +402,15 @@ const toggleActive = async (rule: SearchRule, active: boolean) => {
 }
 
 const confirmDelete = async (rule: SearchRule) => {
-  if (!(await confirm({ text: t('confirmations.delete', { uid: rule.uid }) }))) {
+  if (
+    !(await confirm({ text: t('confirmations.delete', { uid: rule.uid }) }))
+  ) {
     return
   }
-  const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.deleting') })
+  const toast = createToast({
+    ...TOAST_PLEASEWAIT(t),
+    title: t('toasts.deleting'),
+  })
   try {
     await processTask(() => remove(rule.uid))
     toast.update({ ...TOAST_SUCCESS(t) })
@@ -317,7 +424,10 @@ const confirmDeleteAll = async () => {
   if (!(await confirm({ text: t('confirmations.deleteAll') }))) {
     return
   }
-  const toast = createToast({ ...TOAST_PLEASEWAIT(t), title: t('toasts.deletingAll') })
+  const toast = createToast({
+    ...TOAST_PLEASEWAIT(t),
+    title: t('toasts.deletingAll'),
+  })
   try {
     await processTask(() => removeAll())
     toast.update({ ...TOAST_SUCCESS(t) })

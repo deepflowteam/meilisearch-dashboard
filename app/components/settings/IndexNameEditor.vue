@@ -2,11 +2,24 @@
   <form @submit.prevent="renameIndex()" class="space-y-4">
     <UniqueId as="section" v-slot="{ id }" class="flex flex-col gap-1">
       <Label required :for="id">{{ t('labels.renameIndexUid') }}</Label>
-      <input v-model="self.renameIndexUid" required autofocus autocomplete="off" type="text" class="form-input" />
+      <input
+        v-model="self.renameIndexUid"
+        required
+        autofocus
+        autocomplete="off"
+        type="text"
+        class="form-input"
+      />
     </UniqueId>
 
     <div class="flex justify-end">
-      <Button type="submit" :loading="self.isRenaming" icon-on-right theme="primary" icon="heroicons:check">
+      <Button
+        type="submit"
+        :loading="self.isRenaming"
+        icon-on-right
+        theme="primary"
+        icon="heroicons:check"
+      >
         {{ t('actions.renameIndex') }}
       </Button>
     </div>

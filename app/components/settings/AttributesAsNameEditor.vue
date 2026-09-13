@@ -1,7 +1,14 @@
 <template>
   <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submit()">
-    <UFormField :label="t('labels.nameAttribute')" :help="t('help.nameAttribute')">
-      <USelect v-model="editableAttribute" :items="attributeItems" class="w-full sm:w-80" />
+    <UFormField
+      :label="t('labels.nameAttribute')"
+      :help="t('help.nameAttribute')"
+    >
+      <USelect
+        v-model="editableAttribute"
+        :items="attributeItems"
+        class="w-full sm:w-80"
+      />
     </UFormField>
     <footer class="flex flex-col items-center justify-end sm:flex-row">
       <Buttons>
@@ -31,7 +38,10 @@ const AUTO_DETECT = '__auto__'
 
 // A previously chosen attribute may no longer exist on this index's documents (removed, renamed) —
 // silently fall back to auto-detect rather than keep pointing at a field that isn't there anymore.
-if (localSettings.nameAttribute && !props.fields.includes(localSettings.nameAttribute)) {
+if (
+  localSettings.nameAttribute &&
+  !props.fields.includes(localSettings.nameAttribute)
+) {
   localSettings.nameAttribute = null
 }
 
@@ -40,10 +50,15 @@ const attributeItems = computed(() => [
   ...props.fields.map((field) => ({ label: field, value: field })),
 ])
 
-const { value: nameAttribute, reset, modified } = resettableRef(localSettings.nameAttribute)
+const {
+  value: nameAttribute,
+  reset,
+  modified,
+} = resettableRef(localSettings.nameAttribute)
 const editableAttribute = computed({
   get: () => nameAttribute.value ?? AUTO_DETECT,
-  set: (value: string) => (nameAttribute.value = AUTO_DETECT === value ? null : value),
+  set: (value: string) =>
+    (nameAttribute.value = AUTO_DETECT === value ? null : value),
 })
 
 const submit = async () => {

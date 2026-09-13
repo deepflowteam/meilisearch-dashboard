@@ -3,7 +3,13 @@
     <UniqueId v-slot="{ id }" as="div" class="col-span-4 space-y-2">
       <div class="flex flex-col gap-1">
         <Label required :for="id">{{ t('labels.name') }}</Label>
-        <input v-model="embedder[0]" required autocomplete="off" type="text" class="w-full text-sm" />
+        <input
+          v-model="embedder[0]"
+          required
+          autocomplete="off"
+          type="text"
+          class="form-input w-full text-sm"
+        />
       </div>
       <Button
         type="button"
@@ -11,7 +17,8 @@
         theme="primary"
         icon="mdi:bin"
         @click="$emit('remove', embedder[0])"
-        class="w-auto">
+        class="w-auto"
+      >
         {{ t('actions.remove') }}
       </Button>
     </UniqueId>
@@ -27,16 +34,35 @@
         </Select>
       </UniqueId>
 
-      <RestEmbedderForm v-if="'rest' === embedder[1]!.source" v-model="embedder[1] as RestEmbedder" />
-      <OllamaEmbedderForm v-if="'ollama' === embedder[1]!.source" v-model="embedder[1] as OllamaEmbedder" />
-      <OpenAIEmbedderForm v-if="'openAi' === embedder[1]!.source" v-model="embedder[1] as OpenAiEmbedder" />
+      <RestEmbedderForm
+        v-if="'rest' === embedder[1]!.source"
+        v-model="embedder[1] as RestEmbedder"
+      />
+      <OllamaEmbedderForm
+        v-if="'ollama' === embedder[1]!.source"
+        v-model="embedder[1] as OllamaEmbedder"
+      />
+      <OpenAIEmbedderForm
+        v-if="'openAi' === embedder[1]!.source"
+        v-model="embedder[1] as OpenAiEmbedder"
+      />
       <HuggingFaceEmbedderForm
         v-if="'huggingFace' === embedder[1]!.source"
-        v-model="embedder[1] as HuggingFaceEmbedder" />
+        v-model="embedder[1] as HuggingFaceEmbedder"
+      />
 
-      <UniqueId v-if="'userProvided' !== embedder[1]!.source" v-slot="{ id }" as="section" class="flex flex-col gap-1">
+      <UniqueId
+        v-if="'userProvided' !== embedder[1]!.source"
+        v-slot="{ id }"
+        as="section"
+        class="flex flex-col gap-1"
+      >
         <Label :for="id">{{ t('labels.documentTemplate') }}</Label>
-        <Textarea v-model="embedder[1]!.documentTemplate" class="w-full text-sm" rows="5" />
+        <Textarea
+          v-model="embedder[1]!.documentTemplate"
+          class="w-full text-sm"
+          rows="5"
+        />
       </UniqueId>
     </div>
   </div>
@@ -45,7 +71,13 @@
 <script setup lang="ts">
 import Label from '~/components/layout/forms/Label.vue'
 import Button from '~/components/layout/forms/Button.vue'
-import type { Embedder, HuggingFaceEmbedder, OllamaEmbedder, OpenAiEmbedder, RestEmbedder } from 'meilisearch'
+import type {
+  Embedder,
+  HuggingFaceEmbedder,
+  OllamaEmbedder,
+  OpenAiEmbedder,
+  RestEmbedder,
+} from 'meilisearch'
 import Select from '~/components/layout/forms/Select.vue'
 import RestEmbedderForm from '~/components/settings/embedder/RestEmbedderForm.vue'
 import Textarea from '~/components/layout/forms/Textarea.vue'

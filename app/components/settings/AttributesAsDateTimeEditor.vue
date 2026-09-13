@@ -28,7 +28,11 @@ type Props = {
 const props = defineProps<Props>()
 const { t } = useI18n()
 const localSettings = reactive(useIndexLocalSettings(props.indexUid))
-const { value: attributesAsDateTime, reset, modified } = resettableRef(localSettings.attributesAsDateTime)
+const {
+  value: attributesAsDateTime,
+  reset,
+  modified,
+} = resettableRef(localSettings.attributesAsDateTime)
 const editableAttributes = computed({
   get: () => self.attributesAsDateTime.join('\n'),
   set: (value) =>

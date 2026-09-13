@@ -1,13 +1,13 @@
 <template>
-  <button
-    type="button"
+  <UButton
     v-tippy="t('label')"
-    class="relative ml-5 shrink-0 rounded-full bg-white p-1 text-gray-800 hover:text-gray-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:outline-hidden"
-    @click="confirmLogout()">
-    <span class="absolute -inset-1.5" />
-    <span class="sr-only">{{ t('label') }}</span>
-    <Icon name="ant-design:logout-outlined" class="size-6 -rotate-90 hover:text-primary-800" aria-hidden="true" />
-  </button>
+    type="button"
+    color="neutral"
+    variant="ghost"
+    icon="ant-design:logout-outlined"
+    :aria-label="t('label')"
+    @click="confirmLogout()"
+  />
 </template>
 
 <script setup lang="ts">

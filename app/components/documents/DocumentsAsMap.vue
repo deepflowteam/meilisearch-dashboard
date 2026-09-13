@@ -1,6 +1,8 @@
 <template>
   <main class="grid h-full grid-cols-12 overflow-hidden">
-    <div class="col-span-3 h-full space-y-6 overflow-x-hidden overflow-y-auto px-4 pb-4">
+    <div
+      class="col-span-3 h-full space-y-6 overflow-x-hidden overflow-y-auto px-4 pb-4"
+    >
       <DocumentCard
         v-for="document of documents"
         :indexUid="indexUid"
@@ -8,33 +10,24 @@
         :primary-key="primaryKey"
         :key="document[primaryKey]"
         :id="`document-${document[primaryKey]}`"
-        class="w-full" />
+        class="w-full"
+      />
     </div>
-    <MapContainer
-      :center="center"
-      :zoom="2"
-      class="col-span-9 size-full"
-      style="height: 100%; z-index: 0"
-      @zoomend="onZoomEnd">
-      <OpenStreetMap>
-        <ScaleControl />
-        <template v-for="document of documents">
-          <Marker
-            v-if="Object.keys(document).includes('_geo')"
-            :position="document._geo"
-            :icon
-            @click="scrollToDocument(document)">
-            <Popup>{{ document[nameField] }}</Popup>
-          </Marker>
-        </template>
-      </OpenStreetMap>
-    </MapContainer>
+    <div ref="mapContainer" class="col-span-9 size-full" />
   </main>
 </template>
 
 <script setup lang="ts">
+import {
+  Map as MapLibreMap,
+  Marker,
+  NavigationControl,
+  Popup,
+  ScaleControl,
+} from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import DocumentCard from './DocumentCard.vue'
-import { MapContainer, Marker, OpenStreetMap, Popup, ScaleControl } from 'vue3-leaflet'
 import { useFields } from '~/composables'
 import { AppliedFilters } from '~/utils'
 
@@ -47,42 +40,91 @@ type Props = {
   canFilterGeoDocuments: boolean
 }
 
-type ZoomEndEvent = {
-  bounds: {
-    _northEast: {
-      lat: number
-      lng: number
-    }
-    _southWest: {
-      lat: number
-      lng: number
-    }
-  }
-}
-
 const props = defineProps<Props>()
 const { nameField } = useFields(props.primaryKey, props.fields, props.indexUid)
-const center = ref([0, 0])
+
+const mapContainer = ref<HTMLElement>()
+let map: MapLibreMap | undefined
+let markers: Marker[] = []
+
+const colorMode = useColorMode()
+const styleUrl = (dark: boolean) =>
+  `https://tiles.openfreemap.org/styles/${dark ? 'dark' : 'bright'}`
+
 const scrollToDocument = (doc: any) => {
-  document.getElementById(`document-${doc[props.primaryKey]}`)?.scrollIntoView({ behavior: 'smooth' })
+  document
+    .getElementById(`document-${doc[props.primaryKey]}`)
+    ?.scrollIntoView({ behavior: 'smooth' })
 }
-const onZoomEnd = ({ bounds }: ZoomEndEvent) => {
-  if (!props.canFilterGeoDocuments) {
+
+const onMoveEnd = () => {
+  if (!map || !props.canFilterGeoDocuments) {
     return
   }
+  const bounds = map.getBounds()
+  const northEast = bounds.getNorthEast()
+  const southWest = bounds.getSouthWest()
   const boundingBox = {
-    topLeftCorner: Object.values(bounds._northEast) as [number, number],
-    bottomRightCorner: Object.values(bounds._southWest) as [number, number],
+    topLeftCorner: [northEast.lat, northEast.lng] as [number, number],
+    bottomRightCorner: [southWest.lat, southWest.lng] as [number, number],
   }
   props.appliedFilters.applyBoundingBox(boundingBox)
 }
 
-const icon = {
-  iconUrl: '/pin.svg',
-  iconSize: [38, 95],
-  iconAnchor: [22, 60],
-  popupAnchor: [0, -30],
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  shadowAnchor: [11, 40],
+const createMarkerElement = () => {
+  const el = document.createElement('div')
+  el.style.width = '32px'
+  el.style.height = '32px'
+  el.style.cursor = 'pointer'
+  el.style.backgroundImage = 'url(/pin.svg)'
+  el.style.backgroundSize = 'contain'
+  el.style.backgroundRepeat = 'no-repeat'
+  return el
 }
+
+const renderMarkers = () => {
+  if (!map) {
+    return
+  }
+  markers.forEach((marker) => marker.remove())
+  markers = props.documents
+    .filter((doc) => Object.keys(doc).includes('_geo'))
+    .map((doc) => {
+      const { lat, lng } = doc._geo
+      const popup = new Popup({ offset: 24 }).setText(doc[nameField.value])
+      const marker = new Marker({
+        element: createMarkerElement(),
+        anchor: 'bottom',
+      })
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map!)
+      marker.getElement().addEventListener('click', () => scrollToDocument(doc))
+      return marker
+    })
+}
+
+onMounted(() => {
+  map = new MapLibreMap({
+    container: mapContainer.value!,
+    style: styleUrl(colorMode.value === 'dark'),
+    center: [0, 0],
+    zoom: 2,
+  })
+  map.addControl(new NavigationControl({ showCompass: false }))
+  map.addControl(new ScaleControl())
+  map.on('load', renderMarkers)
+  map.on('moveend', onMoveEnd)
+})
+
+onBeforeUnmount(() => {
+  markers.forEach((marker) => marker.remove())
+  map?.remove()
+})
+
+watch(() => props.documents, renderMarkers)
+watch(
+  () => colorMode.value,
+  (value) => map?.setStyle(styleUrl(value === 'dark')),
+)
 </script>

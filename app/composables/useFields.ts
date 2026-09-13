@@ -15,7 +15,9 @@ export const useFields = (
 ): UseFieldsReturn => {
   // Falls back to auto-detection whenever the override is unset, or no longer among this
   // document's fields (attribute removed from the index, or simply absent on this document).
-  const nameAttribute = indexUid ? useIndexLocalSettings(indexUid).nameAttribute : computed(() => null)
+  const nameAttribute = indexUid
+    ? useIndexLocalSettings(indexUid).nameAttribute
+    : computed(() => null)
   const self: any = reactive({
     primaryKey,
     fields,
@@ -33,14 +35,21 @@ export const useFields = (
     sortedFields: computed(() => [
       self.primaryKey,
       self.nameField,
-      ...self.fields.filter((field: string) => ![self.primaryKey, self.nameField].includes(field)),
+      ...self.fields.filter(
+        (field: string) => ![self.primaryKey, self.nameField].includes(field),
+      ),
     ]),
-    fieldsWithoutPrimaryKey: computed(() => [...self.fields.filter((field: string) => field !== self.primaryKey)]),
+    fieldsWithoutPrimaryKey: computed(() => [
+      ...self.fields.filter((field: string) => field !== self.primaryKey),
+    ]),
   })
 
   return {
     fields: toRef(self, 'sortedFields') as ComputedRef<Array<string>>,
     nameField: toRef(self, 'nameField') as ComputedRef<string>,
-    fieldsWithoutPrimaryKey: toRef(self, 'fieldsWithoutPrimaryKey') as ComputedRef<Array<string>>,
+    fieldsWithoutPrimaryKey: toRef(
+      self,
+      'fieldsWithoutPrimaryKey',
+    ) as ComputedRef<Array<string>>,
   }
 }

@@ -1,5 +1,8 @@
 <template>
-  <SettingsSection :title="t('title')" href="https://www.meilisearch.com/docs/reference/api/search#query-locales">
+  <SettingsSection
+    :title="t('title')"
+    href="https://www.meilisearch.com/docs/reference/api/search#query-locales"
+  >
     <UFormField :help="t('help.locales')">
       <UInputMenu
         v-model="locales"
@@ -9,7 +12,8 @@
         :items="localeItems"
         value-key="value"
         :placeholder="t('placeholders.locales')"
-        class="w-full" />
+        class="w-full"
+      />
     </UFormField>
   </SettingsSection>
 </template>
@@ -22,7 +26,12 @@ const locales = defineModel<Array<string>>({ required: true })
 
 const { t } = useI18n()
 
-const localeItems = computed(() => MEILISEARCH_LOCALES.map((code) => ({ label: humanizeLocale(code), value: code })))
+const localeItems = computed(() =>
+  MEILISEARCH_LOCALES.map((code) => ({
+    label: humanizeLocale(code),
+    value: code,
+  })),
+)
 </script>
 
 <i18n>

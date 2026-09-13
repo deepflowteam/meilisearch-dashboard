@@ -38,5 +38,12 @@ export type NetworkUpdate = {
   self?: string | null
   leader?: string | null
   remotes?: Record<string, Partial<Remote> | null>
-  shards?: Record<string, { remotes?: string[]; addRemotes?: string[]; removeRemotes?: string[] } | null>
+  shards?: Record<
+    string,
+    {
+      remotes?: string[]
+      addRemotes?: string[]
+      removeRemotes?: string[]
+    } | null
+  >
 }

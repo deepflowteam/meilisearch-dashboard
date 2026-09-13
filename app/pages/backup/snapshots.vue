@@ -3,13 +3,20 @@
     <template #title-actions>
       <DocumentationLink
         href="https://www.meilisearch.com/docs/learn/advanced/snapshots_vs_dumps#snapshots"
-        v-slot="{ icon }">
+        v-slot="{ icon }"
+      >
         <Icon :name="icon" class="size-5" />
       </DocumentationLink>
     </template>
 
     <template #actions>
-      <Button type="button" theme="primary" icon="clarity:backup-solid" :disabled="loading" @click="createSnapshot()">
+      <Button
+        type="button"
+        theme="primary"
+        icon="clarity:backup-solid"
+        :disabled="loading"
+        @click="createSnapshot()"
+      >
         {{ t('actions.create') }}
       </Button>
     </template>
@@ -38,7 +45,8 @@ import Button from '~/components/layout/forms/Button.vue'
 const { t } = useI18n()
 const meili = useMeiliClient()
 const { satisfiesVersion } = useVersion()
-const fetchTasks = () => tryOrThrow(() => meili.tasks.getTasks({ types: ['snapshotCreation'] }))
+const fetchTasks = () =>
+  tryOrThrow(() => meili.tasks.getTasks({ types: ['snapshotCreation'] }))
 const { createToast } = useToasts()
 const processTask = useTask()
 const { loading, error, handle } = useFormSubmit({
@@ -50,7 +58,9 @@ const { loading, error, handle } = useFormSubmit({
 const tabs = computed(() => [
   { label: t('tabs.dumps'), to: '/backup/dumps' },
   { label: t('tabs.snapshots'), to: '/backup/snapshots' },
-  ...(satisfiesVersion(EXPORT_MIN_VERSION) ? [{ label: t('tabs.export'), to: '/backup/export' }] : []),
+  ...(satisfiesVersion(EXPORT_MIN_VERSION)
+    ? [{ label: t('tabs.export'), to: '/backup/export' }]
+    : []),
 ])
 const self = reactive({
   tasks: await fetchTasks(),

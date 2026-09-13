@@ -13,7 +13,13 @@ import { useMeiliClient } from './useMeiliClient'
  * @see https://www.meilisearch.com/docs/reference/api/chats
  */
 
-export const CHAT_SOURCES = ['openAi', 'azureOpenAi', 'mistral', 'gemini', 'vLlm'] as const
+export const CHAT_SOURCES = [
+  'openAi',
+  'azureOpenAi',
+  'mistral',
+  'gemini',
+  'vLlm',
+] as const
 export type ChatSource = (typeof CHAT_SOURCES)[number]
 
 /**
@@ -50,7 +56,10 @@ export type ChatCompletionBody = {
   model: string
   messages: ChatMessage[]
   stream: true
-  tools?: Array<{ type: 'function'; function: { name: string; description?: string } }>
+  tools?: Array<{
+    type: 'function'
+    function: { name: string; description?: string }
+  }>
 }
 
 /**
@@ -100,21 +109,40 @@ export const useChatWorkspaces = (completionKey?: MaybeRef<string>) => {
 
   const list = () => meili.getChatWorkspaces()
 
-  const getSettings = (uid: string) => meili.chat(uid).get() as Promise<ChatWorkspaceSettings>
+  const getSettings = (uid: string) =>
+    meili.chat(uid).get() as Promise<ChatWorkspaceSettings>
 
-  const updateSettings = (uid: string, settings: Partial<ChatWorkspaceSettings>) =>
-    meili.httpRequest.patch<ChatWorkspaceSettings>({ path: `chats/${uid}/settings`, body: settings })
+  const updateSettings = (
+    uid: string,
+    settings: Partial<ChatWorkspaceSettings>,
+  ) =>
+    meili.httpRequest.patch<ChatWorkspaceSettings>({
+      path: `chats/${uid}/settings`,
+      body: settings,
+    })
 
   const resetSettings = (uid: string) => meili.chat(uid).reset()
 
-  const remove = (uid: string) => meili.httpRequest.delete({ path: `chats/${uid}` })
+  const remove = (uid: string) =>
+    meili.httpRequest.delete({ path: `chats/${uid}` })
 
-  const streamCompletion = (uid: string, body: ChatCompletionBody, signal?: AbortSignal) =>
+  const streamCompletion = (
+    uid: string,
+    body: ChatCompletionBody,
+    signal?: AbortSignal,
+  ) =>
     meili.httpRequest.postStream({
       path: `chats/${uid}/chat/completions`,
       body,
       extraRequestInit: { signal, headers: completionHeaders() },
     })
 
-  return { list, getSettings, updateSettings, resetSettings, remove, streamCompletion }
+  return {
+    list,
+    getSettings,
+    updateSettings,
+    resetSettings,
+    remove,
+    streamCompletion,
+  }
 }

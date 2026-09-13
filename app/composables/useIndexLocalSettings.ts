@@ -44,7 +44,8 @@ export const useIndexLocalSettings = (indexUid: string) => {
   return {
     attributesAsDateTime: computed({
       get: () => self.storage.attributesAsDateTime ?? [],
-      set: (value: Array<string>) => (self.storage.attributesAsDateTime = value),
+      set: (value: Array<string>) =>
+        (self.storage.attributesAsDateTime = value),
     }),
     attributesAsBadges: computed({
       get: () => self.storage.attributesAsBadges ?? [],
@@ -74,18 +75,23 @@ export const useIndexLocalSettings = (indexUid: string) => {
     // merged back in on read so settings persisted by an older version of the app (which knew
     // fewer keys) don't come back as `undefined` search parameters.
     searchSettings: computed({
-      get: () => ({ ...DEFAULT_SEARCH_SETTINGS, ...(self.storage.searchSettings ?? {}) }),
+      get: () => ({
+        ...DEFAULT_SEARCH_SETTINGS,
+        ...(self.storage.searchSettings ?? {}),
+      }),
       set: (value: SearchSettings) => (self.storage.searchSettings = value),
     }),
     // Which embedder the "similar documents" mode compares on, remembered per index. Reconciled
     // against the live embedder list by the documents page before it can reach a search request.
     similarDocumentsEmbedder: computed({
       get: () => self.storage.similarDocumentsEmbedder ?? null,
-      set: (value: string | null) => (self.storage.similarDocumentsEmbedder = value),
+      set: (value: string | null) =>
+        (self.storage.similarDocumentsEmbedder = value),
     }),
     illustrationAttribute: computed({
       get: () => self.storage.illustrationAttribute ?? null,
-      set: (value: string | null) => (self.storage.illustrationAttribute = value),
+      set: (value: string | null) =>
+        (self.storage.illustrationAttribute = value),
     }),
     nameAttribute: computed({
       get: () => self.storage.nameAttribute ?? null,

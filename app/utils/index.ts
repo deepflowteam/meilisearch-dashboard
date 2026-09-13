@@ -12,6 +12,7 @@ export * from './read-file-as-text'
 export * from './resettable-ref'
 export * from './safe-torefs'
 export * from './search-settings'
+export * from './theme-colors'
 export * from './try-or-throw'
 
 export type I18nT = (key: string, args?: any) => string

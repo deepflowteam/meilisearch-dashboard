@@ -20,7 +20,9 @@ export class PromisifiedFileReader<T> implements AsyncIterable<T> {
 
   private onLoad(): void {
     if (!this.currentRead)
-      throw new Error('Assertion error: a result was received but no read operation was in progress')
+      throw new Error(
+        'Assertion error: a result was received but no read operation was in progress',
+      )
 
     const { resolve } = this.currentRead
     this.currentRead = undefined
@@ -39,7 +41,9 @@ export class PromisifiedFileReader<T> implements AsyncIterable<T> {
 
   private assertNoReadInProgress(): void {
     if (this.currentRead) {
-      throw new Error('Assertion error: a read operation is already in progress')
+      throw new Error(
+        'Assertion error: a read operation is already in progress',
+      )
     }
   }
 
@@ -65,15 +69,22 @@ export class PromisifiedFileReader<T> implements AsyncIterable<T> {
     })
   }
 
-  public async readAsArrayBuffer(byteSize?: number): Promise<ArrayBuffer | null> {
+  public async readAsArrayBuffer(
+    byteSize?: number,
+  ): Promise<ArrayBuffer | null> {
     this.assertNoReadInProgress()
 
     const start = this.readPositions.end
-    const end = byteSize ? Math.min(start + byteSize, this.source.size) : this.source.size
+    const end = byteSize
+      ? Math.min(start + byteSize, this.source.size)
+      : this.source.size
 
     this.readPositions = { start, end }
 
-    const blobSlice = Blob.prototype.slice || (Blob.prototype as any).mozSlice || (Blob.prototype as any).webkitSlice
+    const blobSlice =
+      Blob.prototype.slice ||
+      (Blob.prototype as any).mozSlice ||
+      (Blob.prototype as any).webkitSlice
 
     return new Promise((resolve, reject) => {
       this.currentRead = { resolve, reject }

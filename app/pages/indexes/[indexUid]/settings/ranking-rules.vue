@@ -1,25 +1,39 @@
 <template>
-  <form class="space-y-4" @reset.prevent="handleReset()" @submit.prevent="submit()">
+  <form
+    class="space-y-4"
+    @reset.prevent="handleReset()"
+    @submit.prevent="submit()"
+  >
     <h3 class="inline-flex w-full items-start justify-between">
       <span class="inline-flex flex-col gap-1">
         <span class="text-xl font-semibold">{{ t('title') }}</span>
-        <span class="text-sm text-gray-600 italic">
+        <span class="text-sm text-gray-600 italic dark:text-gray-400">
           {{ t('description') }}
         </span>
       </span>
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#ranking-rules" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#ranking-rules"
+      />
     </h3>
 
-    <section :key="rerenderKey" v-sortable class="space-y-2" @end="onOrderChange">
+    <section
+      :key="rerenderKey"
+      v-sortable
+      class="space-y-2"
+      @end="onOrderChange"
+    >
       <div
         v-for="rule in displayList"
         :key="rule"
         role="treeitem"
-        class="flex cursor-move items-center justify-between gap-2 rounded-md border border-gray-100 px-2 py-1.5 text-sm text-gray-800 shadow-xs">
+        class="flex cursor-move items-center justify-between gap-2 rounded-md border border-gray-100 px-2 py-1.5 text-sm text-gray-800 shadow-xs dark:text-gray-200 dark:border-gray-800"
+      >
         <dl class="flex-1 overflow-hidden">
           <template v-if="isBuiltIn(rule)">
             <dt class="font-medium capitalize">{{ formatRuleLabel(rule) }}</dt>
-            <dd class="text-xs text-gray-600 italic">{{ t(`descriptions.${rule}`) }}</dd>
+            <dd class="text-xs text-gray-600 italic dark:text-gray-400">
+              {{ t(`descriptions.${rule}`) }}
+            </dd>
           </template>
           <template v-else>
             <dt class="flex items-center gap-1.5 font-medium">
@@ -29,21 +43,29 @@
                   parseCustomRule(rule)?.direction === 'asc'
                     ? 'bg-blue-100 text-blue-700'
                     : 'bg-orange-100 text-orange-700'
-                ">
-                {{ parseCustomRule(rule)?.direction === 'asc' ? '↑ asc' : '↓ desc' }}
+                "
+              >
+                {{
+                  parseCustomRule(rule)?.direction === 'asc'
+                    ? '↑ asc'
+                    : '↓ desc'
+                }}
               </span>
               <span class="truncate">{{ parseCustomRule(rule)?.field }}</span>
             </dt>
-            <dd class="text-xs text-gray-600 italic">{{ t('descriptions.custom') }}</dd>
+            <dd class="text-xs text-gray-600 italic dark:text-gray-400">
+              {{ t('descriptions.custom') }}
+            </dd>
           </template>
         </dl>
         <div class="flex shrink-0 items-center gap-1">
           <button
             v-if="!isBuiltIn(rule)"
             type="button"
-            class="text-gray-400 transition-colors hover:text-red-500"
+            class="text-gray-400 transition-colors hover:text-red-500 dark:text-gray-500"
             :title="t('actions.removeRule')"
-            @click="removeRule(rule)">
+            @click="removeRule(rule)"
+          >
             <Icon name="mdi:close" />
           </button>
           <Icon name="uil:draggabledots" />
@@ -57,7 +79,8 @@
         type="text"
         class="form-input flex-1 text-sm"
         :placeholder="t('placeholders.fieldName')"
-        @keydown.enter.prevent="addCustomRule()" />
+        @keydown.enter.prevent="addCustomRule()"
+      />
       <select v-model="newRuleDirection" class="form-input shrink-0 text-sm">
         <option value="asc">↑ asc</option>
         <option value="desc">↓ desc</option>
@@ -68,7 +91,8 @@
         icon="mdi:plus"
         size="small"
         :disabled="!newRuleField.trim()"
-        @click="addCustomRule()">
+        @click="addCustomRule()"
+      >
         {{ t('actions.addRule') }}
       </Button>
     </div>
@@ -79,11 +103,16 @@
         theme="primary"
         icon="mdi:bin"
         :disabled="loading || 0 === rankingRules.length"
-        @click="resetToInitialValue()">
+        @click="resetToInitialValue()"
+      >
         {{ t('buttons.reset') }}
       </Button>
       <Buttons>
-        <Button type="submit" :disabled="!modified || loading" :loading="loading" />
+        <Button
+          type="submit"
+          :disabled="!modified || loading"
+          :loading="loading"
+        />
       </Buttons>
     </footer>
   </form>
@@ -107,7 +136,16 @@ type Props = {
 }
 const props = defineProps<Props>()
 
-const BUILT_IN_RULES = ['words', 'typo', 'proximity', 'attribute', 'attributeRank', 'wordPosition', 'sort', 'exactness']
+const BUILT_IN_RULES = [
+  'words',
+  'typo',
+  'proximity',
+  'attribute',
+  'attributeRank',
+  'wordPosition',
+  'sort',
+  'exactness',
+]
 
 function isBuiltIn(rule: string): boolean {
   return BUILT_IN_RULES.includes(rule)
@@ -117,7 +155,9 @@ function formatRuleLabel(rule: string): string {
   return rule.replace(/([a-z])([A-Z])/g, '$1 $2')
 }
 
-function parseCustomRule(rule: string): { direction: 'asc' | 'desc'; field: string } | null {
+function parseCustomRule(
+  rule: string,
+): { direction: 'asc' | 'desc'; field: string } | null {
   const m = rule.match(/^(.+):(asc|desc)$/)
   if (!m) return null
   return { field: m[1]!, direction: m[2] as 'asc' | 'desc' }
@@ -133,7 +173,11 @@ const processTask = useTask()
 const { createToast } = useToasts()
 const { confirm } = useConfirmationDialog()
 const initialRankingRules = await index.getRankingRules()
-const { value: rankingRules, reset, modified } = resettableRef([...initialRankingRules])
+const {
+  value: rankingRules,
+  reset,
+  modified,
+} = resettableRef([...initialRankingRules])
 const self = reactive({ rankingRules })
 
 // Separate display list: only updated on add/remove (not on drag-and-drop reorder).

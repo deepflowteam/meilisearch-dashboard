@@ -19,6 +19,8 @@ https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926
 - 🧭 **Search rules**: manage search rules
 - 💬 **Chat**: use Meilisearch's AI-powered chat, when enabled on the instance
 - 🧪 **Experimental features**: toggle Meilisearch experimental features from the UI
+- 🎨 **Theming**: light/dark/system appearance, accent color and sidebar layout, all customizable from the UI
+- 🗺️ **Map view**: browse geo-tagged documents on an [OpenFreeMap](https://openfreemap.org) map
 
 ## Demo
 
@@ -32,7 +34,7 @@ side: there's no backend, it talks directly to your Meilisearch instance from th
 If you have some basics with [Vue 3](https://vuejs.org/) (Composition API), [Tailwind CSS](https://tailwindcss.com/)
 and [Nuxt UI](https://ui.nuxt.com/), you will easily figure out how this application has been structured.
 
-[Yarn](https://yarnpkg.com/) is required to install packages.
+[Bun](https://bun.sh/) is required to install packages.
 
 Feel free to contribute!
 
@@ -49,19 +51,19 @@ If for some reason you want to run it locally, you can clone the repository and 
 ```bash
 git clone https://github.com/bpolaszek/meiliweb.git
 cd meiliweb
-yarn install
+bun install
 ```
 
 ### Launch dev server
 
 ```bash
-yarn dev
+bun run dev
 ```
 
 ### Build & preview
 
 ```bash
-yarn build && yarn preview
+bun run build && bun run preview
 ```
 
 ### Docker build
@@ -76,22 +78,31 @@ docker build -t meiliweb .
 docker run -p 3000:3000 -d meiliweb
 ```
 
-### Code style
-
-#### Check formatting
+### Docker Compose
 
 ```bash
-yarn lint
+docker compose up -d --build
 ```
+
+### Code style
+
+Formatting and linting are handled by [oxfmt](https://oxc.rs/docs/guide/usage/formatter) and
+[oxlint](https://oxc.rs/docs/guide/usage/linter).
 
 #### Fix formatting
 
 ```bash
-yarn format
+bun run format
 ```
 
 #### Lint
 
 ```bash
-yarn run check
+bun run lint
+```
+
+#### Check both (formatting + lint)
+
+```bash
+bun run check
 ```

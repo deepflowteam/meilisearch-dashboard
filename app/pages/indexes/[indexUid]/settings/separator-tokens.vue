@@ -1,8 +1,12 @@
 <template>
   <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submit()">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#separator-tokens" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#separator-tokens"
+      />
     </h3>
 
     <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -47,7 +51,11 @@ const { loading, error, handle } = useFormSubmit({
 })
 const processTask = useTask()
 const { createToast } = useToasts()
-const { value: separatorTokens, reset, modified } = resettableRef(await index.getSeparatorTokens())
+const {
+  value: separatorTokens,
+  reset,
+  modified,
+} = resettableRef(await index.getSeparatorTokens())
 const self = reactive({ separatorTokens })
 const editableSeparatorTokens = computed({
   get: () => self.separatorTokens.join('\n'),

@@ -1,8 +1,12 @@
 <template>
   <form class="space-y-4" @reset.prevent="reset()" @submit.prevent="submit()">
-    <h3 class="inline-flex w-full items-center justify-between text-xl font-semibold">
+    <h3
+      class="inline-flex w-full items-center justify-between text-xl font-semibold"
+    >
       {{ t('title') }}
-      <DocumentationLink href="https://www.meilisearch.com/docs/reference/api/settings#non-separator-tokens" />
+      <DocumentationLink
+        href="https://www.meilisearch.com/docs/reference/api/settings#non-separator-tokens"
+      />
     </h3>
 
     <Alert v-if="error" dismissable theme="danger" @close="error = null">
@@ -47,7 +51,11 @@ const { loading, error, handle } = useFormSubmit({
 })
 const processTask = useTask()
 const { createToast } = useToasts()
-const { value: nonSeparatorTokens, reset, modified } = resettableRef(await index.getNonSeparatorTokens())
+const {
+  value: nonSeparatorTokens,
+  reset,
+  modified,
+} = resettableRef(await index.getNonSeparatorTokens())
 const self = reactive({ nonSeparatorTokens })
 const editableNonSeparatorTokens = computed({
   get: () => self.nonSeparatorTokens.join('\n'),
@@ -67,22 +75,25 @@ const submit = async () => {
   })
   await handle(async () => {
     toast.spawn()
-    await processTask(() => index.updateNonSeparatorTokens(self.nonSeparatorTokens), {
-      onSuccess: async () => {
-        toast.update({ ...TOAST_SUCCESS(t) })
-        reset(self.nonSeparatorTokens)
+    await processTask(
+      () => index.updateNonSeparatorTokens(self.nonSeparatorTokens),
+      {
+        onSuccess: async () => {
+          toast.update({ ...TOAST_SUCCESS(t) })
+          reset(self.nonSeparatorTokens)
+        },
+        onCanceled: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.canceledTask'),
+          }),
+        onFailure: () =>
+          toast.update({
+            ...TOAST_FAILURE(t),
+            text: t('toasts.texts.failedTask'),
+          }),
       },
-      onCanceled: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.canceledTask'),
-        }),
-      onFailure: () =>
-        toast.update({
-          ...TOAST_FAILURE(t),
-          text: t('toasts.texts.failedTask'),
-        }),
-    })
+    )
   })
 }
 
