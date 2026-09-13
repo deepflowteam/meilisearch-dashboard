@@ -5,11 +5,11 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "deploy": "nuxt generate && wrangler pages deploy .output/public --project-name=meilisearch --branch=main",
     "postinstall": "nuxt prepare",
     "format": "oxfmt",
     "lint": "oxlint",
     "check": "oxlint && oxfmt --check",
-    "check:update": "bunx npm-check-updates -ui",
     "update:pkg": "bun x taze major -w --concurrency 3 --request-timeout 20000 --retry 6 && bun install",
     "clean": "rm -rf .nuxt node_modules bun.lock"
   },
@@ -48,7 +48,8 @@
     "oxfmt": "^0.67.0",
     "oxlint": "^1.82.0",
     "sass": "^1.104.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.131.1"
   },
   "resolutions": {
     "string-width": "4.2.3"
