@@ -118,7 +118,7 @@ const { t } = useI18n()
 en:
   trigger: Theme settings
   title: Theme settings
-  description: Customize the color and appearance of Meiliweb.
+  description: Customize the color and appearance of Meilisearch Dashboard.
   color: Color
   appearance: Appearance
   light: Light

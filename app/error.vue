@@ -8,9 +8,9 @@
         <img
           class="-ml-10 size-16 shrink-0 grow-0"
           src="/assets/images/logo.svg"
-          alt="Meiliweb"
+          alt="Meilisearch Dashboard"
         />
-        <span class="text-3xl font-semibold">Meiliweb</span>
+        <span class="text-3xl font-semibold">Meilisearch Dashboard</span>
       </a>
     </header>
 

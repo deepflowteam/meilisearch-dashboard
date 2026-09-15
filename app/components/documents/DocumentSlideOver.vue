@@ -246,7 +246,7 @@ const remove = () =>
 </script>
 
 <style scoped>
-/* vanilla-jsoneditor's default accent is blue; tint its chrome with the Meiliweb palette. */
+/* vanilla-jsoneditor's default accent is blue; tint its chrome with the Meilisearch Dashboard palette. */
 .json-editor {
   --jse-theme-color: var(--color-meili-800);
   --jse-theme-color-highlight: var(--color-meili-700);

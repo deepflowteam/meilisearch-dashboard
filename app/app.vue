@@ -47,7 +47,7 @@ useHead({
     class: 'h-full bg-default text-default',
   },
   titleTemplate: (titleChunk) => {
-    let appName = 'Meiliweb'
+    let appName = 'Meilisearch Dashboard'
     if (self.credentials) {
       appName += ` - ${self.credentials.name || self.credentials.baseUri}`
     }

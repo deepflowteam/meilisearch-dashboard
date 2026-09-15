@@ -1,5 +1,5 @@
 {
-  "name": "meiliweb",
+  "name": "meilisearch-dashboard",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

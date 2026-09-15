@@ -1,6 +1,6 @@
-# Meiliweb
+# Meilisearch Dashboard
 
-[Meiliweb](https://meilisearch.pages.dev) is a web-based administration panel
+[Meilisearch Dashboard](https://meilisearch.pages.dev) is a web-based administration panel
 that helps you store, organize and visualize data in your [Meilisearch](https://meilisearch.com) instances.
 
 https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926a3dafafe1
@@ -29,11 +29,11 @@ https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926
 
 ## Demo
 
-You can run Meilweb on your search instances, provided they expose appropriate CORS headers, on [https://meilisearch.pages.dev](https://meilisearch.pages.dev).
+You can run Meilisearch Dashboard on your search instances, provided they expose appropriate CORS headers, on [https://meilisearch.pages.dev](https://meilisearch.pages.dev).
 
 ## Local usage
 
-Meiliweb is a [Nuxt 4](https://nuxt.com/) single-page application that entirely runs on the client
+Meilisearch Dashboard is a [Nuxt 4](https://nuxt.com/) single-page application that entirely runs on the client
 side: there's no backend, it talks directly to your Meilisearch instance from the browser.
 
 If you have some basics with [Vue 3](https://vuejs.org/) (Composition API), [Tailwind CSS](https://tailwindcss.com/)
@@ -43,9 +43,9 @@ and [Nuxt UI](https://ui.nuxt.com/), you will easily figure out how this applica
 
 Feel free to contribute!
 
-- [Discussions](https://github.com/deepflowteam/meiliweb/discussions): Ask questions, share ideas, suggest features
-- [Issues](https://github.com/deepflowteam/meiliweb/issues): Report bugs
-- [Pull requests](https://github.com/deepflowteam/meiliweb/pulls): Request changes
+- [Discussions](https://github.com/deepflowteam/meilisearch-dashboard/discussions): Ask questions, share ideas, suggest features
+- [Issues](https://github.com/deepflowteam/meilisearch-dashboard/issues): Report bugs
+- [Pull requests](https://github.com/deepflowteam/meilisearch-dashboard/pulls): Request changes
 
 ### Installation
 
@@ -54,8 +54,8 @@ You mostly don't need to install it on your computer. Just head up to [https://m
 If for some reason you want to run it locally, you can clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/deepflowteam/meiliweb.git
-cd meiliweb
+git clone https://github.com/deepflowteam/meilisearch-dashboard.git
+cd meilisearch-dashboard
 bun install
 ```
 
@@ -74,13 +74,13 @@ bun run build && bun run preview
 ### Docker build
 
 ```bash
-docker build -t meiliweb .
+docker build -t meilisearch-dashboard .
 ```
 
 ### Docker run
 
 ```bash
-docker run -p 3000:3000 -d meiliweb
+docker run -p 3000:3000 -d meilisearch-dashboard
 ```
 
 ### Docker Compose

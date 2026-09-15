@@ -192,7 +192,7 @@ export const useIndexOperations = () => {
       title: t('toasts.titles.swapIndexes', { indexUid, targetIndexUid }),
     })
 
-    // `rename` is required by the client's `IndexSwap` type; Meiliweb only ever plain-swaps.
+    // `rename` is required by the client's `IndexSwap` type; Meilisearch Dashboard only ever plain-swaps.
     const task = await processTask(
       () =>
         meili.swapIndexes([

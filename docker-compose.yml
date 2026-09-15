@@ -1,6 +1,6 @@
 services:
-  meiliweb:
-    container_name: meiliweb
+  meilisearch-dashboard:
+    container_name: meilisearch-dashboard
     build:
       context: .
       dockerfile: Dockerfile

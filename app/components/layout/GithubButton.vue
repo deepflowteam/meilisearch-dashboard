@@ -1,7 +1,7 @@
 <template>
   <UButton
     v-tippy="t('label')"
-    to="https://github.com/deepflowteam/meiliweb"
+    to="https://github.com/deepflowteam/meilisearch-dashboard"
     target="github"
     color="neutral"
     variant="ghost"

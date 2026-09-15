@@ -11,10 +11,10 @@
         <img
           class="size-8 shrink-0"
           src="~/assets/images/logo.svg"
-          alt="Meiliweb"
+          alt="Meilisearch Dashboard"
         />
         <span v-if="!collapsed" class="truncate text-lg font-semibold">
-          Meiliweb
+          Meilisearch Dashboard
         </span>
       </a>
     </template>
