@@ -10,7 +10,7 @@
       icon="heroicons:server"
       trailing-icon="heroicons:chevron-down"
       :label="instanceLabel"
-      :ui="{ label: 'max-w-48 truncate' }"
+      :ui="{ base: 'min-w-0' }"
     />
     <template #instance="{ item }">
       <span class="flex w-full items-center justify-between text-xs">
