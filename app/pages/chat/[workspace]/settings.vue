@@ -11,7 +11,6 @@
     <template #actions>
       <Button
         v-if="available"
-        :as="NuxtLink"
         :to="`/chat/${workspace}`"
         icon="heroicons:chat-bubble-left-right"
       >

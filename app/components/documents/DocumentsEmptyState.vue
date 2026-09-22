@@ -12,7 +12,6 @@
         {{ t('emptyIndex') }}
       </p>
       <Button
-        :as="NuxtLink"
         :to="`/indexes/${indexUid}/settings/import-documents`"
         theme="primary"
         icon="ph:upload-fill"
@@ -24,7 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { NuxtLink } from '#components'
 import Button from '~/components/layout/forms/Button.vue'
 import { useI18n } from 'vue-i18n'
 

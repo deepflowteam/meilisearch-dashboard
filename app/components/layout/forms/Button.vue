@@ -19,10 +19,12 @@
 
 <script setup lang="ts">
 import match from 'match-operator'
-import type { ComponentPublicInstance } from 'vue'
 
 type Props = {
-  as?: string | ComponentPublicInstance
+  // The underlying UButton/ULinkBase always renders as an <a> when `to`/`href` is set
+  // regardless of `as` (see @nuxt/ui's LinkBase.vue), and its `as` prop is String-typed —
+  // passing a component (e.g. NuxtLink) here fails Vue's prop validation for no benefit.
+  as?: string
   type?: 'submit' | 'reset' | 'button' | undefined
   theme?: 'primary' | 'secondary'
   icon?: string

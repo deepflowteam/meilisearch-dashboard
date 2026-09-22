@@ -10,7 +10,6 @@
     </template>
     <template #actions>
       <Button
-        :as="NuxtLink"
         :to="`/chat/${workspace}/settings`"
         icon="heroicons:cog-6-tooth"
       >

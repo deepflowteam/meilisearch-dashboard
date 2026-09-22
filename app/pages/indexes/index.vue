@@ -3,7 +3,6 @@
     <template #actions>
       <Button
         v-if="indexes.length > 0"
-        :as="NuxtLink"
         to="/indexes/create"
         theme="primary"
         icon="pajamas:doc-new"
@@ -155,7 +154,6 @@
         {{ t('emptyState') }}
       </p>
       <Button
-        :as="NuxtLink"
         :to="`/indexes/create`"
         theme="primary"
         icon="pajamas:doc-new"
@@ -258,21 +256,25 @@ const embeddingsTooltip = (
     numberOfEmbeddedDocuments: item.numberOfEmbeddedDocuments ?? 0,
   })
 
-const { duplicateIndex: doDuplicateIndex } = useIndexOperations()
+const {
+  duplicateIndex: doDuplicateIndex,
+  renameIndex: doRenameIndex,
+  swapIndex: doSwapIndex,
+  compactIndex,
+} = useIndexOperations()
+
 const duplicateIndex = async (indexUid: string) => {
   const newIndexUid = await doDuplicateIndex(indexUid)
   await promiseTimeout(1000)
   await navigateTo(`/indexes/${newIndexUid}/documents`)
 }
 
-const { renameIndex: doRenameIndex } = useIndexOperations()
 const renameIndex = async (indexUid: string) => {
   const newIndexUid = await doRenameIndex(indexUid)
   await promiseTimeout(1000)
   await navigateTo(`/indexes/${newIndexUid}/documents`)
 }
 
-const { swapIndex: doSwapIndex } = useIndexOperations()
 const swapIndex = async (indexUid: string) => {
   try {
     await doSwapIndex(indexUid)
@@ -281,8 +283,6 @@ const swapIndex = async (indexUid: string) => {
     if (!(error instanceof DismissedDialog)) throw error
   }
 }
-
-const { compactIndex } = useIndexOperations()
 
 const indexMenuItems = (item: Index): DropdownMenuItem[] => [
   {

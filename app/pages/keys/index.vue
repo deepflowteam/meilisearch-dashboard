@@ -7,7 +7,6 @@
     </template>
     <template #actions>
       <Button
-        :as="NuxtLink"
         to="/keys/settings/create"
         theme="primary"
         icon="pajamas:doc-new"
