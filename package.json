@@ -1,11 +1,11 @@
 {
   "name": "meilisearch-dashboard",
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt build && node scripts/copy-maplibre-worker-deps.mjs",
     "dev": "nuxt dev",
-    "generate": "nuxt generate",
+    "generate": "nuxt generate && node scripts/copy-maplibre-worker-deps.mjs",
     "preview": "nuxt preview",
-    "deploy": "nuxt generate && wrangler pages deploy .output/public --project-name=meilisearch --branch=main",
+    "deploy": "bun run generate && wrangler pages deploy .output/public --project-name=meilisearch --branch=main",
     "postinstall": "nuxt prepare",
     "format": "oxfmt",
     "lint": "oxlint",
