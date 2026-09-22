@@ -31,4 +31,6 @@ if (!existsSync(destDir)) {
 }
 
 copyFileSync(src, dest)
-console.log(`[copy-maplibre-worker-deps] copied maplibre-gl-shared.mjs -> ${dest}`)
+console.log(
+  `[copy-maplibre-worker-deps] copied maplibre-gl-shared.mjs -> ${dest}`,
+)

@@ -4,6 +4,11 @@ import { useMeiliClient } from '~/composables'
 
 type TaskListener = (task: Task) => void
 
+// Matches the `>= 1.52` called out below — kept as its own export so callers (the login page,
+// so far) can warn about it without duplicating the number, and `satisfies`-style rather than a
+// bare string so `useVersion().satisfiesVersion()` and `semver.satisfies()` both accept it as-is.
+export const TASKS_STREAM_MIN_VERSION = '>=1.52.0'
+
 /**
  * Meilisearch >= 1.52 (experimental `tasksStreamingRoute`) can push task updates over
  * `GET /tasks/stream` (SSE) instead of every consumer polling tasks individually. The client
