@@ -9,10 +9,7 @@
       />
     </template>
     <template #actions>
-      <Button
-        :to="`/chat/${workspace}/settings`"
-        icon="heroicons:cog-6-tooth"
-      >
+      <Button :to="`/chat/${workspace}/settings`" icon="heroicons:cog-6-tooth">
         {{ t('actions.settings') }}
       </Button>
       <Button

@@ -153,11 +153,7 @@
       <p class="text-2xl font-light text-gray-700 dark:text-gray-300">
         {{ t('emptyState') }}
       </p>
-      <Button
-        :to="`/indexes/create`"
-        theme="primary"
-        icon="pajamas:doc-new"
-      >
+      <Button :to="`/indexes/create`" theme="primary" icon="pajamas:doc-new">
         {{ t('actions.createExpanded') }}
       </Button>
     </div>

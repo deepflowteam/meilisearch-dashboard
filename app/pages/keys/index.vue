@@ -6,11 +6,7 @@
       </NuxtLink>
     </template>
     <template #actions>
-      <Button
-        to="/keys/settings/create"
-        theme="primary"
-        icon="pajamas:doc-new"
-      >
+      <Button to="/keys/settings/create" theme="primary" icon="pajamas:doc-new">
         {{ t('actions.create') }}
       </Button>
     </template>
