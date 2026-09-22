@@ -3,7 +3,10 @@
 [Meilisearch Dashboard](https://meilisearch.pages.dev) is a web-based administration panel
 that helps you store, organize and visualize data in your [Meilisearch](https://meilisearch.com) instances.
 
-https://github.com/bpolaszek/meiliweb/assets/5569077/b4100e75-1e70-45dd-8c38-926a3dafafe1
+<p align="center">
+  <img src="media/indexes.png" alt="Indexes view" />
+  <img src="media/themes.png" alt="Theming" />
+</p>
 
 ## Features
 
