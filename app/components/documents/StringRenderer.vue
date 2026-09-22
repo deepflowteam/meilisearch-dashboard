@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { templateRef } from '@vueuse/core'
 import type { ComponentPublicInstance } from 'vue'
 import HighlightedText from './HighlightedText.vue'
 
@@ -31,9 +30,11 @@ type Props = {
 
 defineProps<Props>()
 
+// @vueuse/core dropped `templateRef` in v15 in favour of Vue 3.5's own built-in
+// (auto-imported by Nuxt).
 const self = reactive({
   truncated: true,
-  textElement: templateRef<ComponentPublicInstance>('textElement'),
+  textElement: useTemplateRef<ComponentPublicInstance>('textElement'),
   showExpandButton: false,
 })
 

@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { templateRef } from '@vueuse/core'
 import {
   parseHighlightMarkers,
   useHighlightTags,
@@ -24,8 +23,10 @@ const highlighted = computed(() =>
     ? parseHighlightMarkers(props.value, highlightTags.value)
     : { text: props.value, matches: [] },
 )
+// @vueuse/core dropped `templateRef` in v15 in favour of Vue 3.5's own built-in
+// (auto-imported by Nuxt).
 const self = reactive({
-  textElement: templateRef<HTMLElement>('textElement'),
+  textElement: useTemplateRef<HTMLElement>('textElement'),
   text: computed(() => highlighted.value.text),
 })
 
