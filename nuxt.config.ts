@@ -56,7 +56,6 @@ export default defineNuxtConfig({
         'json-editor-vue',
         'json-oneline-stringify',
         'jwt-encode', // CJS
-        'maplibre-gl',
         'match-operator',
         'meilisearch',
         'meilisearch-filters',
@@ -67,6 +66,7 @@ export default defineNuxtConfig({
         'xxh32',
         'yaml',
       ],
+      exclude: ['maplibre-gl'],
     },
   },
 })

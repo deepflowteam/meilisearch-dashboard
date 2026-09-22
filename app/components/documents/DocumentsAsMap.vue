@@ -24,12 +24,16 @@ import {
   NavigationControl,
   Popup,
   ScaleControl,
+  setWorkerUrl,
 } from 'maplibre-gl'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import DocumentCard from './DocumentCard.vue'
 import { useFields } from '~/composables'
 import { AppliedFilters } from '~/utils'
+
+setWorkerUrl(maplibreWorkerUrl)
 
 type Props = {
   indexUid: string
