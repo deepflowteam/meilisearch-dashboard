@@ -5,6 +5,7 @@ that helps you store, organize and visualize data in your [Meilisearch](https://
 
 <p align="center">
   <img src="media/indexes.png" alt="Indexes view" />
+  <img src="media/map.png" alt="Documents map view" />
   <img src="media/themes.png" alt="Theming" />
 </p>
 
