@@ -66,8 +66,12 @@ const onMoveEnd = () => {
     return
   }
   const bounds = map.getBounds()
-  const northEast = bounds.getNorthEast()
-  const southWest = bounds.getSouthWest()
+  // MapLibre keeps unwrapped longitudes as the map pans across the antimeridian (e.g. 197.75
+  // instead of -162.24 once panned/zoomed far enough west), which Meilisearch's _geoBoundingBox
+  // rejects outright ("Bad longitude ... must be contained between -180 and 180"). `.wrap()`
+  // brings both corners back into range the same way the error's own hint would.
+  const northEast = bounds.getNorthEast().wrap()
+  const southWest = bounds.getSouthWest().wrap()
   const boundingBox = {
     topLeftCorner: [northEast.lat, northEast.lng] as [number, number],
     bottomRightCorner: [southWest.lat, southWest.lng] as [number, number],
